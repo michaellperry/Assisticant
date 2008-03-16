@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Assisticant.App</id>
+    <version>1.0.0</version>
+    <authors>Michael L Perry</authors>
+    <owners>Michael L Perry</owners>
+    <licenseUrl>http://assisticant.net/license</licenseUrl>
+    <projectUrl>http://assisticant.net/</projectUrl>
+    <iconUrl>http://assisticant.net/images/logosmall.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Add a view model locator for use in an Update Controls application.</description>
+    <copyright>Copyright 2014, Michael L Perry</copyright>
+    <tags>mvvm viewmodel databinding inotifypropertychanged inpc</tags>
+    <dependencies>
+      <dependency id="Assisticant" version="1.0.0" />
+    </dependencies>
+  </metadata>
+</package>

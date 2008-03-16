@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Assisticant</id>
+    <version>1.0.0</version>
+    <authors>Michael L Perry</authors>
+    <owners>Michael L Perry</owners>
+    <description>Automatically discover view model dependencies and databind without INotifyPropertyChanged.</description>
+    <licenseUrl>http://assisticant.net/license</licenseUrl>
+    <projectUrl>http://assisticant.net/</projectUrl>
+    <iconUrl>http://assisticant.net/images/logosmall.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <language>en-US</language>
+    <tags>mvvm viewmodel databinding inotifypropertychanged inpc wpf silverlight wp7</tags>
+  </metadata>
+</package>
