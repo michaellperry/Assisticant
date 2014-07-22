@@ -21,7 +21,7 @@ namespace Assisticant.UnitTest
 
 		public bool IsUpToDate
 		{
-			get { return _property.ComputedSentry.IsUpToDate; }
+			get { return _property.IsUpToDate; }
 		}
 	}
 }

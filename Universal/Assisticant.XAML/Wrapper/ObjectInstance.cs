@@ -76,7 +76,7 @@ namespace Assisticant.XAML.Wrapper
             return computedProperty;
         }
 
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged { add { } remove { } }
 
         public System.Collections.IEnumerable GetErrors(string propertyName)
         {
