@@ -28,18 +28,18 @@ namespace Assisticant
             return currentSet;
         }
 
-        public static void ScheduleUpdate(IUpdatable updatable)
+        public static void ScheduleUpdate(Action update)
         {
             UpdateScheduler currentSet = _currentSet.Get();
             if (currentSet != null)
-                currentSet._updatables.Add(updatable);
+                currentSet._updatables.Add(update);
             else if (_runOnUIThread != null)
-                _runOnUIThread(updatable.UpdateNow);
+                _runOnUIThread(update);
         }
 
-        private List<IUpdatable> _updatables = new List<IUpdatable>();
+        private List<Action> _updatables = new List<Action>();
 
-        public IEnumerable<IUpdatable> End()
+        public IEnumerable<Action> End()
         {
             System.Diagnostics.Debug.Assert(_currentSet.Get() == this);
             _currentSet.Set(null);

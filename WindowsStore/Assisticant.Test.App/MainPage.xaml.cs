@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Assisticant.XAML;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,6 +26,14 @@ namespace Assisticant.Test.App
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            ForView.Unwrap(DataContext, delegate(ContactListViewModel viewModel)
+            {
+                viewModel.Init();
+            });
         }
     }
 }

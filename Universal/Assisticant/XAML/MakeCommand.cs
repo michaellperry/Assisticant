@@ -22,7 +22,7 @@ namespace Assisticant.XAML
     /// </summary>
     public static class MakeCommand
     {
-        private class Command : ICommand, IUpdatable
+        private class Command : ICommand
         {
             // The condition under which it can execute, and the action to execute.
             private Func<bool> _canExecuteFunction;
@@ -68,7 +68,7 @@ namespace Assisticant.XAML
                     if (scheduler != null)
                     {
                         foreach (var updatable in scheduler.End())
-                            updatable.UpdateNow();
+                            updatable();
                     }
                 }
             }
@@ -87,10 +87,10 @@ namespace Assisticant.XAML
                 // When the "can execute" flag is invalidated, we need to queue
                 // up a call to update it. This will cause the UI thread to
                 // call TriggerUpdate (below) when everything settles down.
-                UpdateScheduler.ScheduleUpdate(this);
+                UpdateScheduler.ScheduleUpdate(UpdateNow);
             }
 
-            public void UpdateNow()
+            private void UpdateNow()
             {
                 // The "can execute" flag is now out-of-date. We need to update it.
                 _depCanExecute.OnGet();

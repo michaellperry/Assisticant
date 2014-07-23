@@ -73,6 +73,14 @@ namespace Assisticant.XAML
                     : wrapper.WrappedObject as TWrappedObjectType;
         }
 
+        public static void Unwrap<TWrappedObjectType>(object dataContext, Action<TWrappedObjectType> action)
+            where TWrappedObjectType : class
+        {
+            var viewModel = Unwrap<TWrappedObjectType>(dataContext);
+            if (viewModel != null)
+                action(viewModel);
+        }
+
         public static void BindAppBarItem(object item, ICommand command)
         {
             var button = item as IApplicationBarMenuItem;

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace Assisticant.XAML.Wrapper
 {
-    public class Tree : IUpdatable
+    public class Tree
     {
         private Dictionary<object, IObjectInstance> _wrapperByObject = new Dictionary<object, IObjectInstance>();
         private IObjectInstance _root;
@@ -25,7 +25,7 @@ namespace Assisticant.XAML.Wrapper
             {
                 _root.UpdateNodes();
             });
-            _depNodes.Invalidated += () => UpdateScheduler.ScheduleUpdate(this);
+            _depNodes.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
         }
 
         public void SetRoot(IObjectInstance root)
@@ -55,7 +55,7 @@ namespace Assisticant.XAML.Wrapper
             _wrapperByObject.Remove(key);
         }
 
-        public void UpdateNow()
+        private void UpdateNow()
         {
             _depNodes.OnGet();
         }

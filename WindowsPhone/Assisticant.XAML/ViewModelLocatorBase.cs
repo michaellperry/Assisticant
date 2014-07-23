@@ -9,7 +9,7 @@ namespace Assisticant.XAML
 {
     public class ViewModelLocatorBase : INotifyPropertyChanged
     {
-        private class ViewModelContainer : IUpdatable
+        private class ViewModelContainer
         {
             private Computed _computed;
             private object _viewModel;
@@ -19,7 +19,7 @@ namespace Assisticant.XAML
             {
                 _firePropertyChanged = firePropertyChanged;
                 _computed = new Computed(() => _viewModel = ForView.Wrap(constructor()));
-                _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(this);
+                _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
             }
 
             public object ViewModel
@@ -27,7 +27,7 @@ namespace Assisticant.XAML
                 get { _computed.OnGet(); return _viewModel; }
             }
 
-            public void UpdateNow()
+            private void UpdateNow()
             {
                 _firePropertyChanged();
             }

@@ -14,7 +14,7 @@ using Assisticant;
 
 namespace Assisticant.XAML.Wrapper
 {
-    internal abstract class ObjectPropertyAtom : ObjectProperty, IUpdatable
+    internal abstract class ObjectPropertyAtom : ObjectProperty
     {
         private Computed _depProperty;
         private object _value;
@@ -31,7 +31,7 @@ namespace Assisticant.XAML.Wrapper
 				// The update should have lower priority than user input & drawing,
 				// to ensure that the app doesn't lock up in case a large model is 
 				// being updated outside the UI (e.g. via timers or the network).
-                _depProperty.Invalidated += () => UpdateScheduler.ScheduleUpdate(this);
+                _depProperty.Invalidated += () => UpdateScheduler.ScheduleUpdate(_depProperty.OnGet);
 			}
 		}
 
@@ -48,8 +48,8 @@ namespace Assisticant.XAML.Wrapper
             {
                 if (scheduler != null)
                 {
-                    foreach (IUpdatable updatable in scheduler.End())
-                        updatable.UpdateNow();
+                    foreach (Action updatable in scheduler.End())
+                        updatable();
                 }
             }
 		}
@@ -74,10 +74,5 @@ namespace Assisticant.XAML.Wrapper
 
         public abstract object TranslateIncommingValue(object value);
         public abstract object TranslateOutgoingValue(object value);
-
-        public void UpdateNow()
-        {
-            _depProperty.OnGet();
-        }
     }
 }

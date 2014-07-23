@@ -67,7 +67,7 @@ namespace Assisticant.XAML
         public abstract object Value { get; }
     }
 
-    internal class ComputedAtom<T> : ComputedPropertyBase, IUpdatable
+    internal class ComputedAtom<T> : ComputedPropertyBase
     {
         private Computed _depValue;
         private T _value;
@@ -77,7 +77,7 @@ namespace Assisticant.XAML
         {
             _firePropertyChanged = firePropertyChanged;
             _depValue = new Computed(() => _value = getMethod());
-            _depValue.Invalidated += () => UpdateScheduler.ScheduleUpdate(this);
+            _depValue.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
         }
 
         public override object Value
@@ -91,7 +91,7 @@ namespace Assisticant.XAML
         }
     }
 
-    internal class ComputedCollection<T> : ComputedPropertyBase, IUpdatable
+    internal class ComputedCollection<T> : ComputedPropertyBase
     {
         private Func<IEnumerable<T>> _getMethod;
         private Computed _depCollection;
@@ -101,7 +101,7 @@ namespace Assisticant.XAML
         {
             _getMethod = getMethod;
             _depCollection = new Computed(OnUpdateCollection);
-            _depCollection.Invalidated += () => UpdateScheduler.ScheduleUpdate(this);
+            _depCollection.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
             _depCollection.Touch();
         }
 
@@ -138,7 +138,7 @@ namespace Assisticant.XAML
             get { return _collection; }
         }
 
-        public void UpdateNow()
+        private void UpdateNow()
         {
             _depCollection.OnGet();
         }

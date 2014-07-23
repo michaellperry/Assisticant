@@ -65,6 +65,14 @@ namespace Assisticant.XAML
                     : wrapper.WrappedObject as TWrappedObjectType;
         }
 
+        public static void Unwrap<TWrappedObjectType>(object dataContext, Action<TWrappedObjectType> action)
+            where TWrappedObjectType : class
+        {
+            var viewModel = Unwrap<TWrappedObjectType>(dataContext);
+            if (viewModel != null)
+                action(viewModel);
+        }
+
         private static void RunOnUIThread(Action action)
         {
             if (_mainDispatcher != null)

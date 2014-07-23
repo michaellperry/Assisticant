@@ -9,6 +9,7 @@
  * 
  **********************************************************************/
 
+using System;
 namespace Assisticant.XAML.Wrapper
 {
     internal class ObjectPropertyAtom : ObjectProperty
@@ -83,8 +84,8 @@ namespace Assisticant.XAML.Wrapper
                     {
                         using (NotificationGate.BeginOutbound())
                         {
-                            foreach (IUpdatable updatable in scheduler.End())
-                                updatable.UpdateNow();
+                            foreach (Action updatable in scheduler.End())
+                                updatable();
                         }
                     }
                 }

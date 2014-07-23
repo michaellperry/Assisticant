@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Assisticant.XAML.Wrapper
 {
-    class ObjectProperty : IUpdatable
+    class ObjectProperty
     {
         private static readonly object[] EmptyIndexer = new object[0];
 
@@ -59,7 +59,7 @@ namespace Assisticant.XAML.Wrapper
                 if (affectedSet != null)
                 {
                     foreach (var updatable in affectedSet.End())
-                        updatable.UpdateNow();
+                        updatable();
                 }
             }
         }
@@ -82,10 +82,10 @@ namespace Assisticant.XAML.Wrapper
 
         private void ValueInvalidated()
         {
-            UpdateScheduler.ScheduleUpdate(this);
+            UpdateScheduler.ScheduleUpdate(UpdateNow);
         }
 
-        public void UpdateNow()
+        private void UpdateNow()
         {
             if (_provider.IsCollection)
             {

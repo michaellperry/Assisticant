@@ -72,7 +72,7 @@
     <Compile Include="Collections\ObservableDictionary.cs" />
     <Compile Include="Collections\ObservableList.cs" />
     <Compile Include="Computed.cs" />
-    <Compile Include="ComputedJob.cs" />
+    <Compile Include="DependentJob.cs" />
     <Compile Include="Fields\Computed.cs" />
     <Compile Include="Fields\Observable.cs" />
     <Compile Include="Observable.cs" />
@@ -86,7 +86,6 @@
     <Compile Include="AssisticantExtensions.cs" />
     <Compile Include="XAML\MakeCommand.cs" />
     <Compile Include="UpdateScheduler.cs" />
-    <Compile Include="IUpdatable.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

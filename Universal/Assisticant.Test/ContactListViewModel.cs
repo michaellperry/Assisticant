@@ -78,5 +78,10 @@ namespace Assisticant.Test
 					.Do(() => _contactList.DeletePerson(_navigation.SelectedPerson));
 			}
 		}
+
+        public void Init()
+        {
+            // Initialization is really a bad idea, but you could do it.
+        }
 	}
 }
