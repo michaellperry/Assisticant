@@ -17,6 +17,7 @@ using System.Windows.Input;
 using Microsoft.Phone.Shell;
 using System.Windows.Threading;
 using System.Windows;
+using Assisticant.Timers;
 
 namespace Assisticant.XAML
 {
@@ -33,6 +34,7 @@ namespace Assisticant.XAML
                 _mainDispatcher = Deployment.Current.Dispatcher;
             }
             UpdateScheduler.Initialize(RunOnUIThread);
+            FloatingTimeZone.Initialize(RunOnUIThread);
         }
 
         /// <summary>

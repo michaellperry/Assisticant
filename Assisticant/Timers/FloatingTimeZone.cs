@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 
 namespace Assisticant.Timers
 {
@@ -11,12 +11,12 @@ namespace Assisticant.Timers
     {
         Dictionary<DateTime, WeakReference> _timers = new Dictionary<DateTime, WeakReference>();
         int _purgePressure;
-        SortedSet<ObservableTimer> _forth = new SortedSet<ObservableTimer>(_comparer);
-        SortedSet<ObservableTimer> _back = new SortedSet<ObservableTimer>(_comparer);
+        HashSet<ObservableTimer> _forth = new HashSet<ObservableTimer>();
+        HashSet<ObservableTimer> _back = new HashSet<ObservableTimer>();
         DateTime _schedule;
         DateTime? _stable;
         FloatingDateTime _now;
-        static Comparer<ObservableTimer> _comparer = Comparer<ObservableTimer>.Create((l, r) => Comparer<DateTime>.Default.Compare(l.ExpirationTime, r.ExpirationTime));
+        static Action<Action> _post = action => SynchronizationContext.Current.Post(state => action(), null);
 
         public static readonly FloatingTimeZone Utc = new UtcTimeZone();
 
@@ -31,11 +31,13 @@ namespace Assisticant.Timers
         protected abstract void ScheduleTimer(TimeSpan delay);
         protected abstract void CancelTimer();
 
+        public static void Initialize(Action<Action> post) { _post = post; }
+
         public DateTime GetStableTime()
         {
             if (_stable == null)
             {
-                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => _stable = null), DispatcherPriority.Input);
+                _post(() => _stable = null);
                 _stable = GetRawTime();
             }
             return _stable.Value;
@@ -43,8 +45,11 @@ namespace Assisticant.Timers
 
         protected void NotifyTimerExpired()
         {
-            _schedule = DateTime.MinValue;
-            ScheduleNext();
+            _post(() =>
+            {
+                _schedule = DateTime.MinValue;
+                ScheduleNext();
+            });
         }
 
         internal ObservableTimer GetTimer(DateTime time)
@@ -83,21 +88,20 @@ namespace Assisticant.Timers
         void ScheduleNext()
         {
             var now = GetStableTime();
-            while (_back.Count > 0 && _back.Max.ExpirationTime > now)
+            foreach (var timer in _back.Where(t => t.ExpirationTime > now).ToList())
             {
-                var timer = _back.Min;
                 _back.Remove(timer);
                 _forth.Add(timer);
                 timer.Expire(false);
             }
-            while (_forth.Count > 0 && _forth.Min.ExpirationTime <= now)
+            foreach (var timer in _back.Where(t => t.ExpirationTime <= now).ToList())
             {
-                var timer = _forth.Min;
                 _forth.Remove(timer);
                 _back.Add(timer);
                 timer.Expire(true);
             }
-            if (_forth.Count == 0 && _back.Count == 0)
+            var head = _forth.OrderBy(t => t.ExpirationTime).FirstOrDefault();
+            if (head == null && _back.Count == 0)
             {
                 if (_schedule != DateTime.MinValue)
                 {
@@ -105,7 +109,7 @@ namespace Assisticant.Timers
                     CancelTimer();
                 }
             }
-            else if (_forth.Count == 0)
+            else if (head == null)
             {
                 if (_schedule != DateTime.MaxValue)
                 {
@@ -113,9 +117,9 @@ namespace Assisticant.Timers
                     ScheduleTimer(TimeSpan.FromSeconds(1));
                 }
             }
-            else if (_forth.Min.ExpirationTime != _schedule)
+            else if (head.ExpirationTime != _schedule)
             {
-                _schedule = _forth.Min.ExpirationTime;
+                _schedule = head.ExpirationTime;
                 ScheduleTimer(new TimeSpan(Math.Min((_schedule - now).Ticks, TimeSpan.FromSeconds(1).Ticks)));
             }
         }

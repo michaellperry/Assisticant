@@ -2,6 +2,7 @@
 using Assisticant.XAML.Wrapper;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Assisticant.Timers;
 
 namespace Assisticant.XAML
 {
@@ -18,6 +19,7 @@ namespace Assisticant.XAML
                 _mainDispatcher = Window.Current.Dispatcher;
             }
             UpdateScheduler.Initialize(RunOnUIThread);
+            FloatingTimeZone.Initialize(RunOnUIThread);
         }
 
         public static object Wrap(object viewModel)
