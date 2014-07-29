@@ -103,9 +103,9 @@
     <Compile Include="Wrapper\UnitTestDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Portable\Assisticant\Assisticant.csproj">
+    <ProjectReference Include="..\..\Assisticant\Assisticant.Portable.csproj">
       <Project>{0F197CDB-CF38-438B-90AD-1B4F0976061E}</Project>
-      <Name>Assisticant</Name>
+      <Name>Assisticant.Portable</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
