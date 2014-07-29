@@ -7,22 +7,24 @@ namespace Assisticant
     {
         private Dictionary<int, T> _valueByThread = new Dictionary<int, T>();
 
-        public T Get()
+        public T Value
         {
-            lock (this)
+            get
             {
-                T value;
-                if (!_valueByThread.TryGetValue(Thread.CurrentThread.ManagedThreadId, out value))
-                    return default(T);
-                return value;
+                lock (this)
+                {
+                    T value;
+                    if (!_valueByThread.TryGetValue(Thread.CurrentThread.ManagedThreadId, out value))
+                        return default(T);
+                    return value;
+                }
             }
-        }
-
-        public void Set(T value)
-        {
-            lock (this)
+            set
             {
-                _valueByThread[Thread.CurrentThread.ManagedThreadId] = value;
+                lock (this)
+                {
+                    _valueByThread[Thread.CurrentThread.ManagedThreadId] = value;
+                }
             }
         }
     }

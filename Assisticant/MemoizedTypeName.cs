@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 
 namespace Assisticant
 {
@@ -30,7 +31,7 @@ namespace Assisticant
 			{
 				if (!_shortNames.TryGetValue(type, out name))
 				{
-					if (type.IsGenericType)
+                    if (IsGenericType(type))
 						_shortNames[type] = name = ComputeGenericName(type);
 					else
 						name = type.Name;
@@ -43,19 +44,33 @@ namespace Assisticant
 		internal static string ComputeGenericName(Type type)
 		{
 			string result = type.Name;
-			if (type.IsGenericType)
+            if (IsGenericType(type))
 			{
 				// remove genric indication (e.g. `1)
 				result = result.Substring(0, result.LastIndexOf('`'));
 
+#if UNIVERSAL
+                var args = type.GenericTypeArguments;
+#else
+                var args = type.GetGenericArguments();
+#endif
+
 				result = string.Format(
 					"{0}<{1}>",
 					result,
-					string.Join(", ", type.GetGenericArguments()
-									  .Select(t => GenericName(t)).ToArray()));
+					string.Join(", ", args.Select(t => GenericName(t)).ToArray()));
 			}
 			return result;
 		}
+
+        static bool IsGenericType(Type type)
+        {
+#if UNIVERSAL
+            return type.GetTypeInfo().IsGenericType;
+#else
+            return type.IsGenericType;
+#endif
+        }
 
 		/// <summary>Extension method on Type that is an alias for the <see cref="ShortName"/> method.</summary>
 		public static string NameWithGenericParams(this Type t)

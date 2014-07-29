@@ -20,16 +20,16 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Debug %28Universal%29\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIVERSAL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin\Release %28Universal%29\</OutputPath>
+    <DefineConstants>TRACE;UNIVERSAL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -37,11 +37,11 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\Common\Mallardsoft.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Common\Mallardsoft.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <None Include="..\..\Common\Mallardsoft.snk">
+    <None Include="..\Common\Mallardsoft.snk">
       <Link>Mallardsoft.snk</Link>
     </None>
   </ItemGroup>
@@ -50,7 +50,7 @@
     <TargetPlatform Include="Windows, Version=8.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Common\CommonProperties.cs">
+    <Compile Include="..\Common\CommonProperties.cs">
       <Link>Properties\CommonProperties.cs</Link>
     </Compile>
     <Compile Include="Collections\ComputedDictionary.cs" />
@@ -61,6 +61,8 @@
     <Compile Include="Computed.cs" />
     <Compile Include="Fields\Computed.cs" />
     <Compile Include="Fields\Observable.cs" />
+    <Compile Include="MemoizedTypeName.cs" />
+    <Compile Include="NamedPrecedents.cs" />
     <Compile Include="Observable.cs" />
     <Compile Include="InertialProperty.cs" />
     <Compile Include="Precedent.cs" />
@@ -72,9 +74,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\portable-wpa81+win81\
-xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\wpa81\
-xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\win81\</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "$(TargetPath)" $(SolutionDir)NuGet\Core\lib\portable-wpa81+win81\
+xcopy /y "$(TargetPath)" $(SolutionDir)NuGet\Core\lib\wpa81\
+xcopy /y "$(TargetPath)" $(SolutionDir)NuGet\Core\lib\win81\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

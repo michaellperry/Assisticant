@@ -28,8 +28,17 @@ namespace Assisticant
 		}
 		public static string GetClassAndMethodName(Delegate d)
 		{
-			return MemoizedTypeName.GenericName(d.Method.DeclaringType) + "." + d.Method.Name;
+            var method = GetMethodInfo(d);
+            return MemoizedTypeName.GenericName(method.DeclaringType) + "." + method.Name;
 		}
+        static MethodInfo GetMethodInfo(Delegate d)
+        {
+#if UNIVERSAL
+            return d.GetMethodInfo();
+#else
+            return d.Method;
+#endif
+        }
 		protected virtual string ComputeName()
 		{
 			return GetClassAndMethodName(_update) + "()";

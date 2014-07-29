@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Assisticant
 {
@@ -20,17 +21,17 @@ namespace Assisticant
         {
             // If someone is already capturing the affected set,
             // let them keep that responsibility.
-            if (_currentSet.Get() != null)
+            if (_currentSet.Value != null)
                 return null;
 
             UpdateScheduler currentSet = new UpdateScheduler();
-            _currentSet.Set(currentSet);
+            _currentSet.Value = currentSet;
             return currentSet;
         }
 
         public static void ScheduleUpdate(Action update)
         {
-            UpdateScheduler currentSet = _currentSet.Get();
+            UpdateScheduler currentSet = _currentSet.Value;
             if (currentSet != null)
                 currentSet._updatables.Add(update);
             else if (_runOnUIThread != null)
@@ -41,8 +42,8 @@ namespace Assisticant
 
         public IEnumerable<Action> End()
         {
-            System.Diagnostics.Debug.Assert(_currentSet.Get() == this);
-            _currentSet.Set(null);
+            System.Diagnostics.Debug.Assert(_currentSet.Value == this);
+            _currentSet.Value = null;
             return _updatables;
         }
     }
