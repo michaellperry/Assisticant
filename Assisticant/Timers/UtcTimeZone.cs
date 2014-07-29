@@ -2,34 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Threading;
+using System.Threading;
 
 namespace Assisticant.Timers
 {
     class UtcTimeZone : FloatingTimeZone
     {
-        DispatcherTimer _timer = new DispatcherTimer();
-
-        public UtcTimeZone() { _timer.Tick += Expire; }
+        Timer _timer;
 
         public override DateTime GetRawTime() { return DateTime.UtcNow; }
 
+        public UtcTimeZone()
+        {
+            _timer = new Timer(Expire, null, Timeout.Infinite, -1);
+        }
+
         protected override void ScheduleTimer(TimeSpan delay)
         {
-            _timer.Stop();
-            _timer.Interval = new TimeSpan(Math.Max(TimeSpan.FromMilliseconds(20).Ticks, delay.Ticks));
-            _timer.Start();
+            _timer.Change(Convert.ToInt32(Math.Max(20, delay.TotalMilliseconds)), -1);
         }
 
         protected override void CancelTimer()
         {
-            _timer.Stop();
+            _timer.Change(Timeout.Infinite, -1);
         }
 
-        void Expire(object sender, EventArgs args)
+        void Expire(object state)
         {
-            _timer.Stop();
+            _timer.Change(Timeout.Infinite, -1);
             NotifyTimerExpired();
         }
     }

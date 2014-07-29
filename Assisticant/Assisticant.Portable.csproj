@@ -84,6 +84,13 @@
     <Compile Include="RecycleBin.cs" />
     <Compile Include="ThreadLocal.cs" />
     <Compile Include="AssisticantExtensions.cs" />
+    <Compile Include="Timers\DroppingTimeSpan.cs" />
+    <Compile Include="Timers\FloatingDateTime.cs" />
+    <Compile Include="Timers\FloatingTimeSpan.cs" />
+    <Compile Include="Timers\FloatingTimeZone.cs" />
+    <Compile Include="Timers\ObservableTimer.cs" />
+    <Compile Include="Timers\RisingTimeSpan.cs" />
+    <Compile Include="Timers\UtcTimeZone.cs" />
     <Compile Include="XAML\MakeCommand.cs" />
     <Compile Include="UpdateScheduler.cs" />
   </ItemGroup>
