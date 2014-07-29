@@ -77,9 +77,9 @@
     <Compile Include="SourceData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assisticant\Assisticant.csproj">
+    <ProjectReference Include="..\..\Assisticant\Assisticant.Portable.csproj">
       <Project>{0f197cdb-cf38-438b-90ad-1b4f0976061e}</Project>
-      <Name>Assisticant</Name>
+      <Name>Assisticant.Portable</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

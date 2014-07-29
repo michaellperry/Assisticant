@@ -85,9 +85,9 @@
     <Compile Include="Wrapper\ClassMember.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Portable\Assisticant\Assisticant.csproj">
+    <ProjectReference Include="..\..\Assisticant\Assisticant.Portable.csproj">
       <Project>{0f197cdb-cf38-438b-90ad-1b4f0976061e}</Project>
-      <Name>Assisticant</Name>
+      <Name>Assisticant.Portable</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
