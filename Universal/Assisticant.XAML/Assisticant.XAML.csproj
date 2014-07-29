@@ -131,9 +131,9 @@
     <TargetPlatform Include="WindowsPhoneApp, Version=8.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assisticant\Assisticant.csproj">
+    <ProjectReference Include="..\..\Assisticant\Assisticant.Universal.csproj">
       <Project>{c5174d32-d236-45e6-b44f-be6a5f1639de}</Project>
-      <Name>Assisticant</Name>
+      <Name>Assisticant.Universal</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">

@@ -23,20 +23,20 @@ namespace Assisticant.XAML.Wrapper
 
         public static bool IsInbound
         {
-            get { return _outboundCount.Get() == 0; }
+            get { return _outboundCount.Value == 0; }
         }
 
         public static IDisposable BeginOutbound()
         {
-            int outboundCount = _outboundCount.Get();
-            _outboundCount.Set(outboundCount + 1);
+            int outboundCount = _outboundCount.Value;
+            _outboundCount.Value = outboundCount + 1;
             return new NotificationGate();
         }
 
         public void Dispose()
         {
-            int outboundCount = _outboundCount.Get();
-            _outboundCount.Set(outboundCount - 1);
+            int outboundCount = _outboundCount.Value;
+            _outboundCount.Value = outboundCount - 1;
         }
     }
 }

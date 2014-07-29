@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Assisticant.Fields;
 
 namespace Assisticant
@@ -110,7 +111,7 @@ namespace Assisticant
 
         internal static Computed GetCurrentUpdate()
         {
-            return _currentUpdate.Get();
+            return _currentUpdate.Value;
         }
 
         /// <summary>
@@ -190,7 +191,7 @@ namespace Assisticant
 			{
 				// We're still not up-to-date (because of a concurrent change).
 				// The current update should similarly not be up-to-date.
-                Computed currentUpdate = _currentUpdate.Get();
+                Computed currentUpdate = _currentUpdate.Value;
 				if (currentUpdate != null)
 					currentUpdate.MakeOutOfDate();
 			}
@@ -312,8 +313,8 @@ namespace Assisticant
 			else if (formerStatus == StatusType.OUT_OF_DATE)
 			{
 				// Push myself to the update stack.
-				Computed stack = _currentUpdate.Get();
-                _currentUpdate.Set(this);
+				Computed stack = _currentUpdate.Value;
+                _currentUpdate.Value = this;
 
 				// Update the attribute.
 				try
@@ -323,9 +324,9 @@ namespace Assisticant
 				finally
 				{
 					// Pop myself off the update stack.
-					Computed that = _currentUpdate.Get();
+					Computed that = _currentUpdate.Value;
 					Debug.Assert(that == this);
-                    _currentUpdate.Set(stack);
+                    _currentUpdate.Value = stack;
 
 					lock (this)
 					{
