@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
-namespace Assisticant.Test.App
+namespace Assisticant.StoreApp
 {
     public class DebugConverter : IValueConverter
     {

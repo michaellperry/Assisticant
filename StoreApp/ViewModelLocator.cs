@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Assisticant;
 using Assisticant.Test;
 
-namespace Assisticant.Test.App
+namespace Assisticant.StoreApp
 {
     public class ViewModelLocator : ViewModelLocatorBase
     {
