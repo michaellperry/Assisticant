@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assisticant.Test
+namespace Assisticant.StoreApp.ViewModels
 {
     public class GenderOption
     {

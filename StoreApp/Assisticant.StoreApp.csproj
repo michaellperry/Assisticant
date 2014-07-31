@@ -108,9 +108,9 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\Universal\Assisticant.Test\Assisticant.Test.csproj">
+    <ProjectReference Include="..\StoreApp.ViewModels\Assisticant.StoreApp.ViewModels.csproj">
       <Project>{b107c9d8-0f56-4923-bddd-92653ec82e5a}</Project>
-      <Name>Assisticant.Test</Name>
+      <Name>Assisticant.StoreApp.ViewModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\Assisticant\Assisticant.Universal.csproj">
       <Project>{c5174d32-d236-45e6-b44f-be6a5f1639de}</Project>

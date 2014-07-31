@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assisticant.Test
+namespace Assisticant.StoreApp.ViewModels
 {
 	public enum GenderEnum
 	{

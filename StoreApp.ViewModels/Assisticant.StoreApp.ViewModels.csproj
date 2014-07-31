@@ -8,8 +8,8 @@
     <ProjectGuid>{B107C9D8-0F56-4923-BDDD-92653EC82E5A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Assisticant.Test</RootNamespace>
-    <AssemblyName>Assisticant.Test</AssemblyName>
+    <RootNamespace>Assisticant.StoreApp.ViewModels</RootNamespace>
+    <AssemblyName>Assisticant.StoreApp.ViewModels</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile32</TargetFrameworkProfile>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -63,7 +63,7 @@
     <TargetPlatform Include="WindowsPhoneApp, Version=8.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Assisticant\Assisticant.Universal.csproj">
+    <ProjectReference Include="..\Assisticant\Assisticant.Universal.csproj">
       <Project>{c5174d32-d236-45e6-b44f-be6a5f1639de}</Project>
       <Name>Assisticant.Universal</Name>
     </ProjectReference>
