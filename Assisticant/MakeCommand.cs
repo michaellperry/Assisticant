@@ -12,7 +12,7 @@
 using System;
 using System.Windows.Input;
 
-namespace Assisticant.XAML
+namespace Assisticant
 {
     /// <summary>
     /// Creates a command object, which implements ICommand. Use the When (optional) and

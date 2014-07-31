@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Assisticant.XAML;
 using System.ComponentModel;
 
 namespace Assisticant.Test

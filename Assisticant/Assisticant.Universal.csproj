@@ -15,7 +15,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-	<BaseIntermediateOutputPath>obj\Universal\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Universal\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,6 +62,7 @@
     <Compile Include="Computed.cs" />
     <Compile Include="Fields\Computed.cs" />
     <Compile Include="Fields\Observable.cs" />
+    <Compile Include="MakeCommand.cs" />
     <Compile Include="MemoizedTypeName.cs" />
     <Compile Include="NamedPrecedents.cs" />
     <Compile Include="Observable.cs" />
@@ -79,7 +80,6 @@
     <Compile Include="Timers\RisingTimeSpan.cs" />
     <Compile Include="Timers\UtcTimeZone.cs" />
     <Compile Include="UpdateScheduler.cs" />
-    <Compile Include="XAML\MakeCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <PropertyGroup>
