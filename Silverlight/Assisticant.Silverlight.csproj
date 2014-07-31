@@ -57,7 +57,7 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Common\CommonProperties.cs">
+    <Compile Include="..\Common\CommonProperties.cs">
       <Link>Properties\CommonProperties.cs</Link>
     </Compile>
     <Compile Include="ForView.cs" />
@@ -81,7 +81,7 @@
     <Compile Include="Wrapper\ObjectPropertyCollectionObject.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Assisticant\Assisticant.Portable.csproj">
+    <ProjectReference Include="..\Assisticant\Assisticant.Portable.csproj">
       <Project>{0f197cdb-cf38-438b-90ad-1b4f0976061e}</Project>
       <Name>Assisticant.Portable</Name>
     </ProjectReference>

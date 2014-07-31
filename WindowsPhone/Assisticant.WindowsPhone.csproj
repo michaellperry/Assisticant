@@ -83,7 +83,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\Common\CommonProperties.cs">
+    <Compile Include="..\Common\CommonProperties.cs">
       <Link>Properties\CommonProperties.cs</Link>
     </Compile>
     <Compile Include="ForView.cs" />
@@ -103,7 +103,7 @@
     <Compile Include="Wrapper\UnitTestDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Assisticant\Assisticant.Portable.csproj">
+    <ProjectReference Include="..\Assisticant\Assisticant.Portable.csproj">
       <Project>{0F197CDB-CF38-438B-90AD-1B4F0976061E}</Project>
       <Name>Assisticant.Portable</Name>
     </ProjectReference>
