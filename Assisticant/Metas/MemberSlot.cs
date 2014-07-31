@@ -48,7 +48,7 @@ namespace Assisticant.Metas
 
         protected object WrapValue(object value)
         {
-            if (!Member.IsViewModel)
+            if (!Member.IsCollection && !Member.IsViewModel)
                 return value;
             if (value == null)
                 return null;

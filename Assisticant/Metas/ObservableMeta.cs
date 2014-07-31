@@ -36,7 +36,7 @@ namespace Assisticant.Metas
             if (unwrapped != null)
                 return new ObservableMeta(member, unwrapped);
             else
-                return null;
+                return member;
         }
 
         static Type UnwrapObservableType(Type observable)

@@ -25,7 +25,7 @@ namespace Assisticant.Metas
             Name = name;
             MemberType = type;
             IsViewModel = ViewModelTypes.IsViewModel(type);
-            IsCollection = typeof(IEnumerable).IsAssignableFromPortable(MemberType);
+            IsCollection = typeof(IEnumerable).IsAssignableFromPortable(MemberType) && MemberType != typeof(string);
         }
 
         public abstract void SetValue(object instance, object value);
@@ -33,7 +33,7 @@ namespace Assisticant.Metas
 
         public override string ToString()
         {
-            return String.Format("{0}.{1}", DeclaringType, Name);
+            return String.Format("{0}.{1}", DeclaringType.Type.Name, Name);
         }
     }
 }
