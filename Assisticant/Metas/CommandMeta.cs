@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Assisticant.XAML.Metas
+namespace Assisticant.Metas
 {
     public class CommandMeta : MemberMeta
     {

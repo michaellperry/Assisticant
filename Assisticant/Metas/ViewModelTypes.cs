@@ -10,7 +10,7 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Threading;
 
-namespace Assisticant.XAML.Metas
+namespace Assisticant.Metas
 {
     public static class ViewModelTypes
     {

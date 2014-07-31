@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assisticant.XAML.Descriptors
+namespace Assisticant.Descriptors
 {
     public class ProxyEventDescriptor : EventDescriptor
     {

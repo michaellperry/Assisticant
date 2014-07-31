@@ -12,7 +12,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace Assisticant.XAML.Metas
+namespace Assisticant.Metas
 {
     class CollectionItem : IDisposable
     {

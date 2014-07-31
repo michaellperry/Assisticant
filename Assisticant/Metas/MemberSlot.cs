@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assisticant.XAML.Metas
+namespace Assisticant.Metas
 {
     public abstract class MemberSlot
     {
