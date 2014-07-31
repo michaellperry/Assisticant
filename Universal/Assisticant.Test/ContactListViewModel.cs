@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Assisticant.Fields;
-using Assisticant.XAML;
 
 namespace Assisticant.Test
 {
