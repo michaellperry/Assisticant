@@ -7,8 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Reflection;
+#if WPF
 using System.Windows.Markup;
 using System.Windows.Threading;
+#endif
+#if UNIVERSAL
+using Windows.UI.Xaml;
+#endif
 
 namespace Assisticant.Metas
 {
@@ -19,15 +25,22 @@ namespace Assisticant.Metas
         {
             typeof(string),
             typeof(Uri),
+#if WPF
             typeof(Cursor),
             typeof(DispatcherObject),
+#endif
+#if UNIVERSAL
+            typeof(DependencyObject),
+#endif
             typeof(INotifyPropertyChanged),
             typeof(INotifyCollectionChanged),
             typeof(ICommand),
+#if WPF
             typeof(CommandBindingCollection),
             typeof(InputBindingCollection),
             typeof(InputScope),
             typeof(XmlLanguage),
+#endif
             typeof(IEnumerable)
         };
 
@@ -44,15 +57,16 @@ namespace Assisticant.Metas
 
         static bool IsViewModelUncached(Type type)
         {
-            if (type.IsValueType || type.IsPrimitive)
+            if (type.IsValueTypePortable() || type.IsPrimitivePortable())
                 return false;
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (type.IsGenericTypePortable() && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 return false;
             if (_disabledByDefault.Contains(type))
                 return false;
-            if (type.BaseType != null && type.BaseType != typeof(object) && !IsViewModel(type.BaseType))
+            var parent = type.BaseTypePortable();
+            if (parent != null && parent != typeof(object) && !IsViewModel(parent))
                 return false;
-            foreach (var iface in type.GetInterfaces())
+            foreach (var iface in type.GetInterfacesPortable())
                 if (!IsViewModel(iface))
                     return false;
             return true;

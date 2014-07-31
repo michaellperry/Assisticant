@@ -9,16 +9,32 @@
  * 
  **********************************************************************/
 
+#if WPF
 using System.Windows.Threading;
+#endif
 using System;
 using Assisticant.Timers;
+#if UNIVERSAL
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+#endif
+#if WPF
 using Assisticant.Descriptors;
+#endif
+#if UNIVERSAL
+using Assisticant.XamlTypes;
+#endif
 
 namespace Assisticant
 {
     public static class ForView
     {
+#if WPF
         private static Dispatcher _mainDispatcher;
+#endif
+#if UNIVERSAL
+        private static CoreDispatcher _mainDispatcher;
+#endif
 
         public static void Initialize()
         {
@@ -26,7 +42,12 @@ namespace Assisticant
             // on the UI thread.
             if (_mainDispatcher == null)
             {
+#if WPF
                 _mainDispatcher = Dispatcher.CurrentDispatcher;
+#endif
+#if UNIVERSAL
+                _mainDispatcher = Window.Current.Dispatcher;
+#endif
             }
             UpdateScheduler.Initialize(RunOnUIThread);
             FloatingTimeZone.Initialize(RunOnUIThread);
@@ -38,14 +59,13 @@ namespace Assisticant
         /// data binding with automatic updates.
         /// </summary>
         /// <param name="wrappedObject">The object to wrap for the view.</param>
-        /// <typeparam name="TWrappedObjectType">!!!DO NOT SPECIFY!!!</typeparam>
         /// <returns>An object suitable for data binding.</returns>
-        public static object Wrap<TWrappedObjectType>(TWrappedObjectType wrappedObject)
+        public static object Wrap(object wrappedObject)
         {
             Initialize();
             if (wrappedObject == null)
                 return null;
-            return Activator.CreateInstance(typeof(ViewProxy<>).MakeGenericType(wrappedObject.GetType()), wrappedObject);
+            return Activator.CreateInstance(typeof(PlatformProxy<>).MakeGenericType(wrappedObject.GetType()), wrappedObject);
         }
 
         /// <summary>
@@ -57,9 +77,9 @@ namespace Assisticant
         public static TViewModel Unwrap<TViewModel>(object dataContext)
             where TViewModel : class
         {
-            ViewProxy proxy = dataContext as ViewProxy;
+            PlatformProxy proxy = dataContext as PlatformProxy;
             if (proxy != null)
-                return proxy.ViewModel as TViewModel;
+                return proxy.Instance as TViewModel;
             return dataContext as TViewModel;
         }
 
@@ -78,5 +98,20 @@ namespace Assisticant
                 _mainDispatcher.BeginInvoke(action, DispatcherPriority.Background);
             }
         }
+#endif
+#if UNIVERSAL
+        private static async void RunOnUIThread(Action action)
+        {
+            if (_mainDispatcher != null)
+            {
+                await _mainDispatcher.RunAsync(
+                    CoreDispatcherPriority.Low,
+                    new DispatchedHandler(delegate
+                    {
+                        action();
+                    }));
+            }
+        }
+#endif
     }
 }

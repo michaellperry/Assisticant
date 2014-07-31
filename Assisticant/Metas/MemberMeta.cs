@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +13,8 @@ namespace Assisticant.Metas
         public readonly TypeMeta DeclaringType;
         public readonly string Name;
         public readonly Type MemberType;
-        public readonly bool IsViewModelType;
+        public readonly bool IsViewModel;
+        public readonly bool IsCollection;
 
         public virtual bool CanRead { get { return true; } }
         public virtual bool CanWrite { get { return true; } }
@@ -22,7 +24,8 @@ namespace Assisticant.Metas
             DeclaringType = owner;
             Name = name;
             MemberType = type;
-            IsViewModelType = ViewModelTypes.IsViewModel(type);
+            IsViewModel = ViewModelTypes.IsViewModel(type);
+            IsCollection = typeof(IEnumerable).IsAssignableFromPortable(MemberType);
         }
 
         public abstract void SetValue(object instance, object value);

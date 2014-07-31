@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Assisticant.XAML;
+using Assisticant;
 using Assisticant.Test;
 
 namespace Assisticant.Test.App

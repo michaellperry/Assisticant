@@ -112,10 +112,6 @@
       <Project>{b107c9d8-0f56-4923-bddd-92653ec82e5a}</Project>
       <Name>Assisticant.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Universal\Assisticant.XAML\Assisticant.XAML.csproj">
-      <Project>{6d17230d-75e8-41d5-b26c-6ad517e769fb}</Project>
-      <Name>Assisticant.XAML</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Assisticant\Assisticant.Universal.csproj">
       <Project>{c5174d32-d236-45e6-b44f-be6a5f1639de}</Project>
       <Name>Assisticant.Universal</Name>

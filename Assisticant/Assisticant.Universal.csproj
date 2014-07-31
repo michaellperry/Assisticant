@@ -54,6 +54,8 @@
     <Compile Include="..\Common\CommonProperties.cs">
       <Link>Properties\CommonProperties.cs</Link>
     </Compile>
+    <Compile Include="AssisticantReflectionUtils.cs" />
+    <Compile Include="BindingInterceptor.cs" />
     <Compile Include="Collections\ComputedDictionary.cs" />
     <Compile Include="Collections\ComputedList.cs" />
     <Compile Include="Collections\Impl\UpdateCollectionHelper.cs" />
@@ -62,8 +64,22 @@
     <Compile Include="Computed.cs" />
     <Compile Include="Fields\Computed.cs" />
     <Compile Include="Fields\Observable.cs" />
+    <Compile Include="ForView.cs" />
     <Compile Include="MakeCommand.cs" />
     <Compile Include="MemoizedTypeName.cs" />
+    <Compile Include="Metas\AtomSlot.cs" />
+    <Compile Include="Metas\CollectionItem.cs" />
+    <Compile Include="Metas\CollectionSlot.cs" />
+    <Compile Include="Metas\CommandMeta.cs" />
+    <Compile Include="Metas\FieldMeta.cs" />
+    <Compile Include="Metas\ViewProxy.cs" />
+    <Compile Include="Metas\MemberMeta.cs" />
+    <Compile Include="Metas\MemberSlot.cs" />
+    <Compile Include="Metas\MethodCommand.cs" />
+    <Compile Include="Metas\ObservableMeta.cs" />
+    <Compile Include="Metas\PropertyMeta.cs" />
+    <Compile Include="Metas\TypeMeta.cs" />
+    <Compile Include="Metas\ViewModelTypes.cs" />
     <Compile Include="NamedPrecedents.cs" />
     <Compile Include="Observable.cs" />
     <Compile Include="InertialProperty.cs" />
@@ -79,7 +95,15 @@
     <Compile Include="Timers\RisingTimeSpan.cs" />
     <Compile Include="Timers\UtcTimeZone.cs" />
     <Compile Include="UpdateScheduler.cs" />
+    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="ViewModelLocatorBase.cs" />
+    <Compile Include="XamlTypes\PlatformProxy.cs" />
+    <Compile Include="XamlTypes\PrimitiveXamlType.cs" />
+    <Compile Include="XamlTypes\ProxyXamlMember.cs" />
+    <Compile Include="XamlTypes\ProxyXamlMetadataProvider.cs" />
+    <Compile Include="XamlTypes\ProxyXamlType.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\portable-wpa81+win81\

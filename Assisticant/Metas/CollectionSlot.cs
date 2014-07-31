@@ -16,7 +16,7 @@ namespace Assisticant.Metas
         Action _delay;
         Func<IEnumerable, IEnumerable> _translateIncomingList;
 
-        public CollectionSlot(IViewProxy proxy, MemberMeta member)
+        public CollectionSlot(ViewProxy proxy, MemberMeta member)
             : base(proxy, member)
 		{
             if (member.CanRead)
@@ -36,11 +36,11 @@ namespace Assisticant.Metas
 			if (_translateIncomingList == null)
 			{
 				Type propType = Member.MemberType;
-				Type elemType = (propType.GetInterfaces().Concat(new Type[] { propType })
-					.FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)) ?? typeof(IEnumerable<object>))
-					.GetGenericArguments()[0];
-				MethodInfo mi = GetType().GetMethod("TranslateIncomingList", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(new Type[] { elemType });
-				_translateIncomingList = (Func<IEnumerable, IEnumerable>)Delegate.CreateDelegate(typeof(Func<IEnumerable, IEnumerable>), this, mi);
+				Type elemType = (propType.GetInterfacesPortable().Concat(new Type[] { propType })
+					.FirstOrDefault(i => i.IsGenericTypePortable() && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)) ?? typeof(IEnumerable<object>))
+					.GetGenericArgumentsPortable().First();
+				MethodInfo mi = GetType().GetMethodPortable("TranslateIncomingList").MakeGenericMethod(new Type[] { elemType });
+				_translateIncomingList = (Func<IEnumerable, IEnumerable>)mi.CreateDelegatePortable(typeof(Func<IEnumerable, IEnumerable>), this);
 			}
 			value = _translateIncomingList((IEnumerable)value);
 			Member.SetValue(Instance, value);

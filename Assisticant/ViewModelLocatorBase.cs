@@ -34,7 +34,12 @@ namespace Assisticant
 
         public ViewModelLocatorBase()
         {
+#if WPF
             _designMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
+#endif
+#if UNIVERSAL
+            _designMode = Windows.ApplicationModel.DesignMode.DesignModeEnabled;
+#endif
         }
 
         public bool DesignMode
@@ -42,15 +47,10 @@ namespace Assisticant
             get { return _designMode; }
         }
 
-        public object ViewModel(Func<object> constructor)
+        public object ViewModel(Func<object> constructor, [CallerMemberName] string propertyName = "")
         {
             if (DesignMode)
                 return constructor();
-
-            string caller = new StackFrame(1).GetMethod().Name;
-            if (!caller.StartsWith("get_"))
-                throw new ArgumentException("Only call ViewModel from a property getter.");
-            string propertyName = caller.Substring(4);
 
             ForView.Initialize();
             ViewModelContainer container;

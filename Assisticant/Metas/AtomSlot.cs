@@ -12,7 +12,7 @@ namespace Assisticant.Metas
         object _value;
 		bool _firePropertyChanged = false;
 
-        internal AtomSlot(IViewProxy proxy, MemberMeta member)
+        internal AtomSlot(ViewProxy proxy, MemberMeta member)
 			: base(proxy, member)
 		{
             if (member.CanRead)

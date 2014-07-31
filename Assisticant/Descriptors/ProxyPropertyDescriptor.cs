@@ -35,7 +35,7 @@ namespace Assisticant.Descriptors
         {
             _owner = owner;
             _meta = meta;
-            if (!meta.IsViewModelType)
+            if (!meta.IsViewModel)
                 _exposedType = meta.MemberType;
             else if (typeof(IEnumerable).IsAssignableFrom(meta.MemberType))
                 _exposedType = typeof(IEnumerable);

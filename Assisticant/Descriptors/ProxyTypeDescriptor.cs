@@ -19,7 +19,7 @@ namespace Assisticant.Descriptors
         public ProxyTypeDescriptor(Type type)
         {
             Meta = TypeMeta.Get(type);
-            ProxyType = typeof(ViewProxy<>).MakeGenericType(type);
+            ProxyType = typeof(PlatformProxy<>).MakeGenericType(type);
             _properties = Meta.Members.Select(m => new ProxyPropertyDescriptor(this, m)).ToArray();
             _propertyCollection = new PropertyDescriptorCollection(_properties);
             _events = new EventDescriptorCollection(type.GetEvents().Select(e => new ProxyEventDescriptor(e)).ToArray());
