@@ -12,11 +12,11 @@ namespace Assisticant.Descriptors
     {
         public override ICustomTypeDescriptor GetTypeDescriptor(Type objectType, object instance)
         {
-            var objectInstance = instance as ViewProxy;
+            var objectInstance = instance as PlatformProxy;
             if (objectInstance != null)
                 return objectInstance.GetTypeDescriptor();
 
-            if (objectType.IsGenericType && objectType.GetGenericTypeDefinition() == typeof(ViewProxy<>))
+            if (objectType.IsGenericType && objectType.GetGenericTypeDefinition() == typeof(PlatformProxy<>))
             {
                 var field = objectType.GetField("TypeDescriptor", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
                 return (ICustomTypeDescriptor)field.GetValue(null);

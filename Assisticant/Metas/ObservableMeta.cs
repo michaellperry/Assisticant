@@ -17,7 +17,7 @@ namespace Assisticant.Metas
             : base(observable.DeclaringType, observable.Name, unwrappedType)
         {
             UnderlyingMember = observable;
-            _valueProperty = observable.MemberType.GetProperty("Value");
+            _valueProperty = observable.MemberType.GetPropertyPortable("Value");
         }
 
 		public override object GetValue(object instance)
@@ -41,8 +41,8 @@ namespace Assisticant.Metas
 
         static Type UnwrapObservableType(Type observable)
         {
-            for (Type ancestor = observable; ancestor != typeof(object) && ancestor != null; ancestor = ancestor.BaseType)
-                if (ancestor.IsGenericType && ancestor.GetGenericTypeDefinition() == typeof(Observable<>))
+            for (Type ancestor = observable; ancestor != typeof(object) && ancestor != null; ancestor = ancestor.BaseTypePortable())
+                if (ancestor.IsGenericTypePortable() && ancestor.GetGenericTypeDefinition() == typeof(Observable<>))
                     return ancestor.GenericTypeArguments[0];
             return null;
         }

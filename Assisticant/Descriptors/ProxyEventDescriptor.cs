@@ -47,7 +47,7 @@ namespace Assisticant.Descriptors
 
         private static object Unwrap(object proxy)
         {
-            return ((ViewProxy)proxy).ViewModel;
+            return ((PlatformProxy)proxy).Instance;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Assisticant
 {
@@ -150,16 +151,7 @@ namespace Assisticant
 
         private IDictionary<string, ComputedPropertyBase> _computedPropertyByName = new Dictionary<string, ComputedPropertyBase>();
 
-        protected T Get<T>(Func<T> getMethod)
-        {
-            ForView.Initialize();
-            string caller = new StackFrame(1).GetMethod().Name;
-            if (!caller.StartsWith("get_"))
-                throw new ArgumentException("Only call Get from a property getter.");
-            return Get<T>(caller.Substring(4), getMethod);
-        }
-
-        protected T Get<T>(string propertyName, Func<T> getMethod)
+        protected T Get<T>(Func<T> getMethod, [CallerMemberName] string propertyName = "")
         {
             ForView.Initialize();
             ComputedPropertyBase property;
@@ -171,16 +163,7 @@ namespace Assisticant
             return (T)property.Value;
         }
 
-        protected IEnumerable<T> GetCollection<T>(Func<IEnumerable<T>> getMethod)
-        {
-            ForView.Initialize();
-            string caller = new StackFrame(1).GetMethod().Name;
-            if (!caller.StartsWith("get_"))
-                throw new ArgumentException("Only call Get from a property getter.");
-            return GetCollection<T>(caller.Substring(4), getMethod);
-        }
-
-        protected IEnumerable<T> GetCollection<T>(string propertyName, Func<IEnumerable<T>> getMethod)
+        protected IEnumerable<T> GetCollection<T>(Func<IEnumerable<T>> getMethod, [CallerMemberName] string propertyName = "")
         {
             ForView.Initialize();
             ComputedPropertyBase property;

@@ -37,8 +37,8 @@ namespace Assisticant.Metas
             var conditions = (from property in properties
                               where property.MemberType == typeof(bool) && property.Name.StartsWith("Can")
                               select property).ToList();
-            return from method in owner.Type.GetMethods()
-                   where method.ReturnType == typeof(void) && method.GetParameters().Length == 0
+            return from method in owner.Type.GetMethodsPortable()
+                   where method.IsPublic && !method.IsStatic && !method.IsSpecialName && method.ReturnType == typeof(void) && method.GetParameters().Length == 0
                    select new CommandMeta(owner, method, conditions.FirstOrDefault(c => c.Name == "Can" + method.Name));
         }
     }

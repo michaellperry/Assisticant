@@ -1,5 +1,4 @@
-﻿using Assisticant.Metas;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -7,48 +6,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assisticant.Descriptors
+namespace Assisticant.Metas
 {
     [DebuggerDisplay("ForView.Wrap({Instance})")]
-    public abstract class ViewProxy : IViewProxy, INotifyPropertyChanged, IDataErrorInfo, IEditableObject
+    public abstract class ViewProxy : INotifyPropertyChanged, IEditableObject
     {
         public readonly object Instance;
         readonly MemberSlot[] _slots;
 
-        public object ViewModel { get { return Instance; } }
-
-        public string Error
-        {
-            get
-            {
-                var errorInfo = Instance as IDataErrorInfo;
-                return errorInfo != null ? errorInfo.Error : null;
-            }
-        }
-
-        public string this[string columnName]
-        {
-            get
-            {
-                var errorInfo = Instance as IDataErrorInfo;
-                return errorInfo != null ? errorInfo[columnName] : null;
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ViewProxy(object instance)
+        public abstract ViewProxy WrapObject(object value);
+
+        protected ViewProxy(object instance, TypeMeta type)
         {
             Instance = instance;
-            _slots = (from member in GetTypeDescriptor().Meta.Members
+            _slots = (from member in type.Members
                       select MemberSlot.Create(this, member)).ToArray();
-        }
-
-        public abstract ProxyTypeDescriptor GetTypeDescriptor();
-
-        public MemberSlot LookupSlot(MemberMeta member)
-        {
-            return _slots.FirstOrDefault(s => s.Member == member);
         }
 
         public void FirePropertyChanged(string name)
@@ -57,11 +31,9 @@ namespace Assisticant.Descriptors
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
 
-        public IViewProxy WrapObject(object value)
+        public MemberSlot LookupSlot(MemberMeta member)
         {
-            if (value == null)
-                return null;
-            return (ViewProxy)Activator.CreateInstance(typeof(ViewProxy<>).MakeGenericType(value.GetType()), value);
+            return _slots.FirstOrDefault(s => s.Member == member);
         }
 
         public void BeginEdit()
@@ -104,22 +76,6 @@ namespace Assisticant.Descriptors
         public override string ToString()
         {
             return Instance.ToString();
-        }
-    }
-
-    [TypeDescriptionProvider(typeof(ProxyDescriptionProvider))]
-    public sealed class ViewProxy<TViewModel> : ViewProxy
-    {
-        public static readonly ProxyTypeDescriptor TypeDescriptor = new ProxyTypeDescriptor(typeof(TViewModel));
-
-        public ViewProxy(object instance)
-            : base(instance)
-        {
-        }
-
-        public override ProxyTypeDescriptor GetTypeDescriptor()
-        {
-            return TypeDescriptor;
         }
     }
 }

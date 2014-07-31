@@ -9,11 +9,11 @@ namespace Assisticant.Metas
 {
     public abstract class MemberSlot
     {
-        public readonly IViewProxy Proxy;
+        public readonly ViewProxy Proxy;
         public readonly MemberMeta Member;
-        public object Instance { get { return Proxy.ViewModel; } }
+        public object Instance { get { return Proxy.Instance; } }
 
-        protected MemberSlot(IViewProxy proxy, MemberMeta member)
+        protected MemberSlot(ViewProxy proxy, MemberMeta member)
         {
             Proxy = proxy;
             Member = member;
@@ -23,9 +23,9 @@ namespace Assisticant.Metas
         public abstract object GetValue();
         internal abstract void UpdateValue();
 
-        internal static MemberSlot Create(IViewProxy proxy, MemberMeta member)
+        internal static MemberSlot Create(ViewProxy proxy, MemberMeta member)
         {
-            if (typeof(IEnumerable).IsAssignableFrom(member.MemberType))
+            if (member.IsCollection)
                 return new CollectionSlot(proxy, member);
             else
                 return new AtomSlot(proxy, member);
@@ -38,17 +38,17 @@ namespace Assisticant.Metas
 
         protected object UnwrapValue(object value)
         {
-            if (!Member.IsViewModelType)
+            if (!Member.IsViewModel)
                 return value;
-            var proxy = value as IViewProxy;
+            var proxy = value as ViewProxy;
             if (proxy != null)
-                return proxy.ViewModel;
+                return proxy.Instance;
             return value;
         }
 
         protected object WrapValue(object value)
         {
-            if (!Member.IsViewModelType)
+            if (!Member.IsViewModel)
                 return value;
             if (value == null)
                 return null;
@@ -59,7 +59,7 @@ namespace Assisticant.Metas
 
         public override string ToString()
         {
-            return String.Format("{0}({1})", Member, Proxy.ViewModel);
+            return String.Format("{0}({1})", Member, Proxy.Instance);
         }
     }
 }

@@ -34,8 +34,9 @@ namespace Assisticant.Metas
 
         internal static IEnumerable<MemberMeta> GetAll(TypeMeta owner)
         {
-            return from property in owner.Type.GetFields()
-                   select new FieldMeta(owner, property);
+            return from field in owner.Type.GetFieldsPortable()
+                   where field.IsPublic && !field.IsStatic
+                   select new FieldMeta(owner, field);
         }
     }
 }
