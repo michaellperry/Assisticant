@@ -7,8 +7,8 @@
     <ProjectGuid>{A1077BA7-8697-4816-8BE9-F26DF8E4198E}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Assisticant.Test.App</RootNamespace>
-    <AssemblyName>Assisticant.Test.App</AssemblyName>
+    <RootNamespace>Assisticant.StoreApp</RootNamespace>
+    <AssemblyName>Assisticant.StoreApp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -108,11 +108,11 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\..\Universal\Assisticant.Test\Assisticant.Test.csproj">
+    <ProjectReference Include="..\Universal\Assisticant.Test\Assisticant.Test.csproj">
       <Project>{b107c9d8-0f56-4923-bddd-92653ec82e5a}</Project>
       <Name>Assisticant.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Assisticant\Assisticant.Universal.csproj">
+    <ProjectReference Include="..\Assisticant\Assisticant.Universal.csproj">
       <Project>{c5174d32-d236-45e6-b44f-be6a5f1639de}</Project>
       <Name>Assisticant.Universal</Name>
     </ProjectReference>
