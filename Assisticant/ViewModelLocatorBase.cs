@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Windows;
 
-namespace Assisticant.XAML
+namespace Assisticant
 {
     public class ViewModelLocatorBase : INotifyPropertyChanged
     {

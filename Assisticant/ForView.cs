@@ -12,9 +12,9 @@
 using System.Windows.Threading;
 using System;
 using Assisticant.Timers;
-using Assisticant.XAML.Descriptors;
+using Assisticant.Descriptors;
 
-namespace Assisticant.XAML
+namespace Assisticant
 {
     public static class ForView
     {

@@ -6,9 +6,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assisticant.XAML.Descriptors
+namespace Assisticant.Descriptors
 {
-    class ProxyDescriptionProvider : TypeDescriptionProvider
+    public class ProxyDescriptionProvider : TypeDescriptionProvider
     {
         public override ICustomTypeDescriptor GetTypeDescriptor(Type objectType, object instance)
         {

@@ -1,4 +1,4 @@
-﻿using Assisticant.XAML.Metas;
+﻿using Assisticant.Metas;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assisticant.XAML.Descriptors
+namespace Assisticant.Descriptors
 {
     [DebuggerDisplay("ForView.Wrap({Instance})")]
     public abstract class ViewProxy : IViewProxy, INotifyPropertyChanged, IDataErrorInfo, IEditableObject

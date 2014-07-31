@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assisticant.XAML.Metas
+namespace Assisticant.Metas
 {
     public class CollectionSlot : MemberSlot, IUpdatable
     {

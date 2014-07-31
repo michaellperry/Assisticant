@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace Assisticant.XAML
+namespace Assisticant
 {
     internal class CollectionItem<T> : IDisposable
     {
