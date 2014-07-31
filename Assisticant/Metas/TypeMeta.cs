@@ -29,5 +29,10 @@ namespace Assisticant.Metas
             }
             return result;
         }
+
+        public override string ToString()
+        {
+            return Type.ToString();
+        }
     }
 }
