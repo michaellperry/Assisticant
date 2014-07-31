@@ -1,7 +1,7 @@
 ﻿using System;
 using Assisticant;
 
-namespace Assisticant.Test
+namespace Assisticant.StoreApp.ViewModels
 {
 	public class ContactListNavigationModel
 	{

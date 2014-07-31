@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Assisticant;
 
-namespace Assisticant.Test
+namespace Assisticant.StoreApp.ViewModels
 {
 	public class ContactList
 	{

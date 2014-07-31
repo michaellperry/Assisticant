@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Assisticant.Test
+namespace Assisticant.StoreApp.ViewModels
 {
     public class PersonViewModelBase
 	{

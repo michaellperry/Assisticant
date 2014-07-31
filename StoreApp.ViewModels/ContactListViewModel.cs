@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Input;
 using Assisticant.Fields;
 
-namespace Assisticant.Test
+namespace Assisticant.StoreApp.ViewModels
 {
     public class ContactListViewModel
 	{

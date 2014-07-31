@@ -69,11 +69,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{B8210BF2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.UnitTest", "Portable\Assisticant.UnitTest\Assisticant.UnitTest.csproj", "{664C559F-A3E9-46AE-A3C5-D95E2E8FB5C2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Universal", "Universal", "{703939C8-C325-4EF6-88F9-85F4E463D963}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Universal", "Assisticant\Assisticant.Universal.csproj", "{C5174D32-D236-45E6-B44F-BE6A5F1639DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Test", "Universal\Assisticant.Test\Assisticant.Test.csproj", "{B107C9D8-0F56-4923-BDDD-92653EC82E5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.StoreApp.ViewModels", "StoreApp.ViewModels\Assisticant.StoreApp.ViewModels.csproj", "{B107C9D8-0F56-4923-BDDD-92653EC82E5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -199,6 +197,5 @@ Global
 		{A2802567-5D9B-4237-9BCE-DEF3066F2526} = {CB7CADA3-8466-4CED-A7BB-0A0A51D5280E}
 		{B8210BF2-0F3D-4204-9512-DA83421236A8} = {CB7CADA3-8466-4CED-A7BB-0A0A51D5280E}
 		{664C559F-A3E9-46AE-A3C5-D95E2E8FB5C2} = {0448634F-FB61-438A-A6F3-0144866310AF}
-		{B107C9D8-0F56-4923-BDDD-92653EC82E5A} = {703939C8-C325-4EF6-88F9-85F4E463D963}
 	EndGlobalSection
 EndGlobal

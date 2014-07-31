@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Assisticant;
-using Assisticant.Test;
+using Assisticant.StoreApp.ViewModels;
 
 namespace Assisticant.StoreApp
 {
