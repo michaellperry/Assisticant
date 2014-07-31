@@ -34,7 +34,13 @@ namespace Assisticant
             UpdateScheduler currentSet = _currentSet.Value;
             if (currentSet != null)
                 currentSet._updatables.Add(updatable);
-            else if (_runOnUIThread != null)
+            else
+                ScheduleBackgroundUpdate(updatable);
+        }
+
+        public static void ScheduleBackgroundUpdate(IUpdatable updatable)
+        {
+            if (_runOnUIThread != null)
                 _runOnUIThread(updatable.UpdateNow);
         }
 

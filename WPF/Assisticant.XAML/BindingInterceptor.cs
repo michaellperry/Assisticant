@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Assisticant.XAML.Metas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Assisticant.XAML.Wrapper;
 
 namespace Assisticant.XAML
 {
@@ -12,9 +12,9 @@ namespace Assisticant.XAML
     {
         public static BindingInterceptor Current = new BindingInterceptor();
 
-        public virtual object GetValue(ObjectProperty property) { return property.ContinueGetValue(); }
-        public virtual void SetValue(ObjectProperty property, object value) { property.ContinueSetValue(value); }
-        public virtual void UpdateValue(ObjectProperty property) { property.ContinueUpdateValue(); }
-        public virtual void Execute(ObjectPropertyCommand command) { command.ContinueExecute(); }
+        public virtual object GetValue(MemberSlot member) { return member.GetValue(); }
+        public virtual void SetValue(MemberSlot member, object value) { member.SetValue(value); }
+        public virtual void UpdateValue(MemberSlot member) { member.UpdateValue(); }
+        public virtual void Execute(MethodCommand command, object parameter) { command.ContinueExecute(parameter); }
     }
 }

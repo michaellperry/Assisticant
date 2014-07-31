@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Assisticant.XAML.Wrapper;
 using System.Diagnostics;
 using System.Windows;
 
