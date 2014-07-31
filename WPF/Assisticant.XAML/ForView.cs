@@ -9,10 +9,10 @@
  * 
  **********************************************************************/
 
-using Assisticant.XAML.Wrapper;
 using System.Windows.Threading;
 using System;
 using Assisticant.Timers;
+using Assisticant.XAML.Descriptors;
 
 namespace Assisticant.XAML
 {
@@ -45,26 +45,22 @@ namespace Assisticant.XAML
             Initialize();
             if (wrappedObject == null)
                 return null;
-            return typeof(ObjectInstance<>)
-				.MakeGenericType(wrappedObject.GetType())
-				.GetConstructor(new Type[] { typeof(object), typeof(Dispatcher) })
-				.Invoke(new object[] { wrappedObject, Dispatcher.CurrentDispatcher });
+            return Activator.CreateInstance(typeof(ViewProxy<>).MakeGenericType(wrappedObject.GetType()), wrappedObject);
         }
 
         /// <summary>
         /// Unwrap a DataContext to get back to the original object.
         /// </summary>
-        /// <typeparam name="TWrappedObjectType">The type of the object that was wrapped.</typeparam>
+        /// <typeparam name="TViewModel">The type of the object that was wrapped.</typeparam>
         /// <param name="dataContext">The DataContext previously wrapped.</param>
         /// <returns>The object originally wrapped, or null.</returns>
-        public static TWrappedObjectType Unwrap<TWrappedObjectType>(object dataContext)
-            where TWrappedObjectType : class
+        public static TViewModel Unwrap<TViewModel>(object dataContext)
+            where TViewModel : class
         {
-            IObjectInstance wrapper = dataContext as IObjectInstance;
-            return
-                wrapper == null
-                    ? default(TWrappedObjectType)
-                    : wrapper.WrappedObject as TWrappedObjectType;
+            ViewProxy proxy = dataContext as ViewProxy;
+            if (proxy != null)
+                return proxy.ViewModel as TViewModel;
+            return dataContext as TViewModel;
         }
 
         public static void Unwrap<TWrappedObjectType>(object dataContext, Action<TWrappedObjectType> action)

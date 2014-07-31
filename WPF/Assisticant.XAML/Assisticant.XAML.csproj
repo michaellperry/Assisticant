@@ -53,29 +53,28 @@
       <Link>Properties\CommonProperties.cs</Link>
     </Compile>
     <Compile Include="BindingInterceptor.cs" />
+    <Compile Include="Descriptors\ProxyDescriptionProvider.cs" />
+    <Compile Include="Descriptors\ProxyEventDescriptor.cs" />
+    <Compile Include="Descriptors\ProxyPropertyDescriptor.cs" />
+    <Compile Include="Descriptors\ProxyTypeDescriptor.cs" />
+    <Compile Include="Descriptors\ViewProxy.cs" />
     <Compile Include="ForView.cs" />
+    <Compile Include="Metas\AtomSlot.cs" />
+    <Compile Include="Metas\CollectionItem.cs" />
+    <Compile Include="Metas\CollectionSlot.cs" />
+    <Compile Include="Metas\IViewProxy.cs" />
+    <Compile Include="Metas\TypeMeta.cs" />
+    <Compile Include="Metas\CommandMeta.cs" />
+    <Compile Include="Metas\FieldMeta.cs" />
+    <Compile Include="Metas\MemberMeta.cs" />
+    <Compile Include="Metas\MemberSlot.cs" />
+    <Compile Include="Metas\MethodCommand.cs" />
+    <Compile Include="Metas\ObservableMeta.cs" />
+    <Compile Include="Metas\PropertyMeta.cs" />
+    <Compile Include="Metas\ViewModelTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="ViewModelLocatorBase.cs" />
-    <Compile Include="Wrapper\ClassEvent.cs" />
-    <Compile Include="Wrapper\ClassMemberCommand.cs" />
-    <Compile Include="Wrapper\ClassMemberField.cs" />
-    <Compile Include="Wrapper\ClassInstance.cs" />
-    <Compile Include="Wrapper\ClassInstanceProvider.cs" />
-    <Compile Include="Wrapper\ClassMemberObservable.cs" />
-    <Compile Include="Wrapper\ClassMemberProperty.cs" />
-    <Compile Include="Wrapper\CollectionItem.cs" />
-    <Compile Include="Wrapper\IObjectInstance.cs" />
-    <Compile Include="Wrapper\ObjectPropertyCommand.cs" />
-    <Compile Include="Wrapper\ObjectInstance.cs" />
-    <Compile Include="Wrapper\ObjectProperty.cs" />
-    <Compile Include="Wrapper\ObjectPropertyAtom.cs" />
-    <Compile Include="Wrapper\ObjectPropertyAtomNative.cs" />
-    <Compile Include="Wrapper\ObjectPropertyAtomObject.cs" />
-    <Compile Include="Wrapper\ObjectPropertyCollection.cs" />
-    <Compile Include="Wrapper\ObjectPropertyCollectionNative.cs" />
-    <Compile Include="Wrapper\ObjectPropertyCollectionObject.cs" />
-    <Compile Include="Wrapper\ClassMember.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Assisticant\Assisticant.Portable.csproj">
