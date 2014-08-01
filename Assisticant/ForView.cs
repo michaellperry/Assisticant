@@ -20,6 +20,9 @@ using Windows.UI.Xaml;
 #endif
 #if WPF
 using Assisticant.Descriptors;
+using Assisticant.Metas;
+using System.Windows.Input;
+using System.Windows.Markup;
 #endif
 #if UNIVERSAL
 using Assisticant.XamlTypes;
@@ -35,6 +38,17 @@ namespace Assisticant
 #if UNIVERSAL
         private static CoreDispatcher _mainDispatcher;
 #endif
+#if WPF
+        static readonly Type[] _disabledTypes = new[]
+        {
+            typeof(Cursor),
+            typeof(DispatcherObject),
+            typeof(CommandBindingCollection),
+            typeof(InputBindingCollection),
+            typeof(InputScope),
+            typeof(XmlLanguage)
+        };
+#endif
 
         public static void Initialize()
         {
@@ -48,9 +62,13 @@ namespace Assisticant
 #if UNIVERSAL
                 _mainDispatcher = Window.Current.Dispatcher;
 #endif
+                UpdateScheduler.Initialize(RunOnUIThread);
+                FloatingTimeZone.Initialize(RunOnUIThread);
+#if WPF
+                foreach (var type in _disabledTypes)
+                    ViewModelTypes.Disable(type);
+#endif
             }
-            UpdateScheduler.Initialize(RunOnUIThread);
-            FloatingTimeZone.Initialize(RunOnUIThread);
         }
 
         /// <summary>
