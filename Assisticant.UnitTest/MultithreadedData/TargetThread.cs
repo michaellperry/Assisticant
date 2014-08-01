@@ -5,27 +5,15 @@ using Assisticant.Fields;
 
 namespace Assisticant.UnitTest.MultithreadedData
 {
-    public class TargetThread
+    public class TargetThread : AbstractThread
     {
         private SourceThread[] _sources;
-        private Thread _thread;
         private Computed<int> _total;
 
         public TargetThread(SourceThread[] sources)
         {
             _sources = sources;
-            _thread = new Thread(ThreadProc);
             _total = new Computed<int>(() => _sources.Sum(source => source.Value));
-        }
-
-        public void Start()
-        {
-            _thread.Start();
-        }
-
-        public void Join()
-        {
-            _thread.Join();
         }
 
         public int Total
@@ -37,7 +25,7 @@ namespace Assisticant.UnitTest.MultithreadedData
             }
         }
 
-        private void ThreadProc()
+        protected override void ThreadProc()
         {
             for (int i = 0; i < SourceThread.MaxValue; i++)
             {
