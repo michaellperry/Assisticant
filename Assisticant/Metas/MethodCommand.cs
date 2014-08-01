@@ -9,11 +9,12 @@ using System.Windows.Input;
 
 namespace Assisticant.Metas
 {
-    public class MethodCommand : ICommand
+    public class MethodCommand : ICommand, IUpdatable
     {
         public readonly object Instance;
         public readonly CommandMeta Meta;
         readonly Computed<bool> _computedCan;
+        bool? lastCan;
 
         public event EventHandler CanExecuteChanged;
 
@@ -24,13 +25,16 @@ namespace Assisticant.Metas
             if (meta.Condition != null)
             {
                 _computedCan = new Computed<bool>(() => (bool)meta.Condition.GetValue(Instance));
-                _computedCan.Invalidated += InvalidateCanExecute;
+                _computedCan.Invalidated += () => UpdateScheduler.ScheduleUpdate(this);
             }
         }
 
         public bool CanExecute(object parameter)
         {
-            return _computedCan != null && _computedCan.Value;
+            if (_computedCan == null)
+                return false;
+            lastCan = _computedCan.Value;
+            return lastCan.Value;
         }
 
         public void Execute(object parameter)
@@ -43,9 +47,10 @@ namespace Assisticant.Metas
             Meta.Method.Invoke(Instance, new object[0]);
         }
 
-        void InvalidateCanExecute()
+        void IUpdatable.UpdateNow()
         {
-            if (CanExecuteChanged != null)
+            var can = _computedCan.Value;
+            if (lastCan != can && CanExecuteChanged != null)
                 CanExecuteChanged(this, EventArgs.Empty);
         }
     }
