@@ -32,7 +32,7 @@ namespace Assisticant.Metas
         public bool CanExecute(object parameter)
         {
             if (_computedCan == null)
-                return false;
+                return true;
             lastCan = _computedCan.Value;
             return lastCan.Value;
         }
