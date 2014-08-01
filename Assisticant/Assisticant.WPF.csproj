@@ -53,26 +53,12 @@
     <Compile Include="..\Common\CommonProperties.cs">
       <Link>Properties\CommonProperties.cs</Link>
     </Compile>
-    <Compile Include="BindingInterceptor.cs" />
     <Compile Include="Descriptors\ProxyDescriptionProvider.cs" />
     <Compile Include="Descriptors\ProxyEventDescriptor.cs" />
     <Compile Include="Descriptors\ProxyPropertyDescriptor.cs" />
     <Compile Include="Descriptors\ProxyTypeDescriptor.cs" />
     <Compile Include="Descriptors\PlatformProxy.cs" />
     <Compile Include="ForView.cs" />
-    <Compile Include="Metas\AtomSlot.cs" />
-    <Compile Include="Metas\CollectionItem.cs" />
-    <Compile Include="Metas\CollectionSlot.cs" />
-    <Compile Include="Metas\TypeMeta.cs" />
-    <Compile Include="Metas\CommandMeta.cs" />
-    <Compile Include="Metas\FieldMeta.cs" />
-    <Compile Include="Metas\MemberMeta.cs" />
-    <Compile Include="Metas\MemberSlot.cs" />
-    <Compile Include="Metas\MethodCommand.cs" />
-    <Compile Include="Metas\ObservableMeta.cs" />
-    <Compile Include="Metas\PropertyMeta.cs" />
-    <Compile Include="Metas\ViewModelTypes.cs" />
-    <Compile Include="Metas\ViewProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="ViewModelLocatorBase.cs" />

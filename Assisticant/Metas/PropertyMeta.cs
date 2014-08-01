@@ -33,7 +33,7 @@ namespace Assisticant.Metas
         internal static IEnumerable<MemberMeta> GetAll(TypeMeta owner)
         {
             return from property in owner.Type.GetPropertiesPortable()
-                   where property.CanRead && property.GetMethod.IsPublic && !property.GetMethod.IsStatic
+                   where property.CanRead && property.GetGetMethodPortable().IsPublic && !property.GetGetMethodPortable().IsStatic
                    select new PropertyMeta(owner, property);
         }
     }
