@@ -48,6 +48,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Portable\Debug\Assisticant.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,6 +58,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Portable\Release\Assisticant.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -129,11 +133,17 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\portable-net45+sl50+wp80+win80\
-xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\net45\
-xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\sl5\
-xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\wp80\
-xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\win80\</PostBuildEvent>
+    <PostBuildEvent>for %25%25f in (
+"$(SolutionDir)NuGet\Core\lib\portable-net45+sl50+wp80+win80\"
+"$(SolutionDir)NuGet\Core\lib\net45\"
+"$(SolutionDir)NuGet\Core\lib\sl5\"
+"$(SolutionDir)NuGet\Core\lib\wp80\"
+"$(SolutionDir)NuGet\Core\lib\win80\"
+) do (
+xcopy /y $(TargetPath) "%25%25~f"
+xcopy /y $(TargetDir)$(TargetName).xml "%25%25~f"
+)
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
