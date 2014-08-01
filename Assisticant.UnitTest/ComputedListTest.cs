@@ -1,5 +1,9 @@
 ﻿using System.Linq;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 using Assisticant.Collections;
 using Assisticant.UnitTest.ContactListData;
 

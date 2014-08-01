@@ -1,5 +1,8 @@
 using System;
 using System.Threading;
+#if NETFX_CORE
+using Windows.System.Threading;
+#endif
 using Assisticant.Fields;
 
 namespace Assisticant.UnitTest
@@ -14,7 +17,11 @@ namespace Assisticant.UnitTest
 			get
 			{
 				int result = _sourceProperty;
+#if NETFX_CORE
+                var ignored = ThreadPool.RunAsync(wi =>
+#else
 				ThreadPool.QueueUserWorkItem(o =>
+#endif
 				{
 					if (AfterGet != null)
 						AfterGet();
