@@ -25,6 +25,8 @@
     <DefineConstants>TRACE;DEBUG;UNIVERSAL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Universal\Debug\Assisticant.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +35,8 @@
     <DefineConstants>TRACE;UNIVERSAL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Universal\Release\Assisticant.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -107,9 +111,15 @@
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\portable-wpa81+win81\
-xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\wpa81\
-xcopy /y $(TargetPath) $(SolutionDir)NuGet\Core\lib\win81\</PostBuildEvent>
+    <PostBuildEvent>for %25%25f in (
+"$(SolutionDir)NuGet\Core\lib\portable-wpa81+win81\"
+"$(SolutionDir)NuGet\Core\lib\wpa81\"
+"$(SolutionDir)NuGet\Core\lib\win81\"
+) do (
+xcopy /y $(TargetPath) "%25%25~f"
+xcopy /y $(TargetDir)$(TargetName).xml "%25%25~f"
+)
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
