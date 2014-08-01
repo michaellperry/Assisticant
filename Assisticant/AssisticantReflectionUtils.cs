@@ -73,7 +73,7 @@ namespace Assisticant
         public static IEnumerable<PropertyInfo> GetPropertiesPortable(this Type type) { return type.GetProperties(AllFlags); }
         public static IEnumerable<FieldInfo> GetFieldsPortable(this Type type) { return type.GetFields(AllFlags); }
         public static IEnumerable<MethodInfo> GetMethodsPortable(this Type type) { return type.GetMethods(AllFlags); }
-        public static MethodInfo GetGetMethodPortable(this PropertyInfo property) { return property.GetGetMethod(); }
+        public static MethodInfo GetGetMethodPortable(this PropertyInfo property) { return property.GetGetMethod(true); }
 #endif
     }
 }
