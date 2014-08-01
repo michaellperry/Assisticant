@@ -57,6 +57,7 @@ namespace Assisticant
                 foreach (var inherited in parent.GetMembersPortable(getDeclared))
                     yield return inherited;
         }
+        public static MethodInfo GetGetMethodPortable(this PropertyInfo property) { return property.GetMethod; }
 #else
         static readonly BindingFlags AllFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
         public static Delegate CreateDelegatePortable(this MethodInfo method, Type delegateType, object target) { return Delegate.CreateDelegate(delegateType, target, method); }
@@ -72,6 +73,7 @@ namespace Assisticant
         public static IEnumerable<PropertyInfo> GetPropertiesPortable(this Type type) { return type.GetProperties(AllFlags); }
         public static IEnumerable<FieldInfo> GetFieldsPortable(this Type type) { return type.GetFields(AllFlags); }
         public static IEnumerable<MethodInfo> GetMethodsPortable(this Type type) { return type.GetMethods(AllFlags); }
+        public static MethodInfo GetGetMethodPortable(this PropertyInfo property) { return property.GetGetMethod(); }
 #endif
     }
 }

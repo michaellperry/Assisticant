@@ -67,6 +67,7 @@
     <Compile Include="..\Common\CommonProperties.cs">
       <Link>Properties\CommonProperties.cs</Link>
     </Compile>
+    <Compile Include="BindingInterceptor.cs" />
     <Compile Include="Collections\ComputedDictionary.cs" />
     <Compile Include="Collections\ComputedList.cs" />
     <Compile Include="Collections\Impl\UpdateCollectionHelper.cs" />
@@ -76,6 +77,19 @@
     <Compile Include="DependentJob.cs" />
     <Compile Include="Fields\Computed.cs" />
     <Compile Include="Fields\Observable.cs" />
+    <Compile Include="Metas\AtomSlot.cs" />
+    <Compile Include="Metas\CollectionItem.cs" />
+    <Compile Include="Metas\CollectionSlot.cs" />
+    <Compile Include="Metas\CommandMeta.cs" />
+    <Compile Include="Metas\FieldMeta.cs" />
+    <Compile Include="Metas\MemberMeta.cs" />
+    <Compile Include="Metas\MemberSlot.cs" />
+    <Compile Include="Metas\MethodCommand.cs" />
+    <Compile Include="Metas\ObservableMeta.cs" />
+    <Compile Include="Metas\PropertyMeta.cs" />
+    <Compile Include="Metas\TypeMeta.cs" />
+    <Compile Include="Metas\ViewModelTypes.cs" />
+    <Compile Include="Metas\ViewProxy.cs" />
     <Compile Include="Observable.cs" />
     <Compile Include="InertialProperty.cs" />
     <Compile Include="MemoizedTypeName.cs" />

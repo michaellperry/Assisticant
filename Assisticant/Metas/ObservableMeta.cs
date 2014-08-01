@@ -22,12 +22,12 @@ namespace Assisticant.Metas
 
 		public override object GetValue(object instance)
 		{
-            return _valueProperty.GetValue(UnderlyingMember.GetValue(instance));
+            return _valueProperty.GetValue(UnderlyingMember.GetValue(instance), null);
 		}
 
         public override void SetValue(object instance, object value)
 		{
-            _valueProperty.SetValue(UnderlyingMember.GetValue(instance), value);
+            _valueProperty.SetValue(UnderlyingMember.GetValue(instance), value, null);
 		}
 
         internal static MemberMeta Intercept(MemberMeta member)
@@ -43,7 +43,7 @@ namespace Assisticant.Metas
         {
             for (Type ancestor = observable; ancestor != typeof(object) && ancestor != null; ancestor = ancestor.BaseTypePortable())
                 if (ancestor.IsGenericTypePortable() && ancestor.GetGenericTypeDefinition() == typeof(Observable<>))
-                    return ancestor.GenericTypeArguments[0];
+                    return ancestor.GetGenericArgumentsPortable().First();
             return null;
         }
     }
