@@ -8,10 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Reflection;
-#if WPF
-using System.Windows.Markup;
-using System.Windows.Threading;
-#endif
 #if UNIVERSAL
 using Windows.UI.Xaml;
 #endif
@@ -25,24 +21,20 @@ namespace Assisticant.Metas
         {
             typeof(string),
             typeof(Uri),
-#if WPF
-            typeof(Cursor),
-            typeof(DispatcherObject),
-#endif
 #if UNIVERSAL
             typeof(DependencyObject),
 #endif
             typeof(INotifyPropertyChanged),
             typeof(INotifyCollectionChanged),
             typeof(ICommand),
-#if WPF
-            typeof(CommandBindingCollection),
-            typeof(InputBindingCollection),
-            typeof(InputScope),
-            typeof(XmlLanguage),
-#endif
             typeof(IEnumerable)
         };
+
+        public static void Disable(Type type)
+        {
+            lock (_cache)
+                _cache[type] = false;
+        }
 
         public static bool IsViewModel(Type type)
         {
