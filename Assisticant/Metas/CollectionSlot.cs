@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Assisticant.Metas
 {
-    public class CollectionSlot : MemberSlot, IUpdatable
+    public class CollectionSlot : MemberSlot
     {
 		ObservableCollection<object> _collection = new ObservableCollection<object>();
         readonly Computed _computed;
@@ -25,7 +25,7 @@ namespace Assisticant.Metas
                 _computed = new Computed(() => BindingInterceptor.Current.UpdateValue(this));
 
                 // When the property becomes out of date, trigger an update.
-                _computed.Invalidated += () => UpdateScheduler.ScheduleBackgroundUpdate(this);
+                _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
             }
         }
 
@@ -54,7 +54,7 @@ namespace Assisticant.Metas
 
         public override object GetValue()
         {
-            ((IUpdatable)this).UpdateNow();
+            UpdateNow();
             return _collection;
         }
 
@@ -114,7 +114,7 @@ namespace Assisticant.Metas
 			return translated;
 		}
 
-        void IUpdatable.UpdateNow()
+        private void UpdateNow()
         {
             _computed.OnGet();
             if (_delay != null)

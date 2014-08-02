@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assisticant.Metas
 {
-    public class AtomSlot : MemberSlot, IUpdatable
+    public class AtomSlot : MemberSlot
     {
         readonly Computed _computed;
         object _value;
@@ -23,7 +23,7 @@ namespace Assisticant.Metas
                 // The update should have lower priority than user input & drawing,
                 // to ensure that the app doesn't lock up in case a large model is 
                 // being updated outside the UI (e.g. via timers or the network).
-                _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(this);
+                _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
             }
 		}
 
@@ -40,8 +40,8 @@ namespace Assisticant.Metas
             {
                 if (scheduler != null)
                 {
-                    foreach (IUpdatable updatable in scheduler.End())
-                        updatable.UpdateNow();
+                    foreach (Action updatable in scheduler.End())
+                        updatable();
                 }
             }
 		}
@@ -64,7 +64,7 @@ namespace Assisticant.Metas
             _firePropertyChanged = true;
         }
 
-        void IUpdatable.UpdateNow()
+        private void UpdateNow()
         {
             _computed.OnGet();
         }

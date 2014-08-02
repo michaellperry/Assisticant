@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Assisticant
 {
-    public class ComputedJob : IUpdatable, IDisposable
+    public class ComputedJob : IDisposable
     {
         Computed _computed;
         bool _running;
@@ -13,7 +13,7 @@ namespace Assisticant
         public ComputedJob(Action action)
         {
             _computed = new Computed(action);
-            _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(this);
+            _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
         }
 
         public void Start()
@@ -21,7 +21,7 @@ namespace Assisticant
             if (_computed == null)
                 throw new InvalidOperationException("Cannot restart ComputedJob");
             _running = true;
-            UpdateScheduler.ScheduleUpdate(this);
+            UpdateScheduler.ScheduleUpdate(UpdateNow);
         }
 
         public void Stop()
@@ -33,7 +33,7 @@ namespace Assisticant
 
         public void Dispose() { Stop(); }
 
-        void IUpdatable.UpdateNow()
+        private void UpdateNow()
         {
             if (_running)
                 _computed.OnGet();

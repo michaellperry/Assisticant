@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Assisticant.Metas
 {
-    public class MethodCommand : ICommand, IUpdatable
+    public class MethodCommand : ICommand
     {
         public readonly object Instance;
         public readonly CommandMeta Meta;
@@ -25,7 +25,7 @@ namespace Assisticant.Metas
             if (meta.Condition != null)
             {
                 _computedCan = new Computed<bool>(() => (bool)meta.Condition.GetValue(Instance));
-                _computedCan.Invalidated += () => UpdateScheduler.ScheduleUpdate(this);
+                _computedCan.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
             }
         }
 
@@ -47,7 +47,7 @@ namespace Assisticant.Metas
             Meta.Method.Invoke(Instance, new object[0]);
         }
 
-        void IUpdatable.UpdateNow()
+        private void UpdateNow()
         {
             var can = _computedCan.Value;
             if (lastCan != can && CanExecuteChanged != null)
