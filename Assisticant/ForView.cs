@@ -109,6 +109,7 @@ namespace Assisticant
                 action(viewModel);
         }
 
+#if WPF
         private static void RunOnUIThread(Action action)
         {
             if (_mainDispatcher != null)
