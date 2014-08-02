@@ -23,9 +23,12 @@ using Assisticant.Descriptors;
 using Assisticant.Metas;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Controls;
+using System.Windows;
 #endif
 #if UNIVERSAL
 using Assisticant.XamlTypes;
+using Windows.UI.Xaml.Controls;
 #endif
 
 namespace Assisticant

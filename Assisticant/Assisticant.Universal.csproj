@@ -101,6 +101,7 @@
     <Compile Include="UpdateScheduler.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="ViewModelLocatorBase.cs" />
+    <Compile Include="ViewSelector.cs" />
     <Compile Include="XamlTypes\PlatformProxy.cs" />
     <Compile Include="XamlTypes\PrimitiveXamlType.cs" />
     <Compile Include="XamlTypes\ProxyXamlMember.cs" />
