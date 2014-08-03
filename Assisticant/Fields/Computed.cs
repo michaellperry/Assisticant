@@ -48,6 +48,11 @@ namespace Assisticant.Fields
 			return computed.Value;
 		}
 
+        public ComputedSubscription Subscribe(Action<T> whenChanged)
+        {
+            return new ComputedSubscription(this, () => whenChanged(this));
+        }
+
 		public override string VisualizerName(bool withValue)
 		{
 			string s = VisualizerName(_name ?? "NamedComputed");
