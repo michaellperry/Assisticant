@@ -8,9 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Reflection;
-#if UNIVERSAL
-using Windows.UI.Xaml;
-#endif
 
 namespace Assisticant.Metas
 {
@@ -19,11 +16,6 @@ namespace Assisticant.Metas
         static readonly Dictionary<Type, bool> _cache = new Dictionary<Type, bool>();
         static readonly Type[] _disabledByDefault = new[]
         {
-            typeof(string),
-            typeof(Uri),
-#if UNIVERSAL
-            typeof(DependencyObject),
-#endif
             typeof(INotifyPropertyChanged),
             typeof(INotifyCollectionChanged),
             typeof(ICommand),
@@ -52,6 +44,8 @@ namespace Assisticant.Metas
             if (type.IsValueTypePortable() || type.IsPrimitivePortable())
                 return false;
             if (type.IsGenericTypePortable() && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                return false;
+            if (type.IsClassPortable() && type != typeof(object) && (type.FullName.StartsWith("System.") || type.FullName.StartsWith("Windows.")))
                 return false;
             if (_disabledByDefault.Contains(type))
                 return false;
