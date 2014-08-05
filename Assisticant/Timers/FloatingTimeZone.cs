@@ -94,7 +94,7 @@ namespace Assisticant.Timers
                 _forth.Add(timer);
                 timer.Expire(false);
             }
-            foreach (var timer in _back.Where(t => t.ExpirationTime <= now).ToList())
+            foreach (var timer in _forth.Where(t => t.ExpirationTime <= now).ToList())
             {
                 _forth.Remove(timer);
                 _back.Add(timer);
