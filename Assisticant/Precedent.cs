@@ -25,13 +25,10 @@ namespace Assisticant
     /// </remarks>
     public abstract class Precedent
     {
-		internal class DependentNode
-        {
-            public WeakReference Computed;
-            public DependentNode Next;
-        }
+        const int _maxArraySize = 16;
 
-        internal DependentNode _firstDependent = null;
+        WeakReference[] _computedArray;
+        WeakHashSet<Computed> _computedHash;
 
         /// <summary>
         /// Method called when the first dependent references this field. This event only
@@ -80,13 +77,15 @@ namespace Assisticant
         /// </summary>
         internal void MakeDependentsOutOfDate()
         {
-            // When I make a dependent out-of-date, it will
-            // call RemoveComputed, thereby removing it from
-            // the list.
-            Computed first;
-            while ((first = First()) != null)
+            if (_computedArray != null)
             {
-                first.MakeOutOfDate();
+                foreach (var computed in WeakArray.Enumerate<Computed>(_computedArray).ToList())
+                    computed.MakeOutOfDate();
+            }
+            else if (_computedHash != null)
+            {
+                foreach (var computed in _computedHash.ToList())
+                    computed.MakeOutOfDate();
             }
         }
 
@@ -119,39 +118,49 @@ namespace Assisticant
         {
             lock (this)
             {
-                bool first = _firstDependent == null;
-                _firstDependent = new DependentNode { Computed = new WeakReference(update), Next = _firstDependent };
+                if (_computedHash != null)
+                {
+                    _computedHash.Add(update);
+                    return false;
+                }
+                if (WeakArray.Contains(ref _computedArray, update))
+                    return false;
+                bool first = _computedArray == null;
+                if (WeakArray.GetCount(ref _computedArray) >= _maxArraySize)
+                {
+                    _computedHash = new WeakHashSet<Computed>();
+                    foreach (var item in WeakArray.Enumerate<Computed>(_computedArray))
+                        _computedHash.Add(item);
+                    _computedArray = null;
+                    _computedHash.Add(update);
+                    return false;
+                }
+                WeakArray.Add(ref _computedArray, update);
                 return first;
             }
         }
-
-        private static int _referenceCount = 0;
 
         private bool Delete(Computed dependent)
         {
             lock (this)
             {
-                int count = 0;
-                DependentNode prior = null;
-                for (DependentNode current = _firstDependent; current != null; current = current.Next)
+                if (_computedArray != null)
                 {
-                    object target = current.Computed.Target;
-                    if (target == null || target == dependent)
-                    {
-                        if (target == null)
-                            System.Diagnostics.Debug.WriteLine(String.Format("Dead reference {0}", _referenceCount++));
-                        if (target == dependent)
-                            ++count;
-                        if (prior == null)
-                            _firstDependent = current.Next;
-                        else
-                            prior.Next = current.Next;
-                    }
-                    else
-                        prior = current;
+                    WeakArray.Remove(ref _computedArray, dependent);
+                    return _computedArray == null;
                 }
-				if (count != 1) Debug.Assert(false, String.Format("Expected 1 dependent, found {0}.", count));
-                return _firstDependent == null;
+                else if (_computedHash != null)
+                {
+                    _computedHash.Remove(dependent);
+                    if (_computedHash.Count == 0)
+                    {
+                        _computedHash = null;
+                        return true;
+                    }
+                    return false;
+                }
+                else
+                    return false;
             }
         }
 
@@ -159,10 +168,12 @@ namespace Assisticant
         {
             lock (this)
             {
-                for (DependentNode current = _firstDependent; current != null; current = current.Next)
-                    if (current.Computed.Target == update)
-                        return true;
-                return false;
+                if (_computedArray != null)
+                    return WeakArray.Contains(ref _computedArray, update);
+                else if (_computedHash != null)
+                    return _computedHash.Contains(update);
+                else
+                    return false;
             }
         }
 
@@ -170,23 +181,7 @@ namespace Assisticant
         {
             lock (this)
             {
-                return _firstDependent != null;
-            }
-        }
-
-        private Computed First()
-        {
-            lock (this)
-            {
-                while (_firstDependent != null)
-                {
-                    Computed dependent = (Computed)_firstDependent.Computed.Target;
-                    if (dependent != null)
-                        return dependent;
-                    else
-                        _firstDependent = _firstDependent.Next;
-                }
-                return null;
+                return _computedArray != null || _computedHash != null;
             }
         }
 
@@ -248,12 +243,16 @@ namespace Assisticant
 					var list = new List<DependentVisualizer>();
 					lock (_self)
 					{
-						for (DependentNode current = _self._firstDependent; current != null; current = current.Next)
-						{
-							var dep = current.Computed.Target as Computed;
-							if (dep != null)
-								list.Add(new DependentVisualizer(dep));
-						}
+                        if (_self._computedArray != null)
+                        {
+                            foreach (var item in WeakArray.Enumerate<Computed>(_self._computedArray))
+                                list.Add(new DependentVisualizer(item));
+                        }
+                        else if (_self._computedHash != null)
+                        {
+                            foreach (var item in _self._computedHash)
+                                list.Add(new DependentVisualizer(item));
+                        }
 
 						list.Sort((a, b) => a.ToString().CompareTo(b.ToString()));
 

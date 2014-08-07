@@ -82,6 +82,7 @@
     <Compile Include="Fields\Computed.cs" />
     <Compile Include="Fields\Observable.cs" />
     <Compile Include="Fields\ComputedSubscription.cs" />
+    <Compile Include="WeakArray.cs" />
     <Compile Include="Metas\AtomSlot.cs" />
     <Compile Include="Metas\CollectionItem.cs" />
     <Compile Include="Metas\CollectionSlot.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Timers\UtcTimeZone.cs" />
     <Compile Include="MakeCommand.cs" />
     <Compile Include="UpdateScheduler.cs" />
+    <Compile Include="WeakHashSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
