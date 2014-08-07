@@ -43,7 +43,7 @@ namespace Assisticant.UnitTest
             // Custom linked list implementation for dependents: 48.
             // Other optimizations: 40.
             // Removed WeakReferenceToSelf: 20.
-            Assert.AreEqual(20 + ObservablePlatformOffset, end - start);
+            Assert.AreEqual(24 + ObservablePlatformOffset, end - start);
 
             int value = newObservable;
             Assert.AreEqual(42, value);
@@ -67,7 +67,7 @@ namespace Assisticant.UnitTest
             // Other optimizations: 104.
 			// Added WeakReferenceToSelf: 108.
             // Removed WeakReferenceToSelf: 104.
-            Assert.AreEqual(104 + ComputedPlatformOffset, end - start);
+            Assert.AreEqual(108 + ComputedPlatformOffset, end - start);
 
             int value = newComputed;
             Assert.AreEqual(42, value);
@@ -93,7 +93,7 @@ namespace Assisticant.UnitTest
             // Other optimizations: 144.
 			// Added WeakReferenceToSelf: 148.
             // Removed WeakReferenceToSelf: 124.
-			Assert.AreEqual(124 + ObservablePlatformOffset, end - start);
+			Assert.AreEqual(132 + ObservablePlatformOffset, end - start);
 
             int value = newComputed;
             Assert.AreEqual(42, value);

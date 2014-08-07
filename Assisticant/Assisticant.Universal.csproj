@@ -103,6 +103,8 @@
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="ViewModelLocatorBase.cs" />
     <Compile Include="ViewSelector.cs" />
+    <Compile Include="WeakArray.cs" />
+    <Compile Include="WeakHashSet.cs" />
     <Compile Include="XamlTypes\PlatformProxy.cs" />
     <Compile Include="XamlTypes\PrimitiveXamlType.cs" />
     <Compile Include="XamlTypes\ProxyXamlMember.cs" />
