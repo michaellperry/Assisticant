@@ -68,6 +68,7 @@
     <Compile Include="IndirectConcurrencyTest.cs" />
     <Compile Include="IndirectComputed.cs" />
     <Compile Include="IndirectComputedTest.cs" />
+    <Compile Include="LargeListTest.cs" />
     <Compile Include="MemoryLeakTest.cs" />
     <Compile Include="MultithreadedData\AbstractThread.cs" />
     <Compile Include="MultithreadedData\SourceThread.cs" />
