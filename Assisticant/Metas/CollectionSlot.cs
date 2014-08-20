@@ -11,22 +11,13 @@ namespace Assisticant.Metas
 {
     public class CollectionSlot : MemberSlot
     {
+        List<object> _sourceCollection;
 		ObservableCollection<object> _collection = new ObservableCollection<object>();
-        readonly Computed _computed;
-        Action _delay;
         Func<IEnumerable, IEnumerable> _translateIncomingList;
 
         public CollectionSlot(ViewProxy proxy, MemberMeta member)
             : base(proxy, member)
 		{
-            if (member.CanRead)
-            {
-                // When the collection is out of date, update it from the wrapped object.
-                _computed = new Computed(() => BindingInterceptor.Current.UpdateValue(this));
-
-                // When the property becomes out of date, trigger an update.
-                _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
-            }
         }
 
         public override void SetValue(object value)
@@ -64,46 +55,57 @@ namespace Assisticant.Metas
             IEnumerable source = Member.GetValue(Instance) as IEnumerable;
             if (source == null)
             {
-                _collection = null;
+                _sourceCollection = null;
                 return;
             }
 
-            List<object> sourceCollection = source.OfType<object>().ToList();
+            _sourceCollection = source.OfType<object>().ToList();
 
             // Delay the update to the observable collection so that we don't record dependencies on
             // properties used in the items template. XAML will invoke the item template synchronously
             // as we add items to the observable collection, thus causing other view model property
             // getters to fire.
-            _delay = delegate
+        }
+
+        protected override void PublishChanges()
+        {
+            if (_sourceCollection == null)
             {
-                if (_collection == null)
+                if (_collection != null)
                 {
-                    _collection = new ObservableCollection<object>();
+                    _collection = null;
                     FirePropertyChanged();
                 }
+                return;
+            }
 
-                // Create a list of new items.
-                List<CollectionItem> items = new List<CollectionItem>();
+            if (_collection == null)
+            {
+                _collection = new ObservableCollection<object>();
+                FirePropertyChanged();
+            }
 
-                // Dump all previous items into a recycle bin.
-                using (RecycleBin<CollectionItem> bin = new RecycleBin<CollectionItem>())
-                {
-                    foreach (object oldItem in _collection)
-                        bin.AddObject(new CollectionItem(_collection, oldItem, true));
-                    // Add new objects to the list.
-                    if (sourceCollection != null)
-                        foreach (object obj in sourceCollection)
-                            items.Add(bin.Extract(new CollectionItem(_collection, WrapValue(obj), false)));
-                    // All deleted items are removed from the collection at this point.
-                }
-                // Ensure that all items are added to the list.
-                int index = 0;
-                foreach (CollectionItem item in items)
-                {
-                    item.EnsureInCollection(index);
-                    ++index;
-                }
-            };
+            // Create a list of new items.
+            List<CollectionItem> items = new List<CollectionItem>();
+
+            // Dump all previous items into a recycle bin.
+            using (RecycleBin<CollectionItem> bin = new RecycleBin<CollectionItem>())
+            {
+                foreach (object oldItem in _collection)
+                    bin.AddObject(new CollectionItem(_collection, oldItem, true));
+                // Add new objects to the list.
+                if (_sourceCollection != null)
+                    foreach (object obj in _sourceCollection)
+                        items.Add(bin.Extract(new CollectionItem(_collection, WrapValue(obj), false)));
+                // All deleted items are removed from the collection at this point.
+            }
+            // Ensure that all items are added to the list.
+            int index = 0;
+            foreach (CollectionItem item in items)
+            {
+                item.EnsureInCollection(index);
+                ++index;
+            }
         }
 
 		IEnumerable TranslateIncomingList<T>(IEnumerable list)
@@ -113,17 +115,5 @@ namespace Assisticant.Metas
 				translated.Add((T)UnwrapValue(elem));
 			return translated;
 		}
-
-        private void UpdateNow()
-        {
-            _computed.OnGet();
-            if (_delay != null)
-            {
-                // Update the observable collection outside of the update method
-                // so we don't take a dependency on item template properties.
-                _delay();
-                _delay = null;
-            }
-        }
     }
 }
