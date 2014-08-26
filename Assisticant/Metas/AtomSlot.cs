@@ -8,23 +8,13 @@ namespace Assisticant.Metas
 {
     public class AtomSlot : MemberSlot
     {
-        readonly Computed _computed;
+        object _sourceValue;
         object _value;
 		bool _firePropertyChanged = false;
 
         internal AtomSlot(ViewProxy proxy, MemberMeta member)
 			: base(proxy, member)
 		{
-            if (member.CanRead)
-            {
-                // When the property is out of date, update it from the wrapped object.
-                _computed = new Computed(() => BindingInterceptor.Current.UpdateValue(this));
-                // When the property becomes out of date, trigger an update.
-                // The update should have lower priority than user input & drawing,
-                // to ensure that the app doesn't lock up in case a large model is 
-                // being updated outside the UI (e.g. via timers or the network).
-                _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
-            }
 		}
 
         public override void SetValue(object value)
@@ -48,25 +38,24 @@ namespace Assisticant.Metas
 
         public override object GetValue()
         {
-            if (_computed.IsNotUpdating)
-                _computed.OnGet();
+            UpdateNow();
             return _value;
         }
 
         internal override void UpdateValue()
         {
-            object value = Member.GetValue(Instance);
-            value = WrapValue(value);
-            if (!Object.Equals(_value, value))
-                _value = value;
-            if (_firePropertyChanged)
-                FirePropertyChanged();
-            _firePropertyChanged = true;
+            _sourceValue = WrapValue(Member.GetValue(Instance));
         }
 
-        private void UpdateNow()
+        protected override void PublishChanges()
         {
-            _computed.OnGet();
+            if (!Object.Equals(_value, _sourceValue))
+            {
+                _value = _sourceValue;
+                if (_firePropertyChanged)
+                    FirePropertyChanged();
+            }
+            _firePropertyChanged = true;
         }
     }
 }
