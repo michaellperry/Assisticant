@@ -10,13 +10,17 @@ namespace Assisticant.UnitTest
     [TestClass]
     public class SubscriptionTest
     {
-        private Queue<Action> _updateQueue;
+        private static Queue<Action> _updateQueue;
 
         [TestInitialize]
         public void Initialize()
         {
-            _updateQueue = new Queue<Action>();
-            UpdateScheduler.Initialize(a => _updateQueue.Enqueue(a));
+            if (_updateQueue == null)
+            {
+                _updateQueue = new Queue<Action>();
+                UpdateScheduler.Initialize(a => _updateQueue.Enqueue(a));
+            }
+            _updateQueue.Clear();
         }
 
         [TestMethod]
@@ -56,10 +60,51 @@ namespace Assisticant.UnitTest
             count.Should().Be(2);
         }
 
+        [TestMethod]
+        public void OuterComputedDoesNotTakeADependency()
+        {
+            Observable<int> source = new Observable<int>();
+            Computed<Counter> outer = new Computed<Counter>(() => new Counter(source));
+
+            int created = 0;
+            Counter counter = null;
+            outer.Subscribe(c =>
+            {
+                counter = c;
+                created++;
+            });
+
+            Process();
+            created.Should().Be(1);
+            counter.Count.Should().Be(1);
+
+            source.Value = 42;
+            Process();
+            created.Should().Be(1);
+            counter.Count.Should().Be(2);
+        }
+
         private void Process()
         {
             while (_updateQueue.Any())
                 _updateQueue.Dequeue()();
+        }
+
+        private class Counter
+        {
+            private Computed<int> _target;
+            private int _count;
+
+            public Counter(Observable<int> source)
+            {
+                _target = new Computed<int>(() => source.Value);
+                _target.Subscribe(i => _count++);
+            }
+
+            public int Count
+            {
+                get { return _count; }
+            }
         }
     }
 }

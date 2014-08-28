@@ -13,7 +13,7 @@ namespace Assisticant.Fields
             _update = update;
 
             _computed.Invalidated += Computed_Invalidated;
-            _update();
+            Computed_Invalidated();
         }
 
         public void Unsubscribe()
