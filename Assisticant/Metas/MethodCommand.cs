@@ -14,7 +14,7 @@ namespace Assisticant.Metas
         public readonly object Instance;
         public readonly CommandMeta Meta;
         readonly Computed<bool> _computedCan;
-        bool? lastCan;
+        bool? _lastCan;
 
         public event EventHandler CanExecuteChanged;
 
@@ -33,8 +33,8 @@ namespace Assisticant.Metas
         {
             if (_computedCan == null)
                 return true;
-            lastCan = _computedCan.Value;
-            return lastCan.Value;
+            _lastCan = _computedCan.Value;
+            return _lastCan.Value;
         }
 
         public void Execute(object parameter)
@@ -44,13 +44,16 @@ namespace Assisticant.Metas
 
         internal void ContinueExecute(object parameter)
         {
-            Meta.Method.Invoke(Instance, new object[0]);
+            if (Meta.HasParameter)
+                Meta.Method.Invoke(Instance, new object[] { parameter });
+            else
+                Meta.Method.Invoke(Instance, new object[0]);
         }
 
         private void UpdateNow()
         {
             var can = _computedCan.Value;
-            if (lastCan != can && CanExecuteChanged != null)
+            if (_lastCan != can && CanExecuteChanged != null)
                 CanExecuteChanged(this, EventArgs.Empty);
         }
     }

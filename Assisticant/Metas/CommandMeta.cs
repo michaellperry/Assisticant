@@ -12,6 +12,7 @@ namespace Assisticant.Metas
     {
         public readonly MethodInfo Method;
         public readonly MemberMeta Condition;
+        public readonly bool HasParameter;
 
         public override bool CanWrite { get { return false; } }
 
@@ -20,6 +21,7 @@ namespace Assisticant.Metas
         {
             Method = method;
             Condition = condition;
+            HasParameter = method.GetParameters().Any();
         }
 
         public override object GetValue(object instance)
@@ -38,7 +40,7 @@ namespace Assisticant.Metas
                               where property.MemberType == typeof(bool) && property.Name.StartsWith("Can")
                               select property).ToList();
             return from method in owner.Type.GetMethodsPortable()
-                   where method.IsPublic && !method.IsStatic && !method.IsSpecialName && method.ReturnType == typeof(void) && method.GetParameters().Length == 0
+                   where method.IsPublic && !method.IsStatic && !method.IsSpecialName && method.ReturnType == typeof(void) && method.GetParameters().Length <= 1
                    select new CommandMeta(owner, method, conditions.FirstOrDefault(c => c.Name == "Can" + method.Name));
         }
     }
