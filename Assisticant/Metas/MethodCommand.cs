@@ -33,6 +33,11 @@ namespace Assisticant.Metas
         {
             if (_computedCan == null)
                 return true;
+            return BindingInterceptor.Current.CanExecute(this, parameter);
+        }
+
+        internal bool ContinueCanExecute(object parameter)
+        {
             _lastCan = _computedCan.Value;
             return _lastCan.Value;
         }
