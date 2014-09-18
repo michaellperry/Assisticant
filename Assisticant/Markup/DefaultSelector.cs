@@ -16,7 +16,14 @@ namespace Assisticant.Markup
             var proxy = item as PlatformProxy;
             var element = container as FrameworkElement;
             if (proxy != null && element != null)
-                return element.TryFindResource(new DataTemplateKey(proxy.Instance.GetType())) as DataTemplate;
+            {
+                for (var type = proxy.Instance.GetType(); type != null && type != typeof(object); type = type.BaseType)
+                {
+                    var template = element.TryFindResource(new DataTemplateKey(type)) as DataTemplate;
+                    if (template != null)
+                        return template;
+                }
+            }
             return null;
         }
     }
