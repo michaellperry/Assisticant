@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Assisticant.App</id>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <authors>Michael L Perry</authors>
     <owners>Michael L Perry</owners>
     <licenseUrl>http://assisticant.net/license</licenseUrl>
@@ -13,7 +13,7 @@
     <copyright>Copyright 2014, Michael L Perry</copyright>
     <tags>mvvm viewmodel databinding inotifypropertychanged inpc</tags>
     <dependencies>
-      <dependency id="Assisticant" version="1.0.0" />
+      <dependency id="Assisticant" />
     </dependencies>
   </metadata>
 </package>
