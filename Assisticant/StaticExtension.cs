@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Markup;
 using SystemStaticExtension = System.Windows.Markup.StaticExtension;
 
-namespace Assisticant.Markup
+namespace Assisticant
 {
     [MarkupExtensionReturnType(typeof(object))]
     public class StaticExtension : MarkupExtension

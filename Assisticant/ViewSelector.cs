@@ -24,6 +24,7 @@ using System.Windows;
 #if UNIVERSAL
 using Assisticant.XamlTypes;
 using Windows.UI.Xaml.Controls;
+using System.Reflection;
 #endif
 
 namespace Assisticant
@@ -37,9 +38,12 @@ namespace Assisticant
             var element = container as FrameworkElement;
             if (wrapper != null && element != null)
             {
-                Type viewModelType = wrapper.Instance.GetType();
-                var key = new DataTemplateKey(viewModelType);
-                return element.TryFindResource(key) as DataTemplate;
+                for (var type = wrapper.Instance.GetType(); type != null && type != typeof(object); type = type.BaseType)
+                {
+                    var template = element.TryFindResource(new DataTemplateKey(type)) as DataTemplate;
+                    if (template != null)
+                        return template;
+                }
             }
 
             return base.SelectTemplate(item, container);
@@ -52,9 +56,12 @@ namespace Assisticant
             var element = container as FrameworkElement;
             if (wrapper != null && element != null)
             {
-                Type viewModelType = wrapper.Instance.GetType();
-                var key = new DataTemplateKey(viewModelType);
-                return TryFindResource(element, key) as DataTemplate;
+                for (var type = wrapper.Instance.GetType(); type != null && type != typeof(object); type = type.GetTypeInfo().BaseType)
+                {
+                    var template = TryFindResource(element, new DataTemplateKey(type)) as DataTemplate;
+                    if (template != null)
+                        return template;
+                }
             }
 
             return base.SelectTemplateCore(item, container);

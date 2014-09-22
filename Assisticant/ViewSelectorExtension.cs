@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 
-namespace Assisticant.Markup
+namespace Assisticant
 {
-    [MarkupExtensionReturnType(typeof(DefaultSelector))]
+    [MarkupExtensionReturnType(typeof(ViewSelector))]
     public class DefaultSelectorExtension : MarkupExtension
     {
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            return new DefaultSelector();
+            return new ViewSelector();
         }
     }
 }
