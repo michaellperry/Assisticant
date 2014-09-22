@@ -64,7 +64,8 @@
     <Compile Include="Descriptors\ProxyTypeDescriptor.cs" />
     <Compile Include="Descriptors\PlatformProxy.cs" />
     <Compile Include="ForView.cs" />
-    <Compile Include="Markup\StaticExtension.cs" />
+    <Compile Include="ViewSelectorExtension.cs" />
+    <Compile Include="StaticExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="ViewModelLocatorBase.cs" />
