@@ -8,7 +8,7 @@ using System.Windows.Markup;
 namespace Assisticant
 {
     [MarkupExtensionReturnType(typeof(ViewSelector))]
-    public class DefaultSelectorExtension : MarkupExtension
+    public class ViewSelectorExtension : MarkupExtension
     {
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
