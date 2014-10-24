@@ -23,7 +23,7 @@ namespace Assisticant.Metas
             return _valueProperty.GetValue(UnderlyingMember.GetValue(instance), null);
 		}
 
-        internal static MemberMeta Intercept(MemberMeta member)
+        internal static MemberMeta InterceptAny(MemberMeta member)
         {
             return ComputedMeta.Intercept(ObservableMeta.Intercept(member));
         }
