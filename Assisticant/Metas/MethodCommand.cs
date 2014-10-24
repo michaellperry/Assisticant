@@ -44,7 +44,19 @@ namespace Assisticant.Metas
 
         public void Execute(object parameter)
         {
-            BindingInterceptor.Current.Execute(this, parameter);
+            var scheduler = UpdateScheduler.Begin();
+            try
+            {
+                BindingInterceptor.Current.Execute(this, parameter);
+            }
+            finally
+            {
+                if (scheduler != null)
+                {
+                    foreach (var updatable in scheduler.End())
+                        updatable();
+                }
+            }
         }
 
         internal void ContinueExecute(object parameter)
