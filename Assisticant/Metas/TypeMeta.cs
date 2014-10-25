@@ -15,7 +15,7 @@ namespace Assisticant.Metas
         TypeMeta(Type type)
         {
             Type = type;
-            var properties = PropertyMeta.GetAll(this).Concat(FieldMeta.GetAll(this)).Select(ObservableMeta.Intercept).ToList();
+            var properties = PropertyMeta.GetAll(this).Concat(FieldMeta.GetAll(this)).Select(ValuePropertyMeta.InterceptAny).ToList();
             Members = properties.Concat(CommandMeta.GetAll(this, properties)).ToArray();
         }
 
