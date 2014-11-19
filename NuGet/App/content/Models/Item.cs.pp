@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assisticant.Collections;
 using Assisticant.Fields;
 
 namespace $rootnamespace$.Models
 {
-    public class Item
+    public sealed class Item
     {
-        private Observable<string> _name = new Observable<string>();
+        private readonly Observable<string> _name = new Observable<string>();
 
         public string Name
         {

@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Assisticant.Collections;
 using Assisticant.Fields;
 
 namespace $rootnamespace$.Models
 {
-    public class Document
+    public sealed class Document
     {
-		private Observable<string> _name = new Observable<string>();
-        private ObservableList<Item> _items = new ObservableList<Item>();
+        private readonly Observable<string> _name = new Observable<string>();
+        private readonly ObservableList<Item> _items = new ObservableList<Item>();
 
-		public string Name
-		{
-			get { return _name; }
-			set { _name.Value = value; }
-		}
+        public string Name
+        {
+            get { return _name; }
+            set { _name.Value = value; }
+        }
 
         public IEnumerable<Item> Items
         {
@@ -26,7 +22,7 @@ namespace $rootnamespace$.Models
 
         public Item NewItem()
         {
-            Item item = new Item();
+            var item = new Item();
             _items.Add(item);
             return item;
         }
@@ -48,14 +44,14 @@ namespace $rootnamespace$.Models
 
         public void MoveDown(Item item)
         {
-            int index = _items.IndexOf(item);
+            var index = _items.IndexOf(item);
             _items.RemoveAt(index);
             _items.Insert(index + 1, item);
         }
 
         public void MoveUp(Item item)
         {
-            int index = _items.IndexOf(item);
+            var index = _items.IndexOf(item);
             _items.RemoveAt(index);
             _items.Insert(index - 1, item);
         }

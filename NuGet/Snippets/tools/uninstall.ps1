@@ -24,7 +24,7 @@ Foreach ($vsVersion in $vsVersions)
 	{
 		$destination = "$myCodeSnippetsFolder$snippetFolder"
 		if (!($myCodeSnippetsFolder -eq $destination))
-		{		
+		{
 			if (Test-Path $destination)
 			{
 				"Uninstalling code snippets for Visual Studio $vsVersion"
@@ -34,6 +34,6 @@ Foreach ($vsVersion in $vsVersions)
 		else
 		{
 			"Define a value for snippetFolder variable, cannot be empty"
-		}		
+		}
 	}
 }

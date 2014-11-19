@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using $rootnamespace$.Models;
 using Assisticant;
 
 namespace $rootnamespace$.ViewModels
 {
-    public class MainViewModel
+    public sealed class MainViewModel
     {
         private readonly Document _document;
-		private readonly Selection _selection;
+        private readonly Selection _selection;
 
         public MainViewModel(Document document, Selection selection)
         {
             _document = document;
-			_selection = selection;
+            _selection = selection;
         }
 
         public IEnumerable<ItemHeader> Items
@@ -60,7 +57,7 @@ namespace $rootnamespace$.ViewModels
             get
             {
                 return MakeCommand
-                    .Do(delegate
+                    .Do(() =>
                     {
                         _selection.SelectedItem = _document.NewItem();
                     });
@@ -73,7 +70,7 @@ namespace $rootnamespace$.ViewModels
             {
                 return MakeCommand
                     .When(() => _selection.SelectedItem != null)
-                    .Do(delegate
+                    .Do(() =>
                     {
                         _document.DeleteItem(_selection.SelectedItem);
                         _selection.SelectedItem = null;
@@ -89,7 +86,7 @@ namespace $rootnamespace$.ViewModels
                     .When(() =>
                         _selection.SelectedItem != null &&
                         _document.CanMoveDown(_selection.SelectedItem))
-                    .Do(delegate
+                    .Do(() =>
                     {
                         _document.MoveDown(_selection.SelectedItem);
                     });
@@ -104,7 +101,7 @@ namespace $rootnamespace$.ViewModels
                     .When(() =>
                         _selection.SelectedItem != null &&
                         _document.CanMoveUp(_selection.SelectedItem))
-                    .Do(delegate
+                    .Do(() =>
                     {
                         _document.MoveUp(_selection.SelectedItem);
                     });

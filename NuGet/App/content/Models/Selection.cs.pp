@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using Assisticant.Fields;
+﻿using Assisticant.Fields;
 
 namespace $rootnamespace$.Models
 {
-    public class Selection
+    public sealed class Selection
     {
-        private Observable<Item> _selectedItem = new Observable<Item>();
+        private readonly Observable<Item> _selectedItem = new Observable<Item>();
 
         public Item SelectedItem
         {

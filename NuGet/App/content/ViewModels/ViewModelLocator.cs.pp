@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assisticant;
+﻿using Assisticant;
 using $rootnamespace$.Models;
 
 namespace $rootnamespace$.ViewModels
 {
-    public class ViewModelLocator : ViewModelLocatorBase
+    public sealed class ViewModelLocator : ViewModelLocatorBase
     {
-        private Document _document;
-		private Selection _selection;
+        private readonly Document _document;
+        private readonly Selection _selection;
 
         public ViewModelLocator()
         {
-			if (DesignMode)
-				_document = LoadDesignModeDocument();
-			else
-				_document = LoadDocument();
-			_selection = new Selection();
+            _document = DesignMode 
+                ? LoadDesignModeDocument() 
+                : LoadDocument();
+
+            _selection = new Selection();
         }
 
         public object Main
@@ -27,20 +22,20 @@ namespace $rootnamespace$.ViewModels
             get { return ViewModel(() => new MainViewModel(_document, _selection)); }
         }
 
-		public object Item
-		{
-			get
-			{
-				return ViewModel(() => _selection.SelectedItem == null
-					? null
-					: new ItemViewModel(_selection.SelectedItem));
-			}
-		}
+        public object Item
+        {
+            get
+            {
+                return ViewModel(() => _selection.SelectedItem == null
+                    ? null
+                    : new ItemViewModel(_selection.SelectedItem));
+            }
+        }
 
-		private Document LoadDocument()
-		{
-			// TODO: Load your document here.
-            Document document = new Document();
+        private static Document LoadDocument()
+        {
+            // TODO: Load your document here.
+            var document = new Document();
             var one = document.NewItem();
             one.Name = "One";
             var two = document.NewItem();
@@ -48,11 +43,11 @@ namespace $rootnamespace$.ViewModels
             var three = document.NewItem();
             three.Name = "Three";
             return document;
-		}
+        }
 
-		private Document LoadDesignModeDocument()
-		{
-            Document document = new Document();
+        private static Document LoadDesignModeDocument()
+        {
+            var document = new Document();
             var one = document.NewItem();
             one.Name = "Design";
             var two = document.NewItem();
@@ -60,6 +55,6 @@ namespace $rootnamespace$.ViewModels
             var three = document.NewItem();
             three.Name = "Data";
             return document;
-		}
+        }
     }
 }

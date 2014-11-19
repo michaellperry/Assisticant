@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using $rootnamespace$.Models;
+﻿using $rootnamespace$.Models;
 
 namespace $rootnamespace$.ViewModels
 {
-    public class ItemViewModel
+    public sealed class ItemViewModel
     {
         private readonly Item _item;
 
@@ -20,14 +17,15 @@ namespace $rootnamespace$.ViewModels
             set { _item.Name = value; }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object other)
         {
-            if (obj == this)
+            if (other == this)
+            {
                 return true;
-            ItemViewModel that = obj as ItemViewModel;
-            if (that == null)
-                return false;
-            return Object.Equals(this._item, that._item);
+            }
+
+            var that = other as ItemViewModel;
+            return that != null && _item.Equals(that._item);
         }
 
         public override int GetHashCode()
