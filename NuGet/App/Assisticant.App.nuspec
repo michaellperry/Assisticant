@@ -9,7 +9,7 @@
     <projectUrl>http://assisticant.net/</projectUrl>
     <iconUrl>http://assisticant.net/images/logosmall.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Add a view model locator for use in an Update Controls application.</description>
+    <description>Add a view model locator for use in an Assisticant application.</description>
     <copyright>Copyright 2014, Michael L Perry</copyright>
     <tags>mvvm viewmodel databinding inotifypropertychanged inpc</tags>
     <dependencies>
