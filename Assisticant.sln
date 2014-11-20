@@ -75,8 +75,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.UnitTest.Univer
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Views", "Views", "{7978153B-792B-4242-938D-99538C4F829A}"
 	ProjectSection(SolutionItems) = preProject
-		MainView.xaml.cs.pp = MainView.xaml.cs.pp
-		MainView.xaml.pp = MainView.xaml.pp
+		NuGet\App\content\Views\MainView.xaml.cs.pp = NuGet\App\content\Views\MainView.xaml.cs.pp
+		NuGet\App\content\Views\MainView.xaml.pp = NuGet\App\content\Views\MainView.xaml.pp
 	EndProjectSection
 EndProject
 Global
