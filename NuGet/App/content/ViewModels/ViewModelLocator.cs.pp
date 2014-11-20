@@ -26,9 +26,9 @@ namespace $rootnamespace$.ViewModels
         {
             get
             {
-                return ViewModel(() => _selection.SelectedItem == null
-                    ? null
-                    : new ItemViewModel(_selection.SelectedItem));
+                return ViewModel(() => _selection.IsItemSelected
+                    ? new ItemViewModel(_selection.SelectedItem)
+                    : null);
             }
         }
 
@@ -36,24 +36,22 @@ namespace $rootnamespace$.ViewModels
         {
             // TODO: Load your document here.
             var document = new Document();
-            var one = document.NewItem();
-            one.Name = "One";
-            var two = document.NewItem();
-            two.Name = "Two";
-            var three = document.NewItem();
-            three.Name = "Three";
+
+            document.NewItem("One");
+            document.NewItem("Two");
+            document.NewItem("Three");
+
             return document;
         }
 
         private static Document LoadDesignModeDocument()
         {
             var document = new Document();
-            var one = document.NewItem();
-            one.Name = "Design";
-            var two = document.NewItem();
-            two.Name = "Mode";
-            var three = document.NewItem();
-            three.Name = "Data";
+
+            document.NewItem("Design");
+            document.NewItem("Mode");
+            document.NewItem("Data");
+
             return document;
         }
     }

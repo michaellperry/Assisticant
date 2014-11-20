@@ -1,8 +1,9 @@
-﻿using $rootnamespace$.Models;
+﻿using System;
+using $rootnamespace$.Models;
 
 namespace $rootnamespace$.ViewModels
 {
-    public sealed class ItemHeader
+    public sealed class ItemHeader : IEquatable<ItemHeader>
     {
         private readonly Item _item;
 
@@ -21,20 +22,48 @@ namespace $rootnamespace$.ViewModels
             get { return _item.Name ?? "<New Item>"; }
         }
 
+        #region Equality
+        public bool Equals(ItemHeader other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return IsEqualTo(other);
+        }
+
         public override bool Equals(object other)
         {
-            if (other == this)
-            {
-                return true;
-            }
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
 
-            var that = other as ItemHeader;
-            return that != null && _item.Equals(that._item);
+            return IsEqualTo(other as ItemHeader);
+        }
+
+        private bool IsEqualTo(ItemHeader other)
+        {
+            return Item.Equals(other.Item);
+        }
+
+        public static bool operator ==(ItemHeader @this, ItemHeader other)
+        {
+            if (ReferenceEquals(@this, other)) return true;
+            if (ReferenceEquals(null, @this)) return false;
+
+            return @this.Equals(other);
+        }
+
+        public static bool operator !=(ItemHeader @this, ItemHeader other)
+        {
+            return !(@this == other);
         }
 
         public override int GetHashCode()
         {
-            return _item.GetHashCode();
+            unchecked
+            {
+                return ((Item != null ? Item.GetHashCode() : 0));
+            }
         }
+        #endregion
     }
 }
