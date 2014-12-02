@@ -15,8 +15,8 @@ namespace Assisticant.Timers
         public FloatingTimeZone Zone { get { return _zone; } }
         public TimeSpan FloatDelta { get { return _delta; } }
         public DateTime Snapshot { get { return _zone.GetStableTime() + _delta; } }
-        public int Year { get { return GetComponent(Snapshot.Year, new DateTime(Snapshot.Year, 0, 0), new DateTime(Snapshot.Year + 1, 0, 0)); } }
-        public int Month { get { return GetComponent(Snapshot.Month, new DateTime(Snapshot.Year, Snapshot.Month, 0), new DateTime(Snapshot.Year, Snapshot.Month, 0).AddMonths(1)); } }
+        public int Year { get { return GetComponent(Snapshot.Year, new DateTime(Snapshot.Year, 1, 1), new DateTime(Snapshot.Year + 1, 1, 1)); } }
+        public int Month { get { return GetComponent(Snapshot.Month, new DateTime(Snapshot.Year, Snapshot.Month, 1), new DateTime(Snapshot.Year, Snapshot.Month, 1).AddMonths(1)); } }
         public int Day { get { return GetComponent(Snapshot.Day, Snapshot.Date, TimeSpan.FromDays(1)); } }
         public int DayOfYear { get { return GetComponent(Snapshot.DayOfYear, Snapshot.Date, TimeSpan.FromDays(1)); } }
         public DayOfWeek DayOfWeek { get { return GetComponent(Snapshot.DayOfWeek, Snapshot.Date, TimeSpan.FromDays(1)); } }
