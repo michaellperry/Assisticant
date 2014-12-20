@@ -9,11 +9,13 @@
  * 
  **********************************************************************/
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Assisticant.Collections
 {
-	public class ObservableList<T> : IList<T>
+	public class ObservableList<T> : IList<T>, IList
 	{
         private IList<T> _list;
 		private Observable _indList = new NamedObservable(MemoizedTypeName<ObservableList<T>>.GenericName());
@@ -111,5 +113,17 @@ namespace Assisticant.Collections
 			_indList.OnGet();
 			return ((System.Collections.IEnumerable)_list).GetEnumerator();
 		}
-	}
+    
+        bool ICollection.IsSynchronized { get { return false; } }
+        object ICollection.SyncRoot { get { return this; } }
+        bool IList.IsFixedSize { get { return false; } }
+        object IList.this[int index] { get { return this[index]; } set { this[index] = (T)value; } }
+
+        int IList.Add(object value) { Add((T)value); return Count - 1; }
+        bool IList.Contains(object value) { return Contains((T)value); }
+        int IList.IndexOf(object value) { return IndexOf((T)value); }
+        void IList.Insert(int index, object value) { Insert(index, (T)value); }
+        void IList.Remove(object value) { Remove((T)value); }
+        void ICollection.CopyTo(Array array, int index) { CopyTo((T[])array, index); }
+    }
 }
