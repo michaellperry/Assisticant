@@ -15,15 +15,15 @@ namespace Assisticant.Timers
         public FloatingTimeZone Zone { get { return _zone; } }
         public TimeSpan FloatDelta { get { return _delta; } }
         public DateTime Snapshot { get { return _zone.GetStableTime() + _delta; } }
+        public DateTime Date { get { return Floor(TimeSpan.FromDays(1)); } }
         public int Year { get { return GetComponent(Snapshot.Year, new DateTime(Snapshot.Year, 1, 1), new DateTime(Snapshot.Year + 1, 1, 1)); } }
         public int Month { get { return GetComponent(Snapshot.Month, new DateTime(Snapshot.Year, Snapshot.Month, 1), new DateTime(Snapshot.Year, Snapshot.Month, 1).AddMonths(1)); } }
-        public int Day { get { return GetComponent(Snapshot.Day, Snapshot.Date, TimeSpan.FromDays(1)); } }
-        public int DayOfYear { get { return GetComponent(Snapshot.DayOfYear, Snapshot.Date, TimeSpan.FromDays(1)); } }
-        public DayOfWeek DayOfWeek { get { return GetComponent(Snapshot.DayOfWeek, Snapshot.Date, TimeSpan.FromDays(1)); } }
-        public int Hour { get { return GetComponent(Snapshot.Hour, new DateTime(Snapshot.Year, Snapshot.Month, Snapshot.Day, Snapshot.Hour, 0, 0), TimeSpan.FromHours(1)); } }
-        public int Minute { get { return GetComponent(Snapshot.Minute, new DateTime(Snapshot.Year, Snapshot.Month, Snapshot.Day, Snapshot.Hour, Snapshot.Minute, 0), TimeSpan.FromMinutes(1)); } }
-        public int Second { get { return GetComponent(Snapshot.Second, new DateTime(Snapshot.Year, Snapshot.Month, Snapshot.Day, Snapshot.Hour, Snapshot.Minute, Snapshot.Second), TimeSpan.FromSeconds(1)); } }
-        public DateTime Date { get { return GetComponent(Snapshot.Date, Snapshot.Date, TimeSpan.FromDays(1)); } }
+        public int Day { get { return Date.Day; } }
+        public int DayOfYear { get { return Date.DayOfYear; } }
+        public DayOfWeek DayOfWeek { get { return Date.DayOfWeek; } }
+        public int Hour { get { return Floor(TimeSpan.FromHours(1)).Hour; } }
+        public int Minute { get { return Floor(TimeSpan.FromMinutes(1)).Minute; } }
+        public int Second { get { return Floor(TimeSpan.FromSeconds(1)).Second; } }
 
         internal FloatingDateTime(FloatingTimeZone zone)
         {
@@ -120,6 +120,12 @@ namespace Assisticant.Timers
             if (obj is DateTime)
                 return CompareTo((DateTime)obj);
             throw new ArgumentException();
+        }
+
+        public DateTime Floor(TimeSpan interval)
+        {
+            var floored = new DateTime(Snapshot.Ticks / interval.Ticks * interval.Ticks);
+            return GetComponent(floored, floored, interval);
         }
 
         public override string ToString() { return Snapshot.ToString(); }
