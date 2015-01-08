@@ -186,7 +186,7 @@ namespace Assisticant.Timers
         public DateTime Floor(TimeSpan interval)
         {
             var floored = new DateTime(Snapshot.Ticks / interval.Ticks * interval.Ticks);
-            return GetComponent(floored, floored, interval);
+            return GetComponent(floored, floored - _delta, interval);
         }
 
         public static FloatingDateTime operator +(FloatingDateTime left, TimeSpan right) { return left.Add(right); }
