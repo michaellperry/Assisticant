@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assisticant;
+﻿using Assisticant;
 using $rootnamespace$.Models;
 
 namespace $rootnamespace$.ViewModels
 {
-    public class ViewModelLocator : ViewModelLocatorBase
+    public sealed class ViewModelLocator : ViewModelLocatorBase
     {
-        private Document _document;
-		private Selection _selection;
+        private readonly Document _document;
+        private readonly Selection _selection;
 
         public ViewModelLocator()
         {
-			if (DesignMode)
-				_document = LoadDesignModeDocument();
-			else
-				_document = LoadDocument();
-			_selection = new Selection();
+            _document = DesignMode 
+                ? LoadDesignModeDocument() 
+                : LoadDocument();
+
+            _selection = new Selection();
         }
 
         public object Main
@@ -27,39 +22,37 @@ namespace $rootnamespace$.ViewModels
             get { return ViewModel(() => new MainViewModel(_document, _selection)); }
         }
 
-		public object Item
-		{
-			get
-			{
-				return ViewModel(() => _selection.SelectedItem == null
-					? null
-					: new ItemViewModel(_selection.SelectedItem));
-			}
-		}
+        public object Item
+        {
+            get
+            {
+                return ViewModel(() => _selection.IsItemSelected
+                    ? new ItemViewModel(_selection.SelectedItem)
+                    : null);
+            }
+        }
 
-		private Document LoadDocument()
-		{
-			// TODO: Load your document here.
-            Document document = new Document();
-            var one = document.NewItem();
-            one.Name = "One";
-            var two = document.NewItem();
-            two.Name = "Two";
-            var three = document.NewItem();
-            three.Name = "Three";
-            return document;
-		}
+        private static Document LoadDocument()
+        {
+            // TODO: Load your document here.
+            var document = new Document();
 
-		private Document LoadDesignModeDocument()
-		{
-            Document document = new Document();
-            var one = document.NewItem();
-            one.Name = "Design";
-            var two = document.NewItem();
-            two.Name = "Mode";
-            var three = document.NewItem();
-            three.Name = "Data";
+            document.NewItem("One");
+            document.NewItem("Two");
+            document.NewItem("Three");
+
             return document;
-		}
+        }
+
+        private static Document LoadDesignModeDocument()
+        {
+            var document = new Document();
+
+            document.NewItem("Design");
+            document.NewItem("Mode");
+            document.NewItem("Data");
+
+            return document;
+        }
     }
 }

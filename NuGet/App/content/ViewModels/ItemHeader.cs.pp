@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using $rootnamespace$.Models;
 
 namespace $rootnamespace$.ViewModels
 {
-    public class ItemHeader
+    public sealed class ItemHeader : IEquatable<ItemHeader>
     {
         private readonly Item _item;
 
@@ -23,19 +22,48 @@ namespace $rootnamespace$.ViewModels
             get { return _item.Name ?? "<New Item>"; }
         }
 
-        public override bool Equals(object obj)
+        #region Equality
+        public bool Equals(ItemHeader other)
         {
-            if (obj == this)
-                return true;
-            ItemHeader that = obj as ItemHeader;
-            if (that == null)
-                return false;
-            return Object.Equals(this._item, that._item);
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return IsEqualTo(other);
+        }
+
+        public override bool Equals(object other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return IsEqualTo(other as ItemHeader);
+        }
+
+        private bool IsEqualTo(ItemHeader other)
+        {
+            return Item.Equals(other.Item);
+        }
+
+        public static bool operator ==(ItemHeader @this, ItemHeader other)
+        {
+            if (ReferenceEquals(@this, other)) return true;
+            if (ReferenceEquals(null, @this)) return false;
+
+            return @this.Equals(other);
+        }
+
+        public static bool operator !=(ItemHeader @this, ItemHeader other)
+        {
+            return !(@this == other);
         }
 
         public override int GetHashCode()
         {
-            return _item.GetHashCode();
+            unchecked
+            {
+                return ((Item != null ? Item.GetHashCode() : 0));
+            }
         }
+        #endregion
     }
 }
