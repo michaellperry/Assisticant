@@ -41,14 +41,21 @@ namespace Assisticant
             }
         }
 
-        class HashedWeakReference : WeakReference
+        class HashedWeakReference
         {
+            private readonly WeakReference _inner;
+
             int _hashCode;
 
             public HashedWeakReference(object target)
-                : base(target)
             {
+                _inner = new WeakReference(target);
                 _hashCode = target.GetHashCode();
+            }
+
+            public object Target
+            {
+                get { return _inner.Target; }
             }
 
             public override bool Equals(object obj)
