@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E865E78F-63F9-404B-BE96-E88C0420DDFB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Assisticant</RootNamespace>
+    <AssemblyName>Assisticant</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile328</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Assisticant.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Assisticant.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Common\Mallardsoft.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="..\Common\Mallardsoft.snk">
+      <Link>Mallardsoft.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\CommonProperties.cs">
+      <Link>Properties\CommonProperties.cs</Link>
+    </Compile>
+    <Compile Include="AssisticantExtensions.cs" />
+    <Compile Include="AssisticantReflectionUtils.cs" />
+    <Compile Include="Collections\ComputedDictionary.cs" />
+    <Compile Include="Collections\ComputedList.cs" />
+    <Compile Include="Collections\Impl\UpdateCollectionHelper.cs" />
+    <Compile Include="Collections\ObservableDictionary.cs" />
+    <Compile Include="Collections\ObservableList.cs" />
+    <Compile Include="Computed.cs" />
+    <Compile Include="ComputedJob.cs" />
+    <Compile Include="Fields\Computed.cs" />
+    <Compile Include="Fields\ComputedSubscription.cs" />
+    <Compile Include="Fields\Observable.cs" />
+    <Compile Include="InertialProperty.cs" />
+    <Compile Include="MemoizedTypeName.cs" />
+    <Compile Include="NamedPrecedents.cs" />
+    <Compile Include="Observable.cs" />
+    <Compile Include="Precedent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecycleBin.cs" />
+    <Compile Include="ThreadLocal.cs" />
+    <Compile Include="Timers\DroppingTimeSpan.cs" />
+    <Compile Include="Timers\FloatingDateTime.cs" />
+    <Compile Include="Timers\FloatingTimeSpan.cs" />
+    <Compile Include="Timers\FloatingTimeZone.cs" />
+    <Compile Include="Timers\ObservableTimer.cs" />
+    <Compile Include="Timers\RisingTimeSpan.cs" />
+    <Compile Include="Timers\UtcTimeZone.cs" />
+    <Compile Include="UpdateScheduler.cs" />
+    <Compile Include="WeakArray.cs" />
+    <Compile Include="WeakHashSet.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>for %25%25f in (
+"$(SolutionDir)NuGet\Core\lib\portable-net4+sl5+netcore45+wpa81+wp8\"
+) do (
+xcopy /y $(TargetPath) "%25%25~f"
+xcopy /y $(TargetDir)$(TargetName).xml "%25%25~f"
+)
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

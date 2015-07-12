@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Assisticant</id>
-    <version>1.1.4.2</version>
+    <version>1.1.4.3</version>
     <authors>Michael L Perry</authors>
     <owners>Michael L Perry</owners>
     <description>Automatically discover view model dependencies and databind without INotifyPropertyChanged.</description>
@@ -13,7 +13,11 @@
     <language>en-US</language>
     <tags>mvvm viewmodel databinding inotifypropertychanged inpc wpf silverlight wp7</tags>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Windows"/>
+      <frameworkAssembly assemblyName="System.Windows" targetFramework="net45"/>
+      <frameworkAssembly assemblyName="System.Windows" targetFramework="portable-net45+sl50+wp80+win80"/>
+      <frameworkAssembly assemblyName="System.Windows" targetFramework="sl5"/>
+      <frameworkAssembly assemblyName="System.Windows" targetFramework="win80"/>
+      <frameworkAssembly assemblyName="System.Windows" targetFramework="wp80"/>
     </frameworkAssemblies>
   </metadata>
 </package>

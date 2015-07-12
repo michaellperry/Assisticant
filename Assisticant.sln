@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Portable", "Assisticant\Assisticant.Portable.csproj", "{0F197CDB-CF38-438B-90AD-1B4F0976061E}"
 EndProject
@@ -72,6 +72,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.StoreApp.ViewModels", "StoreApp.ViewModels\Assisticant.StoreApp.ViewModels.csproj", "{B107C9D8-0F56-4923-BDDD-92653EC82E5A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.UnitTest.Universal", "Assisticant.UnitTest\Assisticant.UnitTest.Universal.csproj", "{4D0B47B3-6AC4-4AA9-A795-DA8AFF1967B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Core", "Assisticant\Assisticant.Core.csproj", "{E865E78F-63F9-404B-BE96-E88C0420DDFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -207,6 +209,16 @@ Global
 		{4D0B47B3-6AC4-4AA9-A795-DA8AFF1967B6}.Release|x86.ActiveCfg = Release|x86
 		{4D0B47B3-6AC4-4AA9-A795-DA8AFF1967B6}.Release|x86.Build.0 = Release|x86
 		{4D0B47B3-6AC4-4AA9-A795-DA8AFF1967B6}.Release|x86.Deploy.0 = Release|x86
+		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Release|ARM.ActiveCfg = Release|Any CPU
+		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Release|x64.ActiveCfg = Release|Any CPU
+		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
