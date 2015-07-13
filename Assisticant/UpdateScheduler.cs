@@ -8,12 +8,15 @@ namespace Assisticant
     {
         private static Action<Action> _runOnUIThread;
         private static ThreadLocal<UpdateScheduler> _currentSet = new ThreadLocal<UpdateScheduler>();
+        private static List<Action> _futureUpdates = new List<Action>();
 
         public static void Initialize(Action<Action> runOnUIThread)
         {
             if (_runOnUIThread == null)
             {
                 _runOnUIThread = runOnUIThread;
+                foreach (var update in _futureUpdates)
+                    _runOnUIThread(update);
             }
         }
 
@@ -36,6 +39,8 @@ namespace Assisticant
                 currentSet._updatables.Add(update);
             else if (_runOnUIThread != null)
                 _runOnUIThread(update);
+            else
+                _futureUpdates.Add(update);
         }
 
         private List<Action> _updatables = new List<Action>();

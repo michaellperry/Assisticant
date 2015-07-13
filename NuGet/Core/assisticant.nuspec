@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Assisticant</id>
-    <version>1.1.4.3</version>
+    <version>1.1.4.4</version>
     <authors>Michael L Perry</authors>
     <owners>Michael L Perry</owners>
     <description>Automatically discover view model dependencies and databind without INotifyPropertyChanged.</description>
@@ -20,4 +20,41 @@
       <frameworkAssembly assemblyName="System.Windows" targetFramework="wp80"/>
     </frameworkAssemblies>
   </metadata>
+  <files>
+    <file src="..\..\Assisticant\bin\portable-net4+sl5+netcore45+wpa81+wp8\Release\Assisticant.dll" target="lib\portable-net4+sl5+netcore45+wpa81+wp8" />
+    <file src="..\..\Assisticant\bin\portable-net4+sl5+netcore45+wpa81+wp8\Release\Assisticant.xml" target="lib\portable-net4+sl5+netcore45+wpa81+wp8" />
+
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\portable-net45+sl50+wp80+win80" />
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\portable-net45+sl50+wp80+win80" />
+
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\net45" />
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\net45" />
+
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\sl5" />
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\sl5" />
+
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\wp80" />
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\wp80" />
+
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\win80" />
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\win80" />
+
+    <file src="..\..\Silverlight\bin\Release\Assisticant.XAML.dll" target="lib\sl5" />
+    <file src="..\..\Silverlight\bin\Release\Assisticant.XAML.xml" target="lib\sl5" />
+
+    <file src="..\..\Assisticant\bin\Universal\Release\Assisticant.dll" target="lib\portable-wpa81+win81" />
+    <file src="..\..\Assisticant\bin\Universal\Release\Assisticant.xml" target="lib\portable-wpa81+win81" />
+
+    <file src="..\..\Assisticant\bin\Universal\Release\Assisticant.dll" target="lib\win81" />
+    <file src="..\..\Assisticant\bin\Universal\Release\Assisticant.xml" target="lib\win81" />
+
+    <file src="..\..\Assisticant\bin\Universal\Release\Assisticant.dll" target="lib\wpa81" />
+    <file src="..\..\Assisticant\bin\Universal\Release\Assisticant.xml" target="lib\wpa81" />
+
+    <file src="..\..\WindowsPhone\bin\Release\Assisticant.XAML.dll" target="lib\wp80" />
+    <file src="..\..\WindowsPhone\bin\Release\Assisticant.XAML.xml" target="lib\wp80" />
+
+    <file src="..\..\Assisticant\bin\WPF\Release\Assisticant.XAML.dll" target="lib\net45" />
+    <file src="..\..\Assisticant\bin\WPF\Release\Assisticant.XAML.xml" target="lib\net45" />
+  </files>
 </package>
