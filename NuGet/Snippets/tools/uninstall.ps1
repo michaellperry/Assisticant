@@ -15,7 +15,7 @@ param($installPath, $toolsPath, $package, $project)
 $snippetFolder = "Assisticant"
 
 # Actual script start
-$vsVersions = @("2005", "2008", "2010", "2012", "2013")
+$vsVersions = @("2005", "2008", "2010", "2012", "2013", "2015")
 
 Foreach ($vsVersion in $vsVersions)
 {
