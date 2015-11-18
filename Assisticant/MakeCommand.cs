@@ -56,21 +56,7 @@ namespace Assisticant
 
             public void Execute(object parameter)
             {
-                var scheduler = UpdateScheduler.Begin();
-
-                try
-                {
-                    // Execute the command.
-                    _execute();
-                }
-                finally
-                {
-                    if (scheduler != null)
-                    {
-                        foreach (var updatable in scheduler.End())
-                            updatable();
-                    }
-                }
+                _execute();
             }
 
             private void UpdateCanExecute()
