@@ -17,7 +17,7 @@ namespace Assisticant.Collections
 {
 	public class ObservableList<T> : IList<T>, IList
 	{
-        private IList<T> _list;
+        private List<T> _list;
 		private Observable _indList = new NamedObservable(MemoizedTypeName<ObservableList<T>>.GenericName());
 
         public ObservableList()
@@ -67,6 +67,12 @@ namespace Assisticant.Collections
 			_indList.OnSet();
 			_list.Add(item);
 		}
+
+        public void AddRange(IEnumerable<T> items)
+        {
+            _indList.OnSet();
+            _list.AddRange(items);
+        }
 
 		public void Clear()
 		{
