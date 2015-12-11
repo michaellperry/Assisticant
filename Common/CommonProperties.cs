@@ -19,4 +19,4 @@ using System;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyVersion("2.3.0.0")]
-[assembly: AssemblyFileVersion("1.1.5.0")]
+[assembly: AssemblyFileVersion("1.1.6.0")]

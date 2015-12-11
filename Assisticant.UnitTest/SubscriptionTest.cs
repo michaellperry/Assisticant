@@ -84,6 +84,26 @@ namespace Assisticant.UnitTest
             counter.Count.Should().Be(2);
         }
 
+        [TestMethod]
+        public void SubscriberCanReceivePriorValue()
+        {
+            Observable<int> source = new Observable<int>();
+            Computed<int> target = new Computed<int>(() => source);
+
+            int newValue = 999, oldValue = 999;
+            source.Value = 3;
+            target.Subscribe((n, o) => { newValue = n; oldValue = o; });
+
+            Process();
+            newValue.Should().Be(3);
+            oldValue.Should().Be(0);
+
+            source.Value = 7;
+            Process();
+            newValue.Should().Be(7);
+            oldValue.Should().Be(3);
+        }
+
         private void Process()
         {
             while (_updateQueue.Any())

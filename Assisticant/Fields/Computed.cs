@@ -50,10 +50,25 @@ namespace Assisticant.Fields
 
         public ComputedSubscription Subscribe(Action<T> whenChanged)
         {
-            return new ComputedSubscription(this, () => whenChanged(this));
+            return new ComputedSubscription(this, delegate (object prior)
+            {
+                T current = this.Value;
+                whenChanged(current);
+                return current;
+            }, default(T));
         }
 
-		public override string VisualizerName(bool withValue)
+        public ComputedSubscription Subscribe(Action<T, T> whenChanged)
+        {
+            return new ComputedSubscription(this, delegate (object prior)
+            {
+                T current = this.Value;
+                whenChanged(current, (T)prior);
+                return current;
+            }, default(T));
+        }
+
+        public override string VisualizerName(bool withValue)
 		{
 			string s = VisualizerName(_name ?? "NamedComputed");
 			if (withValue)
