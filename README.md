@@ -158,4 +158,26 @@ public class Calculator
 
 Here's a [great example](https://github.com/Assisticant/DecisionTree/blob/master/DecisionTree/Models/Nodes/ProbabilityNode.cs#L16) of building a machine out of computeds. See? Just like an object-oriented spreadsheet!
 
-Subscribe to computeds to take additional action when it changes. This is a great way to update things that are not traditionally bindable.
+Subscribe to computeds to take additional action when it changes. This is a great way to update things that are not traditionally bindable. For example, live tiles.
+
+```c#
+public class LiveTileUpdater
+{
+    private readonly Inbox _inbox;
+    private Computed<int> _messageCount;
+    private ComputedSubscription _subscription;
+
+    public LiveTileUpddater(Inbox inbox)
+    {
+        _inbox = inbox;
+        _messageCount = new Computed<int>(() => _inbox.Messages
+            .Where(m => !m.Read).Count());
+        _subscription = _messageCount.Subscribe(UpdateLiveTile);
+    }
+
+    public void UpdateLiveTile(int messageCount)
+    {
+        //...
+    }
+}
+```
