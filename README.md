@@ -28,7 +28,7 @@ public class Model
     public PropertyX
     {
         get { return _x.Value; }
-        see { _x.Value = value; }
+        set { _x.Value = value; }
     }
 }
 ```
