@@ -31,8 +31,10 @@ namespace Assisticant.Collections
                 {
                     _list.Clear();
 
-                    foreach (T item in computeCollection())
-                        _list.Add(bin.Extract(item));
+                    var collection = computeCollection();
+                    if (collection != null)
+                        foreach (T item in collection)
+                            _list.Add(bin.Extract(item));
                 }
             });
         }
