@@ -97,6 +97,16 @@ namespace Assisticant
                 action(viewModel);
         }
 
+        public static TResult Unwrap<TWrappedObjectType, TResult>(object dataContext, Func<TWrappedObjectType, TResult> function, TResult @default = default(TResult))
+            where TWrappedObjectType : class
+        {
+            var viewModel = Unwrap<TWrappedObjectType>(dataContext);
+            if (viewModel != null)
+                return function(viewModel);
+            else
+                return @default;
+        }
+
 #if WPF
         private static void RunOnUIThread(Action action)
         {
