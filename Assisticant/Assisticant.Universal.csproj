@@ -66,6 +66,7 @@
     <Compile Include="Collections\ObservableDictionary.cs" />
     <Compile Include="Collections\ObservableList.cs" />
     <Compile Include="Computed.cs" />
+    <Compile Include="ComputedJob.cs" />
     <Compile Include="Fields\Computed.cs" />
     <Compile Include="Fields\ComputedSubscription.cs" />
     <Compile Include="Fields\Observable.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="InertialProperty.cs" />
     <Compile Include="Precedent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyTracker.cs" />
     <Compile Include="RecycleBin.cs" />
     <Compile Include="AssisticantExtensions.cs" />
     <Compile Include="Timers\DroppingTimeSpan.cs" />

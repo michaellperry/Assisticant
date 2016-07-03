@@ -19,17 +19,12 @@ namespace Assisticant.XAML
             {
                 _firePropertyChanged = firePropertyChanged;
                 _computed = new Computed(() => _viewModel = ForView.Wrap(constructor()));
-                _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
+                _computed.Invalidated += () => UpdateScheduler.ScheduleUpdate(_firePropertyChanged);
             }
 
             public object ViewModel
             {
                 get { _computed.OnGet(); return _viewModel; }
-            }
-
-            public void UpdateNow()
-            {
-                _firePropertyChanged();
             }
         }
 

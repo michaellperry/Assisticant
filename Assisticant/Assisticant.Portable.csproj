@@ -79,6 +79,7 @@
     <Compile Include="Collections\ObservableList.cs" />
     <Compile Include="Computed.cs" />
     <Compile Include="ComputedJob.cs" />
+    <Compile Include="PropertyTracker.cs" />
     <Compile Include="Fields\Computed.cs" />
     <Compile Include="Fields\Observable.cs" />
     <Compile Include="Fields\ComputedSubscription.cs" />

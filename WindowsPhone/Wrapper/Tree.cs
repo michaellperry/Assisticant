@@ -25,7 +25,7 @@ namespace Assisticant.XAML.Wrapper
             {
                 _root.UpdateNodes();
             });
-            _depNodes.Invalidated += () => UpdateScheduler.ScheduleUpdate(UpdateNow);
+            _depNodes.Invalidated += () => UpdateScheduler.ScheduleUpdate(_depNodes.OnGet);
         }
 
         public void SetRoot(IObjectInstance root)
@@ -55,9 +55,5 @@ namespace Assisticant.XAML.Wrapper
             _wrapperByObject.Remove(key);
         }
 
-        private void UpdateNow()
-        {
-            _depNodes.OnGet();
-        }
     }
 }

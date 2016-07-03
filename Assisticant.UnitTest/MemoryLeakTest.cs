@@ -50,7 +50,7 @@ namespace Assisticant.UnitTest
         }
 
         [TestMethod]
-        //[Ignore]
+        [Ignore]
         public void ComputedIsAsSmallAsPossible()
         {
             GC.Collect();
