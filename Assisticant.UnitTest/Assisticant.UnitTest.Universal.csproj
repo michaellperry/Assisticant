@@ -20,6 +20,7 @@
     <AppxBundle>Never</AppxBundle>
     <AllowCrossPlatformRetargeting>False</AllowCrossPlatformRetargeting>
     <BaseIntermediateOutputPath>obj\Universal\</BaseIntermediateOutputPath>
+    <PackageCertificateThumbprint>FB4672029F4336F4CF3D1F018C48345F7020A6C2</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

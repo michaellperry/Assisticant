@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>Assisticant.XAML.Test_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Assisticant.StoreApp_TemporaryKey.pfx</PackageCertificateKeyFile>
     <SccProjectName>%24/updatecontrols/WinRT/Assisticant.XAML.Test</SccProjectName>
     <SccLocalPath>.</SccLocalPath>
     <SccAuxPath>https://tfs.codeplex.com/tfs/tfs07</SccAuxPath>
@@ -20,6 +20,7 @@
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <TargetFrameworkVersion />
+    <PackageCertificateThumbprint>897360B88977AEFBBE663275577EF0DE8C029E3B</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -132,7 +133,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="Assisticant.XAML.Test_TemporaryKey.pfx" />
+    <None Include="Assisticant.StoreApp_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png" />
