@@ -72,6 +72,9 @@
       <Link>Properties\CommonProperties.cs</Link>
     </Compile>
     <Compile Include="BindingInterceptor.cs" />
+    <Compile Include="Binding\BindingManager.cs" />
+    <Compile Include="Binding\IInputSubscription.cs" />
+    <Compile Include="Binding\IDisplayDataConverter.cs" />
     <Compile Include="Collections\ComputedDictionary.cs" />
     <Compile Include="Collections\ComputedList.cs" />
     <Compile Include="Collections\Impl\UpdateCollectionHelper.cs" />
