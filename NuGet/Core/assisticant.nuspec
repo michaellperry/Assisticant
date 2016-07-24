@@ -2,16 +2,16 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Assisticant</id>
-    <version>1.1.8</version>
+    <version>1.2.0</version>
     <authors>Michael L Perry</authors>
     <owners>Michael L Perry</owners>
-    <description>Automatically discover view model dependencies and databind without INotifyPropertyChanged.</description>
+    <description>Automatically discover view model dependencies and databind without INotifyPropertyChanged. UWP, WPF, iOS, or Android.</description>
     <licenseUrl>http://assisticant.net/license</licenseUrl>
     <projectUrl>http://assisticant.net/</projectUrl>
     <iconUrl>http://assisticant.net/images/logosmall.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <language>en-US</language>
-    <tags>mvvm viewmodel databinding inotifypropertychanged inpc wpf silverlight wp7</tags>
+    <tags>mvvm viewmodel databinding inotifypropertychanged inpc wpf silverlight wp7 xamarin ios android</tags>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Windows" targetFramework="net45"/>
       <frameworkAssembly assemblyName="System.Windows" targetFramework="portable-net45+sl50+wp80+win80"/>
@@ -56,5 +56,17 @@
 
     <file src="..\..\Assisticant\bin\WPF\Release\Assisticant.XAML.dll" target="lib\net45" />
     <file src="..\..\Assisticant\bin\WPF\Release\Assisticant.XAML.xml" target="lib\net45" />
+
+    <file src="..\..\Android\bin\Release\Assisticant.Android.dll" target="lib\MonoAndroid403" />
+    <file src="..\..\Android\bin\Release\Assisticant.Android.xml" target="lib\MonoAndroid403" />
+
+    <file src="..\..\iOS\bin\Release\Assisticant.iOS.dll" target="lib\Xamarin.iOS10" />
+    <file src="..\..\iOS\bin\Release\Assisticant.iOS.xml" target="lib\Xamarin.iOS10" />
+
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\MonoAndroid403" />
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\MonoAndroid403" />
+
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\Xamarin.iOS10" />
+    <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\Xamarin.iOS10" />
   </files>
 </package>
