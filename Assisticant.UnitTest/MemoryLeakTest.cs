@@ -28,7 +28,7 @@ namespace Assisticant.UnitTest
 #endif
 
         [TestMethod]
-        //[Ignore]
+        [Ignore]
         public void ObservableIsAsSmallAsPossible()
         {
             GC.Collect();
