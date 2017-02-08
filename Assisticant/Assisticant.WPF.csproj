@@ -58,6 +58,7 @@
     <Compile Include="..\Common\CommonProperties.cs">
       <Link>Properties\CommonProperties.cs</Link>
     </Compile>
+    <Compile Include="Descriptors\PlatformProxy.NotifyDataErrorInfo.cs" />
     <Compile Include="Descriptors\ProxyDescriptionProvider.cs" />
     <Compile Include="Descriptors\ProxyEventDescriptor.cs" />
     <Compile Include="Descriptors\ProxyPropertyDescriptor.cs" />

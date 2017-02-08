@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Assisticant.Descriptors
 {
-    public abstract class PlatformProxy : ViewProxy, IDataErrorInfo
+    public abstract partial class PlatformProxy : ViewProxy, IDataErrorInfo
     {
         public string Error
         {
