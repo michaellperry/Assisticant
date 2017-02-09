@@ -65,6 +65,11 @@
     <Compile Include="Descriptors\ProxyTypeDescriptor.cs" />
     <Compile Include="Descriptors\PlatformProxy.cs" />
     <Compile Include="ForView.cs" />
+    <Compile Include="Validation\IntValidationExtension.cs" />
+    <Compile Include="Validation\IValidation.cs" />
+    <Compile Include="Validation\PropertyValidator.cs" />
+    <Compile Include="Validation\StringValidationExtensions.cs" />
+    <Compile Include="Validation\ValidationRules.cs" />
     <Compile Include="ViewSelectorExtension.cs" />
     <Compile Include="StaticExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,6 +88,7 @@
       <Link>Mallardsoft.snk</Link>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -1,22 +1,37 @@
-﻿using System;
+﻿using Assisticant.Validation;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assisticant.Descriptors
 {
     public abstract partial class PlatformProxy : INotifyDataErrorInfo
     {
+        private ValidationRules _validator;
+
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-        public bool HasErrors => false;
+        partial void PlatformProxy_NotifyDataErrorInfo()
+        {
+            var validation = Instance as IValidation;
+            _validator = validation?.Rules;
+            if (_validator != null)
+            {
+                _validator.ErrorsChanged += Validator_ErrorsChanged;
+            }
+        }
+
+        public bool HasErrors => _validator?.HasErrors ?? false;
 
         public IEnumerable GetErrors(string propertyName)
         {
-            return Enumerable.Empty<string>();
+            return _validator?.GetErrors(propertyName) ?? Enumerable.Empty<string>();
+        }
+
+        private void Validator_ErrorsChanged(string propertyName)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
     }
 }

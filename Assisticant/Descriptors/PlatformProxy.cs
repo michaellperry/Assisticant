@@ -32,6 +32,7 @@ namespace Assisticant.Descriptors
         protected PlatformProxy(object instance, ProxyTypeDescriptor descriptor)
             : base(instance, descriptor.Meta)
         {
+            PlatformProxy_NotifyDataErrorInfo();
         }
 
         public abstract ProxyTypeDescriptor GetTypeDescriptor();
@@ -42,6 +43,8 @@ namespace Assisticant.Descriptors
                 return null;
             return (PlatformProxy)Activator.CreateInstance(typeof(PlatformProxy<>).MakeGenericType(value.GetType()), value);
         }
+
+        partial void PlatformProxy_NotifyDataErrorInfo();
     }
 
     [TypeDescriptionProvider(typeof(ProxyDescriptionProvider))]
