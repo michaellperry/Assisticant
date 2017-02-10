@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Assisticant</id>
-    <version>1.2.0</version>
+    <version>1.2.1-alpha</version>
     <authors>Michael L Perry</authors>
     <owners>Michael L Perry</owners>
     <description>Automatically discover view model dependencies and databind without INotifyPropertyChanged. UWP, WPF, iOS, or Android.</description>
