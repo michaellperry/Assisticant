@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{664C559F-A3E9-46AE-A3C5-D95E2E8FB5C2}</ProjectGuid>
+    <ProjectGuid>{4B50DF86-0C6C-4AB3-A22D-FE5D22846DFA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Assisticant.UnitTest</RootNamespace>
-    <AssemblyName>Assisticant.UnitTest</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>Assisticant.UnitTest.WPF</RootNamespace>
+    <AssemblyName>Assisticant.UnitTest.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,13 +16,12 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
-    <BaseIntermediateOutputPath>obj\Portable\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Portable\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -30,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Portable\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -56,44 +55,24 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CollectionContentTest.cs" />
-    <Compile Include="CollectionData\SourceCollection.cs" />
-    <Compile Include="CollectionData\TargetCollection.cs" />
-    <Compile Include="CollectionTest.cs" />
-    <Compile Include="ContactListData\Contact.cs" />
-    <Compile Include="ContactListData\ContactList.cs" />
-    <Compile Include="ContactListData\ContactListSortOrder.cs" />
-    <Compile Include="ContactListData\ContactListViewModel.cs" />
-    <Compile Include="ContactListData\ContactViewModel.cs" />
-    <Compile Include="ComputedListTest.cs" />
-    <Compile Include="DirectConcurrencyTest.cs" />
-    <Compile Include="DirectComputed.cs" />
-    <Compile Include="DirectComputedTest.cs" />
-    <Compile Include="DynamicSortOrderTest.cs" />
-    <Compile Include="IndirectConcurrencyTest.cs" />
-    <Compile Include="IndirectComputed.cs" />
-    <Compile Include="IndirectComputedTest.cs" />
-    <Compile Include="LargeListTest.cs" />
-    <Compile Include="MemoryLeakTest.cs" />
-    <Compile Include="MultithreadedData\AbstractThread.cs" />
-    <Compile Include="MultithreadedData\SourceThread.cs" />
-    <Compile Include="MultithreadedData\TargetThread.cs" />
-    <Compile Include="MultithreadedTest.cs" />
-    <Compile Include="NotificationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SortedCollectionTest.cs" />
-    <Compile Include="SourceData.cs" />
-    <Compile Include="SubscriptionTest.cs" />
+    <Compile Include="NotifyDataErrorInfoTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Assisticant\Assisticant.Portable.csproj">
-      <Project>{0f197cdb-cf38-438b-90ad-1b4f0976061e}</Project>
+      <Project>{0F197CDB-CF38-438B-90AD-1B4F0976061E}</Project>
       <Name>Assisticant.Portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Assisticant\Assisticant.WPF.csproj">
+      <Project>{fefabf21-e62d-4e4a-a51a-30803edfa37f}</Project>
+      <Name>Assisticant.WPF</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
