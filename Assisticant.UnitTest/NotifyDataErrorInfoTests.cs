@@ -3,6 +3,7 @@ using Assisticant.Validation;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Assisticant.UnitTest.WPF
 {
@@ -50,6 +51,8 @@ namespace Assisticant.UnitTest.WPF
             viewModel.PhoneNumber = "abc";
 
             notify.HasErrors.Should().BeTrue();
+            string.Join(", ", notify.GetErrors("PhoneNumber").OfType<string>().ToArray())
+                .Should().Be(@"PhoneNumber must match the pattern [0-9\-\(\)]* (whatever that means)");
         }
 
         private static TestViewModel GivenViewModel()
