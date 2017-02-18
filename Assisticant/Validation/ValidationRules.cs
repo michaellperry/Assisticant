@@ -19,7 +19,7 @@ namespace Assisticant.Validation
             var body = (MemberExpression)property.Body;
             var propertyName = body.Member.Name;
             var function = property.Compile();
-            var propertyValidator = new PropertyValidator(propertyName, () => function, Notify);
+            var propertyValidator = new PropertyValidator(propertyName, () => function(), Notify);
             _validatorByPropertyName.Add(propertyName, propertyValidator);
             return propertyValidator;
         }
