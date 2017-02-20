@@ -24,6 +24,13 @@ namespace Assisticant.Validation
             return propertyValidator;
         }
 
+        public ValidationRules For<T>(Expression<Func<T>> property, Func<bool> predicate, Func<string> message)
+        {
+            var validator = AddPropertyValidator(property);
+            validator.AddRule()
+            return this;
+        }
+
         private void Notify(string propertyName)
         {
             ErrorsChanged?.Invoke(propertyName);
