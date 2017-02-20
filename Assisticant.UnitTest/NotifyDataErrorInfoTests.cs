@@ -21,8 +21,8 @@ namespace Assisticant.UnitTest.WPF
             }
 
             public ValidationRules Rules => new ValidationRules()
-                .For(() => PhoneNumber, r => r
-                    .Matches(@"[0-9\-\(\)]*"));
+                .ForString(() => PhoneNumber, r => r
+                    .Matches(@"^[0-9\-\(\)]*$"));
         }
 
         [TestMethod]
@@ -52,7 +52,29 @@ namespace Assisticant.UnitTest.WPF
 
             notify.HasErrors.Should().BeTrue();
             string.Join(", ", notify.GetErrors("PhoneNumber").OfType<string>().ToArray())
-                .Should().Be(@"PhoneNumber must match the pattern [0-9\-\(\)]* (whatever that means)");
+                .Should().Be(@"PhoneNumber is not valid");
+        }
+
+        [TestMethod]
+        public void HasErrorWhenRegexPartiallyMatched()
+        {
+            var viewModel = GivenViewModel();
+            var notify = GivenNotifyDataErrorInfo(viewModel);
+            viewModel.PhoneNumber = "abc123";
+
+            notify.HasErrors.Should().BeTrue();
+            string.Join(", ", notify.GetErrors("PhoneNumber").OfType<string>().ToArray())
+                .Should().Be(@"PhoneNumber is not valid");
+        }
+
+        [TestMethod]
+        public void HasNoErrorWhenRegexIsMatched()
+        {
+            var viewModel = GivenViewModel();
+            var notify = GivenNotifyDataErrorInfo(viewModel);
+            viewModel.PhoneNumber = "555-1212";
+
+            notify.HasErrors.Should().BeFalse();
         }
 
         private static TestViewModel GivenViewModel()

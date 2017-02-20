@@ -6,7 +6,7 @@ namespace Assisticant.Validation
 {
     public static class StringValidationExtensions
     {
-        public static ValidationRules For(this ValidationRules validator, Expression<Func<string>> property,
+        public static ValidationRules ForString(this ValidationRules validator, Expression<Func<string>> property,
             Func<StringPropertyValidationRule, StringPropertyValidationRule> rule)
         {
             var propertyValidator = validator.AddPropertyValidator(property);
@@ -43,8 +43,8 @@ namespace Assisticant.Validation
         public StringPropertyValidationRule Matches(string pattern)
         {
             var regex = new Regex(pattern);
-            _propertyValidator.AddRule(v => v != null && regex.IsMatch((string)v)
-                ? $"{_propertyValidator.PropertyName} must match the pattern {pattern} (whatever that means)"
+            _propertyValidator.AddRule(v => v != null && !regex.IsMatch((string)v)
+                ? $"{_propertyValidator.PropertyName} is not valid"
                 : null);
             return this;
         }

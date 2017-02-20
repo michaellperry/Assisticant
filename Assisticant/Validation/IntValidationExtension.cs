@@ -5,7 +5,7 @@ namespace Assisticant.Validation
 {
     public static class IntValidationExtension
     {
-        public static ValidationRules For(this ValidationRules validator, Expression<Func<int>> property,
+        public static ValidationRules ForInt(this ValidationRules validator, Expression<Func<int>> property,
             Func<IntPropertyValidationRule, IntPropertyValidationRule> rule)
         {
             var propertyValidator = validator.AddPropertyValidator(property);
