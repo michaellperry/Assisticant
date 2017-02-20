@@ -74,7 +74,7 @@ namespace Assisticant.UnitTest
         }
 
         [TestMethod]
-        //[Ignore]
+        [Ignore]
         public void SingleDependencyBeforeUpdateIsAsSmallAsPossible()
         {
             GC.Collect();
