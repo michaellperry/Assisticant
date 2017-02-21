@@ -5,12 +5,26 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel;
 using System.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace Assisticant.UnitTest.WPF
 {
     [TestClass]
     public class NotifyDataErrorInfoTests
     {
+        private static Queue<Action> _updateQueue;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            if (_updateQueue == null)
+            {
+                _updateQueue = new Queue<Action>();
+                UpdateScheduler.Initialize(a => _updateQueue.Enqueue(a));
+            }
+            _updateQueue.Clear();
+        }
+
         class TestViewModel : IValidation
         {
             private Observable<string> _phoneNumber = new Observable<string>();
@@ -68,6 +82,22 @@ namespace Assisticant.UnitTest.WPF
             var notify = GivenNotifyDataErrorInfo(viewModel);
 
             ShouldHaveNoError(notify);
+        }
+
+        [TestMethod]
+        public void NotifiesWhenPropertyChanges()
+        {
+            var viewModel = GivenViewModel();
+            var notify = GivenNotifyDataErrorInfo(viewModel);
+            List<string> notified = new List<string>();
+            EventHandler<DataErrorsChangedEventArgs> handler = (s, e) =>
+                { notified.Add(e.PropertyName); };
+            notify.ErrorsChanged += handler;
+            viewModel.PhoneNumber = "abc";
+            Process();
+            notify.ErrorsChanged -= handler;
+
+            string.Join(", ", notified).Should().Be("PhoneNumber");
         }
 
         [TestMethod]
@@ -129,6 +159,12 @@ namespace Assisticant.UnitTest.WPF
             viewModel.Death = DateTime.Parse("2009-01-01");
 
             ShouldHaveError(notify, "Death", "Death date must be after birth date.");
+        }
+
+        private void Process()
+        {
+            while (_updateQueue.Any())
+                _updateQueue.Dequeue()();
         }
 
         private static TestViewModel GivenViewModel()

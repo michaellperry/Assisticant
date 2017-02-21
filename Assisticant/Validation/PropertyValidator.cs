@@ -22,8 +22,24 @@ namespace Assisticant.Validation
                 var value = function();
                 return _rules.Select(r => r(value)).Where(e => e != null).ToList();
             });
-            _subscription = _validationErrors.Subscribe(errors => notify(propertyName));
-        }
+            _subscription = _validationErrors.Subscribe((errors, priorErrors) =>
+            {
+                if (priorErrors == null)
+                {
+                    if (errors != null && errors.Any())
+                    {
+                        notify(propertyName);
+                    }
+                }
+                else
+                {
+                    if (errors == null || !priorErrors.SequenceEqual(errors))
+                    {
+                        notify(propertyName);
+                    }
+                }
+            });
+    }
 
         public void Dispose()
         {
