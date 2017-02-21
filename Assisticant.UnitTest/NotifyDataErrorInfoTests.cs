@@ -15,6 +15,8 @@ namespace Assisticant.UnitTest.WPF
         {
             private Observable<string> _phoneNumber = new Observable<string>();
             private Observable<int> _age = new Observable<int>();
+            private Observable<DateTime> _birth = new Observable<DateTime>();
+            private Observable<DateTime?> _death = new Observable<DateTime?>();
 
             public string PhoneNumber
             {
@@ -28,13 +30,26 @@ namespace Assisticant.UnitTest.WPF
                 set { _age.Value = value; }
             }
 
+            public DateTime Birth
+            {
+                get { return _birth; }
+                set { _birth.Value = value; }
+            }
+
+            public DateTime? Death
+            {
+                get { return _death; }
+                set { _death.Value = value; }
+            }
+
             public ValidationRules Rules => new ValidationRules()
                 .ForString(() => PhoneNumber, r => r
                     .Matches(@"^[0-9\-\(\)]*$"))
                 .ForInt(() => Age, r => r
                     .GreaterThanOrEqualTo(0))
                 .ForInt(() => Age, r => r
-                    .LessThan(150));
+                    .LessThan(150))
+                .For(() => Death, v => v == null || v > Birth, () => "Death date must be after birth date.");
         }
 
         [TestMethod]
@@ -103,6 +118,17 @@ namespace Assisticant.UnitTest.WPF
             viewModel.Age = 150;
 
             ShouldHaveError(notify, "Age", "Age must be less than 150");
+        }
+
+        [TestMethod]
+        public void CanExpressCustomRule()
+        {
+            var viewModel = GivenViewModel();
+            var notify = GivenNotifyDataErrorInfo(viewModel);
+            viewModel.Birth = DateTime.Parse("2010-01-01");
+            viewModel.Death = DateTime.Parse("2009-01-01");
+
+            ShouldHaveError(notify, "Death", "Death date must be after birth date.");
         }
 
         private static TestViewModel GivenViewModel()
