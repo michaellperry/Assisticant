@@ -9,7 +9,7 @@ namespace Assisticant.Validation
         public static ValidationRules ForString(this ValidationRules validator, Expression<Func<string>> property,
             Func<StringPropertyValidationRule, StringPropertyValidationRule> rule)
         {
-            var propertyValidator = validator.AddPropertyValidator(property);
+            var propertyValidator = validator.ValidatorForProperty(property);
             rule(new StringPropertyValidationRule(propertyValidator));
             return validator;
         }

@@ -14,20 +14,24 @@ namespace Assisticant.Validation
         private Dictionary<string, PropertyValidator> _validatorByPropertyName =
             new Dictionary<string, PropertyValidator>();
 
-        public PropertyValidator AddPropertyValidator<T>(Expression<Func<T>> property)
+        public PropertyValidator ValidatorForProperty<T>(Expression<Func<T>> property)
         {
             var body = (MemberExpression)property.Body;
             var propertyName = body.Member.Name;
-            var function = property.Compile();
-            var propertyValidator = new PropertyValidator(propertyName, () => function(), Notify);
-            _validatorByPropertyName.Add(propertyName, propertyValidator);
+            PropertyValidator propertyValidator;
+            if (!_validatorByPropertyName.TryGetValue(propertyName, out propertyValidator))
+            {
+                var function = property.Compile();
+                propertyValidator = new PropertyValidator(propertyName, () => function(), Notify);
+                _validatorByPropertyName.Add(propertyName, propertyValidator);
+            }
             return propertyValidator;
         }
 
-        public ValidationRules For<T>(Expression<Func<T>> property, Func<bool> predicate, Func<string> message)
+        public ValidationRules For<T>(Expression<Func<T>> property, Func<T, bool> predicate, Func<string> message)
         {
-            var validator = AddPropertyValidator(property);
-            validator.AddRule()
+            var validator = ValidatorForProperty(property);
+            validator.AddRule(v => predicate((T)v) ? null : message());
             return this;
         }
 

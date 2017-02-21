@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel;
 using System.Linq;
+using System;
 
 namespace Assisticant.UnitTest.WPF
 {
@@ -13,6 +14,7 @@ namespace Assisticant.UnitTest.WPF
         class TestViewModel : IValidation
         {
             private Observable<string> _phoneNumber = new Observable<string>();
+            private Observable<int> _age = new Observable<int>();
 
             public string PhoneNumber
             {
@@ -20,9 +22,19 @@ namespace Assisticant.UnitTest.WPF
                 set { _phoneNumber.Value = value; }
             }
 
+            public int Age
+            {
+                get { return _age; }
+                set { _age.Value = value; }
+            }
+
             public ValidationRules Rules => new ValidationRules()
                 .ForString(() => PhoneNumber, r => r
-                    .Matches(@"^[0-9\-\(\)]*$"));
+                    .Matches(@"^[0-9\-\(\)]*$"))
+                .ForInt(() => Age, r => r
+                    .GreaterThanOrEqualTo(0))
+                .ForInt(() => Age, r => r
+                    .LessThan(150));
         }
 
         [TestMethod]
@@ -40,7 +52,7 @@ namespace Assisticant.UnitTest.WPF
             var viewModel = GivenViewModel();
             var notify = GivenNotifyDataErrorInfo(viewModel);
 
-            notify.HasErrors.Should().BeFalse();
+            ShouldHaveNoError(notify);
         }
 
         [TestMethod]
@@ -50,9 +62,7 @@ namespace Assisticant.UnitTest.WPF
             var notify = GivenNotifyDataErrorInfo(viewModel);
             viewModel.PhoneNumber = "abc";
 
-            notify.HasErrors.Should().BeTrue();
-            string.Join(", ", notify.GetErrors("PhoneNumber").OfType<string>().ToArray())
-                .Should().Be(@"PhoneNumber is not valid");
+            ShouldHaveError(notify, "PhoneNumber", @"PhoneNumber is not valid");
         }
 
         [TestMethod]
@@ -62,9 +72,7 @@ namespace Assisticant.UnitTest.WPF
             var notify = GivenNotifyDataErrorInfo(viewModel);
             viewModel.PhoneNumber = "abc123";
 
-            notify.HasErrors.Should().BeTrue();
-            string.Join(", ", notify.GetErrors("PhoneNumber").OfType<string>().ToArray())
-                .Should().Be(@"PhoneNumber is not valid");
+            ShouldHaveError(notify, "PhoneNumber", @"PhoneNumber is not valid");
         }
 
         [TestMethod]
@@ -74,7 +82,27 @@ namespace Assisticant.UnitTest.WPF
             var notify = GivenNotifyDataErrorInfo(viewModel);
             viewModel.PhoneNumber = "555-1212";
 
-            notify.HasErrors.Should().BeFalse();
+            ShouldHaveNoError(notify);
+        }
+
+        [TestMethod]
+        public void HasErrorWhenTooSmall()
+        {
+            var viewModel = GivenViewModel();
+            var notify = GivenNotifyDataErrorInfo(viewModel);
+            viewModel.Age = -1;
+
+            ShouldHaveError(notify, "Age", "Age must be at least 0");
+        }
+
+        [TestMethod]
+        public void HasErrorWhenTooBig()
+        {
+            var viewModel = GivenViewModel();
+            var notify = GivenNotifyDataErrorInfo(viewModel);
+            viewModel.Age = 150;
+
+            ShouldHaveError(notify, "Age", "Age must be less than 150");
         }
 
         private static TestViewModel GivenViewModel()
@@ -87,6 +115,18 @@ namespace Assisticant.UnitTest.WPF
             var viewModel = ForView.Wrap(testViewModel);
             var notify = viewModel as INotifyDataErrorInfo;
             return notify;
+        }
+
+        private static void ShouldHaveNoError(INotifyDataErrorInfo notify)
+        {
+            notify.HasErrors.Should().BeFalse();
+        }
+
+        private static void ShouldHaveError(INotifyDataErrorInfo notify, string property, string expectedError)
+        {
+            notify.HasErrors.Should().BeTrue();
+            string.Join(", ", notify.GetErrors(property).OfType<string>().ToArray())
+                .Should().Be(expectedError);
         }
     }
 }

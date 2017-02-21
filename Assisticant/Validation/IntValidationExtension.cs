@@ -8,7 +8,7 @@ namespace Assisticant.Validation
         public static ValidationRules ForInt(this ValidationRules validator, Expression<Func<int>> property,
             Func<IntPropertyValidationRule, IntPropertyValidationRule> rule)
         {
-            var propertyValidator = validator.AddPropertyValidator(property);
+            var propertyValidator = validator.ValidatorForProperty(property);
             rule(new IntPropertyValidationRule(propertyValidator));
             return validator;
         }
@@ -23,19 +23,35 @@ namespace Assisticant.Validation
             _propertyValidator = propertyValidator;
         }
 
+        public IntPropertyValidationRule GreaterThan(int lowerBound)
+        {
+            _propertyValidator.AddRule(v => ((int)v) > lowerBound
+                ? null
+                : $"{_propertyValidator.PropertyName} must be greater than {lowerBound}");
+            return this;
+        }
+
         public IntPropertyValidationRule GreaterThanOrEqualTo(int lowerBound)
         {
-            _propertyValidator.AddRule(v => ((int)v) < lowerBound
-                ? $"{_propertyValidator.PropertyName} must be greater than or equal to {lowerBound}"
-                : null);
+            _propertyValidator.AddRule(v => ((int)v) >= lowerBound
+                ? null
+                : $"{_propertyValidator.PropertyName} must be at least {lowerBound}");
             return this;
         }
 
         public IntPropertyValidationRule LessThan(int upperBound)
         {
-            _propertyValidator.AddRule(v => ((int)v) >= upperBound
-                ? $"{_propertyValidator.PropertyName} must be less than {upperBound}"
-                : null);
+            _propertyValidator.AddRule(v => ((int)v) < upperBound
+                ? null
+                : $"{_propertyValidator.PropertyName} must be less than {upperBound}");
+            return this;
+        }
+
+        public IntPropertyValidationRule LessThanOrEqualTo(int upperBound)
+        {
+            _propertyValidator.AddRule(v => ((int)v) <= upperBound
+                ? null
+                : $"{_propertyValidator.PropertyName} must be no more than {upperBound}");
             return this;
         }
     }
