@@ -40,5 +40,17 @@ namespace Assisticant.Validation
 
             return _wrapped;
         }
+
+        public ValidationRules IsRequired()
+        {
+            var validator = _wrapped.ValidatorForProperty(_propExpression);
+
+            validator
+                .AddRule(
+                    v => !string.IsNullOrEmpty((string)v),
+                    () => $"{validator.PropertyName} is required");
+
+            return _wrapped;
+        }
     }
 }
