@@ -5,6 +5,24 @@ using System.Linq.Expressions;
 
 namespace Assisticant.Validation
 {
+    public static class Validator
+    {
+        public static PropertyValidationContext<T> For<T>(Expression<Func<T>> propExpr)
+        {
+            return (new ValidationRules()).For(propExpr);
+        }
+
+        public static StringPropertyValidationContext For(Expression<Func<string>> propExpr)
+        {
+            return (new ValidationRules()).For(propExpr);
+        }
+
+        public static NumericPropValidationContext<int> For(Expression<Func<int>> propExpr)
+        {
+            return (new ValidationRules()).For(propExpr);
+        }
+    }
+
     public sealed class ValidationRules : IDisposable, IValidationRules
     {
         public delegate void ErrorsChangedDelegate(string propertyName);
@@ -13,6 +31,11 @@ namespace Assisticant.Validation
 
         private readonly Dictionary<string, PropertyValidator> _validatorByPropertyName =
             new Dictionary<string, PropertyValidator>();
+
+        internal ValidationRules()
+        {
+            
+        }
 
         internal PropertyValidator ValidatorForProperty<T>(Expression<Func<T>> property)
         {

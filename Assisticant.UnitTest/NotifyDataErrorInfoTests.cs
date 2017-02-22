@@ -56,7 +56,8 @@ namespace Assisticant.UnitTest.WPF
                 set { _death.Value = value; }
             }
 
-            public IValidationRules Rules => new ValidationRules()
+            public IValidationRules Rules => 
+                Validator
                 .For(() => PhoneNumber)
                     .Matches(@"^[0-9\-\(\)]*$")
                 .For(() => Age)
