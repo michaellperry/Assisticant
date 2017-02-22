@@ -59,10 +59,10 @@ namespace Assisticant.UnitTest.WPF
             public IValidationRules Rules => new ValidationRules()
                 .For(() => PhoneNumber)
                     .Matches(@"^[0-9\-\(\)]*$")
-                .ForInt(() => Age, r => r
-                    .GreaterThanOrEqualTo(0))
-                .ForInt(() => Age, r => r
-                    .LessThan(150))
+                .For(() => Age)
+                    .GreaterThanOrEqualTo(0)
+                .For(() => Age)
+                    .LessThan(150)
                 .For(() => Death)
                     .Where(v => v == null || v > Birth)
                     .WithMessage("Death date must be after birth date.");

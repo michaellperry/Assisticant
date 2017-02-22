@@ -38,6 +38,11 @@ namespace Assisticant.Validation
             return new StringPropertyValidationContext(this, propExpression);
         }
 
+        public NumericPropValidationContext<int> For(Expression<Func<int>> propExpression)
+        {
+            return new NumericPropValidationContext<int>(this, propExpression);
+        }
+
         private void Notify(string propertyName)
         {
             ErrorsChanged?.Invoke(propertyName);
