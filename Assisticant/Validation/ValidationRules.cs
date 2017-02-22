@@ -5,16 +5,16 @@ using System.Linq.Expressions;
 
 namespace Assisticant.Validation
 {
-    public class ValidationRules : IDisposable
+    public sealed class ValidationRules : IDisposable, IValidationRules
     {
         public delegate void ErrorsChangedDelegate(string propertyName);
 
         public event ErrorsChangedDelegate ErrorsChanged;
 
-        private Dictionary<string, PropertyValidator> _validatorByPropertyName =
+        private readonly Dictionary<string, PropertyValidator> _validatorByPropertyName =
             new Dictionary<string, PropertyValidator>();
 
-        public PropertyValidator ValidatorForProperty<T>(Expression<Func<T>> property)
+        internal PropertyValidator ValidatorForProperty<T>(Expression<Func<T>> property)
         {
             var body = (MemberExpression)property.Body;
             var propertyName = body.Member.Name;
@@ -28,11 +28,14 @@ namespace Assisticant.Validation
             return propertyValidator;
         }
 
-        public ValidationRules For<T>(Expression<Func<T>> property, Func<T, bool> predicate, Func<string> message)
+        public PropertyValidationContext<T> For<T>(Expression<Func<T>> propExpression)
         {
-            var validator = ValidatorForProperty(property);
-            validator.AddRule(v => predicate((T)v) ? null : message());
-            return this;
+            return new PropertyValidationContext<T>(this, propExpression);
+        }
+
+        public StringPropertyValidationContext For(Expression<Func<string>> propExpression)
+        {
+            return new StringPropertyValidationContext(this, propExpression);
         }
 
         private void Notify(string propertyName)

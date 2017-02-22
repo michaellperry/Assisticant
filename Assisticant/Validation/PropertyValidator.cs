@@ -8,9 +8,9 @@ namespace Assisticant.Validation
 {
     public class PropertyValidator : IDisposable
     {
-        private ObservableList<Func<object, string>> _rules = new ObservableList<Func<object, string>>();
-        private Computed<List<string>> _validationErrors;
-        private ComputedSubscription _subscription;
+        private readonly ObservableList<Func<object, string>> _rules = new ObservableList<Func<object, string>>();
+        private readonly Computed<List<string>> _validationErrors;
+        private readonly ComputedSubscription _subscription;
 
         public string PropertyName { get; }
 
@@ -49,6 +49,11 @@ namespace Assisticant.Validation
         public void AddRule(Func<object, string> rule)
         {
             _rules.Add(rule);
+        }
+
+        public void AddRule(Func<object, bool> predicate, Func<string> errGenerator)
+        {
+            _rules.Add(v => predicate(v) ? null : errGenerator());
         }
 
         public IEnumerable<string> ValidationErrors => _validationErrors.Value;

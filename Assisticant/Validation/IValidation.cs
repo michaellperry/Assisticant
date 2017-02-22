@@ -2,6 +2,6 @@
 {
     public interface IValidation
     {
-        ValidationRules Rules { get; }
+        IValidationRules Rules { get; }
     }
 }

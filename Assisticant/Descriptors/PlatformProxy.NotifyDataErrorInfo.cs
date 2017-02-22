@@ -8,7 +8,7 @@ namespace Assisticant.Descriptors
 {
     public abstract partial class PlatformProxy : INotifyDataErrorInfo
     {
-        private ValidationRules _validator;
+        private IValidationRules _validator;
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 

@@ -1,0 +1,13 @@
+﻿<ProjectConfiguration>
+  <Settings>
+    <IgnoredTests>
+      <NamedTestSelector>
+        <TestName>Assisticant.UnitTest.MemoryLeakTest.DirectComputedObjectCanBeGarbageCollected</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>Assisticant.UnitTest.MemoryLeakTest.IndirectComputedObjectCanBeGarbageCollected</TestName>
+      </NamedTestSelector>
+    </IgnoredTests>
+    <PreviouslyBuiltSuccessfully>True</PreviouslyBuiltSuccessfully>
+  </Settings>
+</ProjectConfiguration>

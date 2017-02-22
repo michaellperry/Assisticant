@@ -56,14 +56,16 @@ namespace Assisticant.UnitTest.WPF
                 set { _death.Value = value; }
             }
 
-            public ValidationRules Rules => new ValidationRules()
-                .ForString(() => PhoneNumber, r => r
-                    .Matches(@"^[0-9\-\(\)]*$"))
+            public IValidationRules Rules => new ValidationRules()
+                .For(() => PhoneNumber)
+                    .Matches(@"^[0-9\-\(\)]*$")
                 .ForInt(() => Age, r => r
                     .GreaterThanOrEqualTo(0))
                 .ForInt(() => Age, r => r
                     .LessThan(150))
-                .For(() => Death, v => v == null || v > Birth, () => "Death date must be after birth date.");
+                .For(() => Death)
+                    .Where(v => v == null || v > Birth)
+                    .WithMessage("Death date must be after birth date.");
         }
 
         [TestMethod]
