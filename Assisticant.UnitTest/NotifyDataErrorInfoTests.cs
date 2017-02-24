@@ -62,11 +62,11 @@ namespace Assisticant.UnitTest.WPF
                     .Matches(@"^[0-9\-\(\)]*$")
                 .For(() => Age)
                     .GreaterThanOrEqualTo(0)
-                .For(() => Age)
                     .LessThan(150)
                 .For(() => Death)
                     .Where(v => v == null || v > Birth)
-                    .WithMessage("Death date must be after birth date.");
+                    .WithMessage(() => "Death date must be after birth date.")
+                .Build();
         }
 
         [TestMethod]

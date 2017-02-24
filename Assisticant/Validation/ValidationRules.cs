@@ -7,17 +7,32 @@ namespace Assisticant.Validation
 {
     public static class Validator
     {
-        public static PropertyValidationContext<T> For<T>(Expression<Func<T>> propExpr)
+        public static PropertyValidationContextNew<T> For<T>(Expression<Func<T>> propExpr)
+        {
+            return new PropertyValidationContextNew<T>(new PropertyRuleset[0], propExpr);
+        }
+
+        public static StringPropertyValidationContextNew For(Expression<Func<string>> propExpr)
+        {
+            return new StringPropertyValidationContextNew(new PropertyRuleset[0], propExpr);
+        }
+
+        public static NumericPropValidationContextNew<int> For(Expression<Func<int>> propExpr)
+        {
+            return new NumericPropValidationContextNew<int>(new PropertyRuleset[0], propExpr);
+        }
+
+        public static PropertyValidationContext<T> ForOld<T>(Expression<Func<T>> propExpr)
         {
             return (new ValidationRules()).For(propExpr);
         }
 
-        public static StringPropertyValidationContext For(Expression<Func<string>> propExpr)
+        public static StringPropertyValidationContext ForOld(Expression<Func<string>> propExpr)
         {
             return (new ValidationRules()).For(propExpr);
         }
 
-        public static NumericPropValidationContext<int> For(Expression<Func<int>> propExpr)
+        public static NumericPropValidationContext<int> ForOld(Expression<Func<int>> propExpr)
         {
             return (new ValidationRules()).For(propExpr);
         }
@@ -39,8 +54,7 @@ namespace Assisticant.Validation
 
         internal PropertyValidator ValidatorForProperty<T>(Expression<Func<T>> property)
         {
-            var body = (MemberExpression)property.Body;
-            var propertyName = body.Member.Name;
+            var propertyName = property.GetPropertyName();
             PropertyValidator propertyValidator;
             if (!_validatorByPropertyName.TryGetValue(propertyName, out propertyValidator))
             {
