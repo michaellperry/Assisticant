@@ -5,17 +5,17 @@ using System.Text.RegularExpressions;
 
 namespace Assisticant.Validation
 {
-    public class StringPropertyValidationContextNew : PropertyValidationContextNew<string>
+    public class StringPropertyValidationContext : PropertyValidationContext<string>
     {
-        internal StringPropertyValidationContextNew(IEnumerable<PropertyRuleset> rulesets, Expression<Func<string>> propExpression) : base(rulesets, propExpression)
+        internal StringPropertyValidationContext(IEnumerable<PropertyRuleset> rulesets, Expression<Func<string>> propExpression) : base(rulesets, propExpression)
         {
         }
 
-        internal StringPropertyValidationContextNew(IEnumerable<PropertyRuleset> rulesets, PropertyRuleset<string> currentRuleset) : base(rulesets, currentRuleset)
+        internal StringPropertyValidationContext(IEnumerable<PropertyRuleset> rulesets, PropertyRuleset<string> currentRuleset) : base(rulesets, currentRuleset)
         {
         }
 
-        public StringPropertyValidationContextNew Matches(string pattern)
+        public StringPropertyValidationContext Matches(string pattern)
         {
             var regex = new Regex(pattern);
 
@@ -25,28 +25,7 @@ namespace Assisticant.Validation
                     v => v == null || regex.IsMatch((string)v),
                     () => $"{name} is not valid");
 
-            return new StringPropertyValidationContextNew(_rulesets, ruleset);
-        }
-    }
-
-    public class StringPropertyValidationContext : PropertyValidationContext<string>
-    {
-        internal StringPropertyValidationContext(ValidationRules wrapped, Expression<Func<string>> propExpression) : base(wrapped, propExpression)
-        {
-        }
-
-        public ValidationRules Matches(string pattern)
-        {
-            var regex = new Regex(pattern);
-
-            var validator = _wrapped.ValidatorForProperty(_propExpression);
-
-            validator
-                .AddRule(
-                    v => v == null || regex.IsMatch((string)v),
-                    () => $"{validator.PropertyName} is not valid");
-
-            return _wrapped;
+            return new StringPropertyValidationContext(_rulesets, ruleset);
         }
     }
 }

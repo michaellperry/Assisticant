@@ -1,26 +1,26 @@
 ﻿using System;
-using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace Assisticant.Validation
 {
     public sealed class PropertyPredicateContext<T>
     {
-        private readonly ValidationRules _wrapped;
-        private readonly Expression<Func<T>> _propExpression;
+        private readonly IEnumerable<PropertyRuleset> _rulesets;
+        private readonly PropertyRuleset<T> _currentRuleset;
         private readonly Func<T, bool> _predicate;
 
-        internal PropertyPredicateContext(ValidationRules wrapped, Expression<Func<T>> propExpression, Func<T, bool> predicate)
+        internal PropertyPredicateContext(IEnumerable<PropertyRuleset> rulesets, PropertyRuleset<T> currentRuleset, Func<T, bool> predicate)
         {
-            _wrapped = wrapped;
-            _propExpression = propExpression;
+            _rulesets = rulesets;
             _predicate = predicate;
+            _currentRuleset = currentRuleset;
         }
 
-        public ValidationRules WithMessage(string message)
+        public PropertyValidationContext<T> WithMessage(Func<string> messageFactory)
         {
-            _wrapped.ValidatorForProperty(_propExpression).AddRule(v => _predicate((T)v), () => message);
+            var ruleset = _currentRuleset.AddRule(_predicate, messageFactory);
 
-            return _wrapped;
+            return new PropertyValidationContext<T>(_rulesets, ruleset);
         }
     }
 }

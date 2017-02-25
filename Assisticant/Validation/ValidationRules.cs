@@ -7,34 +7,19 @@ namespace Assisticant.Validation
 {
     public static class Validator
     {
-        public static PropertyValidationContextNew<T> For<T>(Expression<Func<T>> propExpr)
+        public static PropertyValidationContext<T> For<T>(Expression<Func<T>> propExpr)
         {
-            return new PropertyValidationContextNew<T>(new PropertyRuleset[0], propExpr);
+            return new PropertyValidationContext<T>(new PropertyRuleset[0], propExpr);
         }
 
-        public static StringPropertyValidationContextNew For(Expression<Func<string>> propExpr)
+        public static StringPropertyValidationContext For(Expression<Func<string>> propExpr)
         {
-            return new StringPropertyValidationContextNew(new PropertyRuleset[0], propExpr);
+            return new StringPropertyValidationContext(new PropertyRuleset[0], propExpr);
         }
 
-        public static NumericPropValidationContextNew<int> For(Expression<Func<int>> propExpr)
+        public static NumericPropValidationContext<int> For(Expression<Func<int>> propExpr)
         {
-            return new NumericPropValidationContextNew<int>(new PropertyRuleset[0], propExpr);
-        }
-
-        public static PropertyValidationContext<T> ForOld<T>(Expression<Func<T>> propExpr)
-        {
-            return (new ValidationRules()).For(propExpr);
-        }
-
-        public static StringPropertyValidationContext ForOld(Expression<Func<string>> propExpr)
-        {
-            return (new ValidationRules()).For(propExpr);
-        }
-
-        public static NumericPropValidationContext<int> ForOld(Expression<Func<int>> propExpr)
-        {
-            return (new ValidationRules()).For(propExpr);
+            return new NumericPropValidationContext<int>(new PropertyRuleset[0], propExpr);
         }
     }
 
@@ -63,21 +48,6 @@ namespace Assisticant.Validation
                 _validatorByPropertyName.Add(propertyName, propertyValidator);
             }
             return propertyValidator;
-        }
-
-        public PropertyValidationContext<T> For<T>(Expression<Func<T>> propExpression)
-        {
-            return new PropertyValidationContext<T>(this, propExpression);
-        }
-
-        public StringPropertyValidationContext For(Expression<Func<string>> propExpression)
-        {
-            return new StringPropertyValidationContext(this, propExpression);
-        }
-
-        public NumericPropValidationContext<int> For(Expression<Func<int>> propExpression)
-        {
-            return new NumericPropValidationContext<int>(this, propExpression);
         }
 
         private void Notify(string propertyName)
