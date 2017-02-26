@@ -12,7 +12,7 @@ namespace Assisticant.Validation
             where T : IComparable<T>, IComparable
         {
             comparer = DefaultIfNull(comparer);
-            var name = context._currentProperty.GetPropertyName();
+            var name = context.PropertyName;
 
             return context.BeginPredicate(
                 x => comparer.Compare(x, lowerBound) > 0,
@@ -26,7 +26,7 @@ namespace Assisticant.Validation
             where T : IComparable<T>, IComparable
         {
             comparer = DefaultIfNull(comparer);
-            var name = context._currentProperty.GetPropertyName();
+            var name = context.PropertyName;
 
             return context.BeginPredicate(
                 x => comparer.Compare(x, lowerBound) >= 0,
@@ -40,7 +40,7 @@ namespace Assisticant.Validation
             where T : IComparable<T>, IComparable
         {
             comparer = DefaultIfNull(comparer);
-            var name = context._currentProperty.GetPropertyName();
+            var name = context.PropertyName;
 
             return context.BeginPredicate(
                 x => comparer.Compare(x, upperBound) < 0,
@@ -54,7 +54,7 @@ namespace Assisticant.Validation
             where T : IComparable<T>, IComparable
         {
             comparer = DefaultIfNull(comparer);
-            var name = context._currentProperty.GetPropertyName();
+            var name = context.PropertyName;
 
             return context.BeginPredicate(
                 x => comparer.Compare(x, upperBound) > 0,

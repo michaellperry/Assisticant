@@ -40,20 +40,6 @@ namespace Assisticant.Validation
             return BeginPredicate(predicate);
         }
 
-        internal PropertyPredicateContext<T> BeginPredicate(Func<T, bool> predicate, Func<string> messageFactory = null)
-        {
-            if (messageFactory == null)
-            {
-                var name = _currentProperty.GetPropertyName();
-
-                messageFactory = () => $"{name} is not valid";
-            }
-
-            var rules = EndRule();
-            return new PropertyPredicateContext<T>(_rulesets, _currentProperty, rules,
-                predicate, messageFactory);
-        }
-
         public PropertyValidationContext<TNew> For<TNew>(Expression<Func<TNew>> propExpression)
         {
             var rulesets = EndProperty();
@@ -75,6 +61,22 @@ namespace Assisticant.Validation
             }
 
             return rules;
+        }
+
+        internal string PropertyName => _currentProperty.GetPropertyName();
+
+        internal PropertyPredicateContext<T> BeginPredicate(Func<T, bool> predicate, Func<string> messageFactory = null)
+        {
+            if (messageFactory == null)
+            {
+                var name = _currentProperty.GetPropertyName();
+
+                messageFactory = () => $"{name} is not valid";
+            }
+
+            var rules = EndRule();
+            return new PropertyPredicateContext<T>(_rulesets, _currentProperty, rules,
+                predicate, messageFactory);
         }
 
         private IEnumerable<Tuple<Func<T, bool>, Func<string>>> EndRule()
