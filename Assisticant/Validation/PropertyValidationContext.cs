@@ -35,14 +35,6 @@ namespace Assisticant.Validation
                 );
         }
 
-        public StringPropertyValidationContext For(Expression<Func<string>> propExpression)
-        {
-            return new StringPropertyValidationContext(
-                _rulesets.Concat(new[] { _currentRuleset }),
-                propExpression
-                );
-        }
-
         public NumericPropValidationContext<int> For(Expression<Func<int>> propExpression)
         {
             return new NumericPropValidationContext<int>(

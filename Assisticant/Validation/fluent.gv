@@ -1,0 +1,22 @@
+digraph "fluent"
+{
+
+Validator -> PropertyValidationContext [label="For T"]
+Validator -> StringPropertyValidationContext [label="For string"]
+Validator -> NumericPropValidationContext [label="For int"]
+
+PropertyValidationContext -> PropertyPredicateContext [label="Where"]
+PropertyValidationContext -> PropertyValidationContext [label="For T"]
+PropertyValidationContext -> StringPropertyValidationContext [label="For string"]
+PropertyValidationContext -> NumericPropValidationContext [label="For int"]
+PropertyValidationContext -> ValidationRules [label="Build"]
+
+StringPropertyValidationContext -> PropertyValidationContext [style=dashed]
+StringPropertyValidationContext -> StringPropertyValidationContext [label="Matches"]
+
+NumericPropValidationContext -> PropertyValidationContext [style=dashed]
+NumericPropValidationContext -> NumericPropValidationContext [label="Rule"]
+
+PropertyPredicateContext -> PropertyValidationContext [label="WithMessage"]
+
+}

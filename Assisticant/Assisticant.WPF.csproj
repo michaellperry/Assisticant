@@ -73,7 +73,7 @@
     <Compile Include="Validation\PropertyRuleset.cs" />
     <Compile Include="Validation\PropertyValidationContext.cs" />
     <Compile Include="Validation\PropertyValidator.cs" />
-    <Compile Include="Validation\StringPropertyValidationContext.cs" />
+    <Compile Include="Validation\StringPropertyValidationContextExtensions.cs" />
     <Compile Include="Validation\ValidationRules.cs" />
     <Compile Include="ViewSelectorExtension.cs" />
     <Compile Include="StaticExtension.cs" />
