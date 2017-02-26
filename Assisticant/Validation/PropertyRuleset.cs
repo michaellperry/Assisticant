@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Assisticant.Validation
@@ -12,27 +12,13 @@ namespace Assisticant.Validation
     internal sealed class PropertyRuleset<T> : PropertyRuleset
     {
         public Expression<Func<T>> PropExpr { get; }
-        private readonly Tuple<Func<T, bool>, Func<string>>[] _rules;
+        private readonly IEnumerable<Tuple<Func<T, bool>, Func<string>>> _rules;
 
-        public PropertyRuleset(Expression<Func<T>> propExpr)
+        public PropertyRuleset(Expression<Func<T>> propExpr, IEnumerable<Tuple<Func<T, bool>, Func<string>>> rules)
         {
             PropExpr = propExpr;
 
-            _rules = new Tuple<Func<T, bool>, Func<string>>[0];
-        }
-
-        private PropertyRuleset(PropertyRuleset<T> from, Func<T, bool> predicate, Func<string> messageFactory)
-        {
-            PropExpr = from.PropExpr;
-
-            _rules = from._rules
-                .Concat(new[] {Tuple.Create(predicate, messageFactory)})
-                .ToArray();
-        }
-
-        public PropertyRuleset<T> AddRule(Func<T, bool> predicate, Func<string> messageFactory)
-        {
-            return new PropertyRuleset<T>(this, predicate, messageFactory);
+            _rules = rules;
         }
 
         public override void AddTo(ValidationRules rules)

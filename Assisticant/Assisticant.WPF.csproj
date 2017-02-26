@@ -68,7 +68,7 @@
     <Compile Include="Validation\ExpressionExtensions.cs" />
     <Compile Include="Validation\IValidation.cs" />
     <Compile Include="Validation\IValidationRules.cs" />
-    <Compile Include="Validation\NumericPropValidationContext.cs" />
+    <Compile Include="Validation\NumericPropertyValidationContextExtentions.cs" />
     <Compile Include="Validation\PropertyPredicateContext.cs" />
     <Compile Include="Validation\PropertyRuleset.cs" />
     <Compile Include="Validation\PropertyValidationContext.cs" />

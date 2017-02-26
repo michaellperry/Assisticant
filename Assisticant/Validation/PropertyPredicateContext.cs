@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Assisticant.Validation
 {
-    public sealed class PropertyPredicateContext<T>
+    public sealed class PropertyPredicateContext<T> : PropertyValidationContext<T>
     {
-        private readonly IEnumerable<PropertyRuleset> _rulesets;
-        private readonly PropertyRuleset<T> _currentRuleset;
-        private readonly Func<T, bool> _predicate;
-
-        internal PropertyPredicateContext(IEnumerable<PropertyRuleset> rulesets, PropertyRuleset<T> currentRuleset, Func<T, bool> predicate)
+        internal PropertyPredicateContext(
+            IEnumerable<PropertyRuleset> rulesets,
+            Expression<Func<T>> currentProperty,
+            IEnumerable<Tuple<Func<T, bool>, Func<string>>> rules,
+            Func<T, bool> currentPredicate,
+            Func<string> currentMessageFactory) :
+            base(rulesets, currentProperty, rules, currentPredicate, currentMessageFactory)
         {
-            _rulesets = rulesets;
-            _predicate = predicate;
-            _currentRuleset = currentRuleset;
         }
 
         public PropertyValidationContext<T> WithMessage(Func<string> messageFactory)
         {
-            var ruleset = _currentRuleset.AddRule(_predicate, messageFactory);
-
-            return new PropertyValidationContext<T>(_rulesets, ruleset);
+            return new PropertyValidationContext<T>(
+                _rulesets, _currentProperty, _rules, _currentPredicate, messageFactory);
         }
     }
 }

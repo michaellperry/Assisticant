@@ -8,10 +8,7 @@ namespace Assisticant.Validation
         {
             var regex = new Regex(pattern);
 
-            return new PropertyPredicateContext<string>(
-                context._rulesets,
-                context._currentRuleset,
-                v => v == null || regex.IsMatch(v));
+            return context.BeginPredicate(v => v == null || regex.IsMatch(v));
         }
     }
 }

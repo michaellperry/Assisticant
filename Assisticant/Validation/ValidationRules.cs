@@ -11,11 +11,6 @@ namespace Assisticant.Validation
         {
             return new PropertyValidationContext<T>(new PropertyRuleset[0], propExpr);
         }
-
-        public static NumericPropValidationContext<int> For(Expression<Func<int>> propExpr)
-        {
-            return new NumericPropValidationContext<int>(new PropertyRuleset[0], propExpr);
-        }
     }
 
     public sealed class ValidationRules : IDisposable, IValidationRules

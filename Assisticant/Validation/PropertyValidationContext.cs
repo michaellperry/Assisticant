@@ -8,46 +8,66 @@ namespace Assisticant.Validation
     public class PropertyValidationContext<T>
     {
         internal readonly IEnumerable<PropertyRuleset> _rulesets;
-        internal readonly PropertyRuleset<T> _currentRuleset;
+        internal readonly Expression<Func<T>> _currentProperty;
+        internal readonly IEnumerable<Tuple<Func<T, bool>, Func<string>>> _rules;
+        internal readonly Func<T, bool> _currentPredicate;
+        internal readonly Func<string> _currentMessageFactory;
 
-        internal PropertyValidationContext(IEnumerable<PropertyRuleset> rulesets, Expression<Func<T>> propExpression)
+        internal PropertyValidationContext(
+            IEnumerable<PropertyRuleset> rulesets,
+            Expression<Func<T>> currentProperty) :
+            this (rulesets, currentProperty,
+                new Tuple<Func<T, bool>, Func<string>>[0], null, null)
         {
-            _rulesets = rulesets;
-            _currentRuleset = new PropertyRuleset<T>(propExpression);
         }
 
-        internal PropertyValidationContext(IEnumerable<PropertyRuleset> rulesets, PropertyRuleset<T> currentRuleset)
+        internal PropertyValidationContext(
+            IEnumerable<PropertyRuleset> rulesets,
+            Expression<Func<T>> currentProperty,
+            IEnumerable<Tuple<Func<T, bool>, Func<string>>> rules,
+            Func<T, bool> currentPredicate,
+            Func<string> currentMessageFactory)
         {
             _rulesets = rulesets;
-            _currentRuleset = currentRuleset;
+            _currentProperty = currentProperty;
+            _rules = rules;
+            _currentPredicate = currentPredicate;
+            _currentMessageFactory = currentMessageFactory;
         }
 
         public PropertyPredicateContext<T> Where(Func<T, bool> predicate)
         {
-            return new PropertyPredicateContext<T>(_rulesets, _currentRuleset, predicate);
+            return BeginPredicate(predicate);
+        }
+
+        internal PropertyPredicateContext<T> BeginPredicate(Func<T, bool> predicate, Func<string> messageFactory = null)
+        {
+            if (messageFactory == null)
+            {
+                var name = _currentProperty.GetPropertyName();
+
+                messageFactory = () => $"{name} is not valid";
+            }
+
+            var rules = EndRule();
+            return new PropertyPredicateContext<T>(_rulesets, _currentProperty, rules,
+                predicate, messageFactory);
         }
 
         public PropertyValidationContext<TNew> For<TNew>(Expression<Func<TNew>> propExpression)
         {
-            return new PropertyValidationContext<TNew>(
-                _rulesets.Concat(new [] {_currentRuleset}),
-                propExpression
-                );
-        }
+            var rulesets = EndProperty();
 
-        public NumericPropValidationContext<int> For(Expression<Func<int>> propExpression)
-        {
-            return new NumericPropValidationContext<int>(
-                _rulesets.Concat(new[] { _currentRuleset }),
-                propExpression
-                );
+            return new PropertyValidationContext<TNew>(
+                rulesets,
+                propExpression);
         }
 
         public ValidationRules Build()
         {
             var rules = new ValidationRules();
 
-            var allRulesets = _rulesets.Concat(new[] {_currentRuleset});
+            var allRulesets = EndProperty();
 
             foreach (var ruleset in allRulesets)
             {
@@ -55,6 +75,33 @@ namespace Assisticant.Validation
             }
 
             return rules;
+        }
+
+        private IEnumerable<Tuple<Func<T, bool>, Func<string>>> EndRule()
+        {
+            if (_currentPredicate != null)
+            {
+                var rule = Tuple.Create(_currentPredicate, _currentMessageFactory);
+                return _rules.Concat(new[] { rule });
+            }
+            else
+            {
+                return _rules;
+            }
+        }
+
+        private IEnumerable<PropertyRuleset> EndProperty()
+        {
+            if (_currentProperty != null)
+            {
+                var rules = EndRule();
+                var ruleset = new PropertyRuleset<T>(_currentProperty, rules);
+                return _rulesets.Concat(new[] { ruleset });
+            }
+            else
+            {
+                return _rulesets;
+            }
         }
     }
 }
