@@ -12,9 +12,9 @@ namespace Assisticant.Validation
             return new PropertyValidationContext<T>(new PropertyRuleset[0], propExpr);
         }
 
-        public static NumericPropValidationContext<int> For(Expression<Func<int>> propExpr)
+        public static PropertyValidationContext<int> For(Expression<Func<int>> propExpr)
         {
-            return new NumericPropValidationContext<int>(new PropertyRuleset[0], propExpr);
+            return new PropertyValidationContext<int>(new PropertyRuleset[0], propExpr);
         }
     }
 

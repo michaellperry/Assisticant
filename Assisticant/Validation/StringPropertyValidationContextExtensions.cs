@@ -4,14 +4,16 @@ namespace Assisticant.Validation
 {
     public static class StringPropertyValidationContextExtensions
     {
-        public static PropertyPredicateContext<string> Matches(this PropertyValidationContext<string> context, string pattern)
+        public static OptionalMessagePropertyValidationContext<string> Matches(
+            this PropertyValidationContextBase<string> context,
+            string pattern)
         {
             var regex = new Regex(pattern);
 
-            return new PropertyPredicateContext<string>(
-                context._rulesets,
-                context._currentRuleset,
-                v => v == null || regex.IsMatch(v));
+            return context.BeginPredicate(
+                v => v == null || regex.IsMatch(v),
+                () => $"{context._currentRuleset.PropExpr.GetPropertyName()} is not valid."
+            );
         }
     }
 }
