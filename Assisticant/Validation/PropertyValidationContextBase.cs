@@ -37,6 +37,17 @@ namespace Assisticant.Validation
             );
         }
 
+        internal OptionalMessagePropertyValidationContext<T> BeginPredicate(
+            Func<T, bool> predicate,
+            Func<string> messageFactory)
+        {
+            return new OptionalMessagePropertyValidationContext<T>(
+                _rulesets,
+                FinalizeRuleset(),
+                predicate,
+                messageFactory);
+        }
+
         internal virtual IEnumerable<PropertyRuleset> FinalizeRulesets()
         {
             return _rulesets.Concat(new [] {FinalizeRuleset()});

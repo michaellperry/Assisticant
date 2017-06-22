@@ -66,19 +66,5 @@ namespace Assisticant.Validation
         {
             return comparer != null ? comparer : Comparer<T>.Default;
         }
-
-        internal static OptionalMessagePropertyValidationContext<T> BeginPredicate<T>(
-            this PropertyValidationContextBase<T> context,
-            Func<T, bool> predicate,
-            Func<string> messageFactory
-        )
-        {
-            return new OptionalMessagePropertyValidationContext<T>(
-                context._rulesets,
-                context.FinalizeRuleset(),
-                predicate,
-                messageFactory
-                );
-        }
     }
 }
