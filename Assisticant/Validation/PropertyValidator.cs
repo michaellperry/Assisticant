@@ -39,7 +39,7 @@ namespace Assisticant.Validation
                     }
                 }
             });
-    }
+        }
 
         public void Dispose()
         {

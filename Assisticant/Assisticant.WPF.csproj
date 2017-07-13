@@ -65,6 +65,7 @@
     <Compile Include="Descriptors\ProxyTypeDescriptor.cs" />
     <Compile Include="Descriptors\PlatformProxy.cs" />
     <Compile Include="ForView.cs" />
+    <Compile Include="Validation\ExampleViewModel.cs" />
     <Compile Include="Validation\ExpressionExtensions.cs" />
     <Compile Include="Validation\IValidation.cs" />
     <Compile Include="Validation\IValidationRules.cs" />
