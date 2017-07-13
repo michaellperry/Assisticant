@@ -59,10 +59,11 @@ namespace Assisticant.UnitTest.WPF
             public IValidationRules Rules => 
                 Validator
                 .For(() => PhoneNumber)
-                    .Where(n => !string.IsNullOrEmpty(n))
+                    .Required()
                         .WithMessage(() => "Phone number is required")
                     .Matches(@"^[0-9\-\(\)]*$")
                         .WithMessage(() => "Phone number may contain only parentheses, dashes, and digits.")
+                    .MaxLength(20)
                 .For(() => Age)
                     .GreaterThanOrEqualTo(0)
                     .LessThan(150)
@@ -106,24 +107,49 @@ namespace Assisticant.UnitTest.WPF
             string.Join(", ", notified).Should().Be("PhoneNumber");
         }
 
-        [TestMethod]
-        public void HasErrorWhenRegexNotMatched()
+        private void ShouldHaveErrorWhen(Action<TestViewModel> condition, string property, string expectedError)
         {
             var viewModel = GivenViewModel();
             var notify = GivenNotifyDataErrorInfo(viewModel);
-            viewModel.PhoneNumber = "abc";
+            condition(viewModel);
 
-            ShouldHaveError(notify, "PhoneNumber", @"Phone number may contain only parentheses, dashes, and digits.");
+            ShouldHaveError(notify, property, expectedError);
+        }
+
+        [TestMethod]
+        public void HasErrorOnStringRequired()
+        {
+            ShouldHaveErrorWhen(
+                vm => vm.PhoneNumber = null,
+                "PhoneNumber",
+                "Phone number is required");
+        }
+
+        [TestMethod]
+        public void HasErrorOnStringMaxLengthExceeded()
+        {
+            ShouldHaveErrorWhen(
+                vm => vm.PhoneNumber = "012345678901234567890",
+                "PhoneNumber",
+                "PhoneNumber may be at most 20 characters long.");
+        }
+
+        [TestMethod]
+        public void HasErrorWhenRegexNotMatched()
+        {
+            ShouldHaveErrorWhen(
+                vm => vm.PhoneNumber = "abc",
+                "PhoneNumber",
+                "Phone number may contain only parentheses, dashes, and digits.");
         }
 
         [TestMethod]
         public void HasErrorWhenRegexPartiallyMatched()
         {
-            var viewModel = GivenViewModel();
-            var notify = GivenNotifyDataErrorInfo(viewModel);
-            viewModel.PhoneNumber = "abc123";
-
-            ShouldHaveError(notify, "PhoneNumber", @"Phone number may contain only parentheses, dashes, and digits.");
+            ShouldHaveErrorWhen(
+                vm => vm.PhoneNumber = "abc123",
+                "PhoneNumber",
+                "Phone number may contain only parentheses, dashes, and digits.");
         }
 
         [TestMethod]
@@ -139,32 +165,32 @@ namespace Assisticant.UnitTest.WPF
         [TestMethod]
         public void HasErrorWhenTooSmall()
         {
-            var viewModel = GivenViewModel();
-            var notify = GivenNotifyDataErrorInfo(viewModel);
-            viewModel.Age = -1;
-
-            ShouldHaveError(notify, "Age", "Age must be at least 0");
+            ShouldHaveErrorWhen(
+                vm => vm.Age = -1,
+                "Age",
+                "Age must be at least 0");
         }
 
         [TestMethod]
         public void HasErrorWhenTooBig()
         {
-            var viewModel = GivenViewModel();
-            var notify = GivenNotifyDataErrorInfo(viewModel);
-            viewModel.Age = 150;
-
-            ShouldHaveError(notify, "Age", "Age must be less than 150");
+            ShouldHaveErrorWhen(
+                vm => vm.Age = 150,
+                "Age",
+                "Age must be less than 150");
         }
 
         [TestMethod]
         public void CanExpressCustomRule()
         {
-            var viewModel = GivenViewModel();
-            var notify = GivenNotifyDataErrorInfo(viewModel);
-            viewModel.Birth = DateTime.Parse("2010-01-01");
-            viewModel.Death = DateTime.Parse("2009-01-01");
-
-            ShouldHaveError(notify, "Death", "Death date must be after birth date.");
+            ShouldHaveErrorWhen(
+                vm =>
+                {
+                    vm.Birth = DateTime.Parse("2010-01-01");
+                    vm.Death = DateTime.Parse("2009-01-01");
+                },
+                "Death",
+                "Death date must be after birth date.");
         }
 
         private void Process()
