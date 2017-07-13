@@ -25,12 +25,15 @@ namespace Assisticant.UnitTest.WPF
             _updateQueue.Clear();
         }
 
+        class Person { }
+
         class TestViewModel : IValidation
         {
             private Observable<string> _phoneNumber = new Observable<string>("(123)456-7890");
             private Observable<int> _age = new Observable<int>();
             private Observable<DateTime> _birth = new Observable<DateTime>();
             private Observable<DateTime?> _death = new Observable<DateTime?>();
+            private Observable<Person> _friend = new Observable<Person>(new Person());
 
             public string PhoneNumber
             {
@@ -56,10 +59,16 @@ namespace Assisticant.UnitTest.WPF
                 set { _death.Value = value; }
             }
 
+            public Person Friend
+            {
+                get { return _friend; }
+                set { _friend.Value = value; }
+            }
+
             public IValidationRules Rules => 
                 Validator
                 .For(() => PhoneNumber)
-                    .Required()
+                    .NotNullOrWhitespace()
                         .WithMessage(() => "Phone number is required")
                     .Matches(@"^[0-9\-\(\)]*$")
                         .WithMessage(() => "Phone number may contain only parentheses, dashes, and digits.")
@@ -70,6 +79,8 @@ namespace Assisticant.UnitTest.WPF
                 .For(() => Death)
                     .Where(v => v == null || v > Birth)
                     .WithMessage(() => "Death date must be after birth date.")
+                .For(() => Friend)
+                    .NotNull()
                 .Build();
         }
 
@@ -191,6 +202,15 @@ namespace Assisticant.UnitTest.WPF
                 },
                 "Death",
                 "Death date must be after birth date.");
+        }
+
+        [TestMethod]
+        public void HasErrorWhenNull()
+        {
+            ShouldHaveErrorWhen(
+                vm => vm.Friend = null,
+                "Friend",
+                "Friend must not be null.");
         }
 
         private void Process()

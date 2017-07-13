@@ -4,12 +4,21 @@ namespace Assisticant.Validation
 {
     public static class StringPropertyValidationContextExtensions
     {
-        public static OptionalMessagePropertyValidationContext<string> Required(
+        public static OptionalMessagePropertyValidationContext<string> NotNullOrEmpty(
+            this PropertyValidationContext<string> context)
+        {
+            return context.BeginPredicate(
+                v => !string.IsNullOrEmpty(v),
+                () => $"{context._currentRuleset.PropExpr.GetPropertyName()} must not be empty."
+            );
+        }
+
+        public static OptionalMessagePropertyValidationContext<string> NotNullOrWhitespace(
             this PropertyValidationContext<string> context)
         {
             return context.BeginPredicate(
                 v => !string.IsNullOrWhiteSpace(v),
-                () => $"{context._currentRuleset.PropExpr.GetPropertyName()} is required."
+                () => $"{context._currentRuleset.PropExpr.GetPropertyName()} must not be empty or whitespace."
             );
         }
 

@@ -69,6 +69,7 @@
     <Compile Include="Validation\IValidation.cs" />
     <Compile Include="Validation\IValidationRules.cs" />
     <Compile Include="Validation\NumericPropertyValidationContextExtentions.cs" />
+    <Compile Include="Validation\ObjectPropertyValidationContextExtensions.cs" />
     <Compile Include="Validation\OptionalMessagePropertyValidationContext.cs" />
     <Compile Include="Validation\PropertyPredicateContext.cs" />
     <Compile Include="Validation\PropertyRuleset.cs" />
