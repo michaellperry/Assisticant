@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Assisticant\AssisticantExtensions.cs" Link="AssisticantExtensions.cs" />
+    <Compile Include="..\Assisticant\AssisticantReflectionUtils.cs" Link="AssisticantReflectionUtils.cs" />
+    <Compile Include="..\Assisticant\BindingInterceptor.cs" Link="BindingInterceptor.cs" />
+    <Compile Include="..\Assisticant\Binding\BindingManager.cs" Link="Binding\BindingManager.cs" />
+    <Compile Include="..\Assisticant\Binding\IDisplayDataConverter.cs" Link="Binding\IDisplayDataConverter.cs" />
+    <Compile Include="..\Assisticant\Binding\IInputSubscription.cs" Link="Binding\IInputSubscription.cs" />
+    <Compile Include="..\Assisticant\Collections\ComputedDictionary.cs" Link="Collections\ComputedDictionary.cs" />
+    <Compile Include="..\Assisticant\Collections\ComputedList.cs" Link="Collections\ComputedList.cs" />
+    <Compile Include="..\Assisticant\Collections\Impl\UpdateCollectionHelper.cs" Link="Collections\Impl\UpdateCollectionHelper.cs" />
+    <Compile Include="..\Assisticant\Collections\ObservableDictionary.cs" Link="Collections\ObservableDictionary.cs" />
+    <Compile Include="..\Assisticant\Collections\ObservableList.cs" Link="Collections\ObservableList.cs" />
+    <Compile Include="..\Assisticant\Computed.cs" Link="Computed.cs" />
+    <Compile Include="..\Assisticant\ComputedJob.cs" Link="ComputedJob.cs" />
+    <Compile Include="..\Assisticant\Fields\Computed.cs" Link="Fields\Computed.cs" />
+    <Compile Include="..\Assisticant\Fields\ComputedSubscription.cs" Link="Fields\ComputedSubscription.cs" />
+    <Compile Include="..\Assisticant\Fields\Observable.cs" Link="Fields\Observable.cs" />
+    <Compile Include="..\Assisticant\InertialProperty.cs" Link="InertialProperty.cs" />
+    <Compile Include="..\Assisticant\MakeCommand.cs" Link="MakeCommand.cs" />
+    <Compile Include="..\Assisticant\MemoizedTypeName.cs" Link="MemoizedTypeName.cs" />
+    <Compile Include="..\Assisticant\Metas\AtomSlot.cs" Link="Metas\AtomSlot.cs" />
+    <Compile Include="..\Assisticant\Metas\CollectionItem.cs" Link="Metas\CollectionItem.cs" />
+    <Compile Include="..\Assisticant\Metas\CollectionSlot.cs" Link="Metas\CollectionSlot.cs" />
+    <Compile Include="..\Assisticant\Metas\CommandMeta.cs" Link="Metas\CommandMeta.cs" />
+    <Compile Include="..\Assisticant\Metas\ComputedMeta.cs" Link="Metas\ComputedMeta.cs" />
+    <Compile Include="..\Assisticant\Metas\FieldMeta.cs" Link="Metas\FieldMeta.cs" />
+    <Compile Include="..\Assisticant\Metas\MemberMeta.cs" Link="Metas\MemberMeta.cs" />
+    <Compile Include="..\Assisticant\Metas\MemberSlot.cs" Link="Metas\MemberSlot.cs" />
+    <Compile Include="..\Assisticant\Metas\MethodCommand.cs" Link="Metas\MethodCommand.cs" />
+    <Compile Include="..\Assisticant\Metas\ObservableMeta.cs" Link="Metas\ObservableMeta.cs" />
+    <Compile Include="..\Assisticant\Metas\PropertyMeta.cs" Link="Metas\PropertyMeta.cs" />
+    <Compile Include="..\Assisticant\Metas\TypeMeta.cs" Link="Metas\TypeMeta.cs" />
+    <Compile Include="..\Assisticant\Metas\ValuePropertyMeta.cs" Link="Metas\ValuePropertyMeta.cs" />
+    <Compile Include="..\Assisticant\Metas\ViewModelTypes.cs" Link="Metas\ViewModelTypes.cs" />
+    <Compile Include="..\Assisticant\Metas\ViewProxy.cs" Link="Metas\ViewProxy.cs" />
+    <Compile Include="..\Assisticant\NamedPrecedents.cs" Link="NamedPrecedents.cs" />
+    <Compile Include="..\Assisticant\Observable.cs" Link="Observable.cs" />
+    <Compile Include="..\Assisticant\Precedent.cs" Link="Precedent.cs" />
+    <Compile Include="..\Assisticant\PropertyTracker.cs" Link="PropertyTracker.cs" />
+    <Compile Include="..\Assisticant\RecycleBin.cs" Link="RecycleBin.cs" />
+    <Compile Include="..\Assisticant\ThreadLocal.cs" Link="ThreadLocal.cs" />
+    <Compile Include="..\Assisticant\Timers\DroppingTimeSpan.cs" Link="Timers\DroppingTimeSpan.cs" />
+    <Compile Include="..\Assisticant\Timers\FloatingDateTime.cs" Link="Timers\FloatingDateTime.cs" />
+    <Compile Include="..\Assisticant\Timers\FloatingTimeSpan.cs" Link="Timers\FloatingTimeSpan.cs" />
+    <Compile Include="..\Assisticant\Timers\FloatingTimeZone.cs" Link="Timers\FloatingTimeZone.cs" />
+    <Compile Include="..\Assisticant\Timers\ObservableTimer.cs" Link="Timers\ObservableTimer.cs" />
+    <Compile Include="..\Assisticant\Timers\RisingTimeSpan.cs" Link="Timers\RisingTimeSpan.cs" />
+    <Compile Include="..\Assisticant\Timers\UtcTimeZone.cs" Link="Timers\UtcTimeZone.cs" />
+    <Compile Include="..\Assisticant\UpdateScheduler.cs" Link="UpdateScheduler.cs" />
+    <Compile Include="..\Assisticant\WeakArray.cs" Link="WeakArray.cs" />
+    <Compile Include="..\Assisticant\WeakHashSet.cs" Link="WeakHashSet.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Binding\" />
+    <Folder Include="Fields\" />
+    <Folder Include="Metas\" />
+    <Folder Include="Timers\" />
+    <Folder Include="Collections\Impl\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

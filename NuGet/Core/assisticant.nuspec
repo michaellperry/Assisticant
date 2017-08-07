@@ -11,7 +11,7 @@
     <iconUrl>http://assisticant.net/images/logosmall.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <language>en-US</language>
-    <tags>mvvm viewmodel databinding inotifypropertychanged inpc wpf silverlight wp7 xamarin ios android</tags>
+    <tags>mvvm viewmodel databinding inotifypropertychanged inpc wpf silverlight wp7 xamarin ios android netstandard</tags>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Windows" targetFramework="net45"/>
       <frameworkAssembly assemblyName="System.Windows" targetFramework="portable-net45+sl50+wp80+win80"/>
@@ -19,6 +19,13 @@
       <frameworkAssembly assemblyName="System.Windows" targetFramework="win80"/>
       <frameworkAssembly assemblyName="System.Windows" targetFramework="wp80"/>
     </frameworkAssemblies>
+
+    <group targetFramework="netstandard1.4">
+      <dependency id="System.ComponentModel" version="4.3.0" />
+      <dependency id="System.Threading.Thread" version="4.3.0" />
+      <dependency id="NETStandard.Library" version="1.6.1" />
+    </group>
+    
   </metadata>
   <files>
     <file src="..\..\Assisticant\bin\portable-net4+sl5+netcore45+wpa81+wp8\Release\Assisticant.dll" target="lib\portable-net4+sl5+netcore45+wpa81+wp8" />
@@ -68,5 +75,9 @@
 
     <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\Xamarin.iOS10" />
     <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\Xamarin.iOS10" />
+
+    <file src="..\..\Assisticant\Assisticant.Netstandard\bin\Release\netstandard1.4" target="lib\netstandard1.4" />
+    <file src="..\..\Assisticant\Assisticant.Netstandard\bin\Release\netstandard1.4" target="lib\netstandard1.4" />
+    
   </files>
 </package>
