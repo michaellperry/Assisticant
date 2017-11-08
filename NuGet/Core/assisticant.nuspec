@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Assisticant</id>
-    <version>1.3</version>
+    <version>1.4</version>
     <authors>Michael L Perry</authors>
     <owners>Michael L Perry</owners>
     <description>Automatically discover view model dependencies and databind without INotifyPropertyChanged. UWP, WPF, iOS, or Android.</description>
@@ -11,7 +11,7 @@
     <iconUrl>http://assisticant.net/images/logosmall.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <language>en-US</language>
-    <tags>mvvm viewmodel databinding inotifypropertychanged inpc wpf silverlight wp7 xamarin ios android netstandard</tags>
+    <tags>mvvm viewmodel databinding inotifypropertychanged inpc wpf wp7 xamarin ios android netstandard</tags>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Windows" targetFramework="net45"/>
       <frameworkAssembly assemblyName="System.Windows" targetFramework="portable-net45+sl50+wp80+win80"/>
@@ -20,12 +20,14 @@
       <frameworkAssembly assemblyName="System.Windows" targetFramework="wp80"/>
     </frameworkAssemblies>
 
-    <group targetFramework="netstandard1.4">
-      <dependency id="System.ComponentModel" version="4.3.0" />
-      <dependency id="System.Threading.Thread" version="4.3.0" />
-      <dependency id="NETStandard.Library" version="1.6.1" />
-    </group>
-    
+    <dependencies>
+      <group targetFramework="netstandard1.4">
+        <dependency id="System.ComponentModel" version="4.3.0" />
+        <dependency id="System.Threading.Thread" version="4.3.0" />
+        <dependency id="NETStandard.Library" version="1.6.1" />
+      </group>
+    </dependencies>
+
   </metadata>
   <files>
     <file src="..\..\Assisticant\bin\portable-net4+sl5+netcore45+wpa81+wp8\Release\Assisticant.dll" target="lib\portable-net4+sl5+netcore45+wpa81+wp8" />
@@ -46,9 +48,6 @@
     <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\win80" />
     <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\win80" />
 
-    <file src="..\..\Silverlight\bin\Release\Assisticant.XAML.dll" target="lib\sl5" />
-    <file src="..\..\Silverlight\bin\Release\Assisticant.XAML.xml" target="lib\sl5" />
-
     <file src="..\..\Assisticant\bin\Universal\Release\Assisticant.dll" target="lib\portable-wpa81+win81" />
     <file src="..\..\Assisticant\bin\Universal\Release\Assisticant.xml" target="lib\portable-wpa81+win81" />
 
@@ -57,9 +56,6 @@
 
     <file src="..\..\Assisticant\bin\Universal\Release\Assisticant.dll" target="lib\wpa81" />
     <file src="..\..\Assisticant\bin\Universal\Release\Assisticant.xml" target="lib\wpa81" />
-
-    <file src="..\..\WindowsPhone\bin\Release\Assisticant.XAML.dll" target="lib\wp80" />
-    <file src="..\..\WindowsPhone\bin\Release\Assisticant.XAML.xml" target="lib\wp80" />
 
     <file src="..\..\Assisticant\bin\WPF\Release\Assisticant.XAML.dll" target="lib\net45" />
     <file src="..\..\Assisticant\bin\WPF\Release\Assisticant.XAML.xml" target="lib\net45" />
@@ -76,8 +72,8 @@
     <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\Xamarin.iOS10" />
     <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\Xamarin.iOS10" />
 
-    <file src="..\..\Assisticant\Assisticant.Netstandard\bin\Release\netstandard1.4" target="lib\netstandard1.4" />
-    <file src="..\..\Assisticant\Assisticant.Netstandard\bin\Release\netstandard1.4" target="lib\netstandard1.4" />
+    <file src="..\..\Assisticant\bin\netstandard1.4\Release\netstandard1.4\Assisticant.netstandard.dll" target="lib\netstandard1.4" />
+    <file src="..\..\Assisticant\bin\netstandard1.4\Release\netstandard1.4\Assisticant.netstandard.xml" target="lib\netstandard1.4" />
     
   </files>
 </package>
