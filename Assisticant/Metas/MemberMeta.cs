@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -15,6 +16,7 @@ namespace Assisticant.Metas
         public readonly Type MemberType;
         public readonly bool IsViewModel;
         public readonly bool IsCollection;
+        public readonly bool IsObservableCollection;
 
         public virtual bool CanRead { get { return true; } }
         public virtual bool CanWrite { get { return true; } }
@@ -26,6 +28,8 @@ namespace Assisticant.Metas
             MemberType = type;
             IsViewModel = ViewModelTypes.IsViewModel(type);
             IsCollection = typeof(IEnumerable).IsAssignableFromPortable(MemberType) && MemberType != typeof(string);
+            IsObservableCollection = typeof(INotifyCollectionChanged).IsAssignableFromPortable(type) ||
+                IsBindingList(type);
         }
 
         public abstract void SetValue(object instance, object value);
@@ -34,6 +38,13 @@ namespace Assisticant.Metas
         public override string ToString()
         {
             return String.Format("{0}.{1}", DeclaringType.Type.Name, Name);
+        }
+
+        private bool IsBindingList(Type type)
+        {
+            const string bindingList = "System.ComponentModel.IBindingList";
+            return type.FullName == bindingList ||
+                type.GetInterfacesPortable().Any(i => i.FullName == bindingList);
         }
     }
 }

@@ -22,31 +22,45 @@ namespace Assisticant.Metas
 
         public override void SetValue(object value)
 		{
-			// Use reflection to convert the collection to the ViewModel type
-			// (which must be compatible with List<T>, e.g. IEnumerable<T> or IList)
-			if (_translateIncomingList == null)
-			{
-				Type propType = Member.MemberType;
-				Type elemType = (propType.GetInterfacesPortable().Concat(new Type[] { propType })
-					.FirstOrDefault(i => i.IsGenericTypePortable() && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)) ?? typeof(IEnumerable<object>))
-					.GetGenericArgumentsPortable().First();
-				MethodInfo mi = GetType().GetMethodPortable("TranslateIncomingList").MakeGenericMethod(new Type[] { elemType });
-				_translateIncomingList = (Func<IEnumerable, IEnumerable>)mi.CreateDelegatePortable(typeof(Func<IEnumerable, IEnumerable>), this);
-			}
-			value = _translateIncomingList((IEnumerable)value);
-			Member.SetValue(Instance, value);
+            if (Member.IsObservableCollection)
+            {
+                Member.SetValue(Instance, value);
+            }
+            else
+            {
+                // Use reflection to convert the collection to the ViewModel type
+                // (which must be compatible with List<T>, e.g. IEnumerable<T> or IList)
+                if (_translateIncomingList == null)
+                {
+                    Type propType = Member.MemberType;
+                    Type elemType = (propType.GetInterfacesPortable().Concat(new Type[] { propType })
+                        .FirstOrDefault(i => i.IsGenericTypePortable() && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)) ?? typeof(IEnumerable<object>))
+                        .GetGenericArgumentsPortable().First();
+                    MethodInfo mi = GetType().GetMethodPortable("TranslateIncomingList").MakeGenericMethod(new Type[] { elemType });
+                    _translateIncomingList = (Func<IEnumerable, IEnumerable>)mi.CreateDelegatePortable(typeof(Func<IEnumerable, IEnumerable>), this);
+                }
+                value = _translateIncomingList((IEnumerable)value);
+                Member.SetValue(Instance, value);
 
-			// If the UI object switches to a new collection, we can expect it to
-			// cancel its subscription to _collection.CollectionChanged and subscribe
-			// to the new collection instead. So let's adopt the collection as our
-			// own, if it happens to be ObservableCollection<object>.
-			_collection = value as ObservableCollection<object>;
-		}
+                // If the UI object switches to a new collection, we can expect it to
+                // cancel its subscription to _collection.CollectionChanged and subscribe
+                // to the new collection instead. So let's adopt the collection as our
+                // own, if it happens to be ObservableCollection<object>.
+                _collection = value as ObservableCollection<object>;
+            }
+        }
 
         public override object GetValue()
         {
-            UpdateNow();
-            return _collection;
+            if (Member.IsObservableCollection)
+            {
+                return Member.GetValue(Instance);
+            }
+            else
+            {
+                UpdateNow();
+                return _collection;
+            }
         }
 
         internal override void UpdateValue()
