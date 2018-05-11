@@ -59,7 +59,7 @@ namespace Assisticant
         }
         public static MethodInfo GetGetMethodPortable(this PropertyInfo property) { return property.GetMethod; }
         public static bool IsClassPortable(this Type type) { return type.GetTypeInfo().IsClass; }
-#elif NETSTANDARD2_0
+#elif NETSTANDARD1_4
         public static Delegate CreateDelegatePortable(this MethodInfo method, Type delegateType, object target) { return method.CreateDelegate(delegateType, target); }
         public static bool IsValueTypePortable(this Type type) { return type.GetTypeInfo().IsValueType; }
         public static bool IsPrimitivePortable(this Type type) { return type.GetTypeInfo().IsPrimitive; }

@@ -40,7 +40,7 @@ namespace Assisticant.Metas
                 }
                 else
                 {
-#if NETSTANDARD2_0
+#if NETFRAMEWORK
                     if (BindingListSlot.AppliesTo(member))
                     {
                         return new BindingListSlot(proxy, member);

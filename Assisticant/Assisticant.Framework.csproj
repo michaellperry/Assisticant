@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Assisticant</RootNamespace>
+    <AssemblyName>Assisticant</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFRAMEWORK</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFRAMEWORK</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Common\Mallardsoft.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\CommonProperties.cs">
+      <Link>Properties\CommonProperties.cs</Link>
+    </Compile>
+    <Compile Include="AssisticantExtensions.cs" />
+    <Compile Include="AssisticantReflectionUtils.cs" />
+    <Compile Include="BindingInterceptor.cs" />
+    <Compile Include="Binding\BindingManager.cs" />
+    <Compile Include="Binding\IDisplayDataConverter.cs" />
+    <Compile Include="Binding\IInputSubscription.cs" />
+    <Compile Include="Collections\ComputedDictionary.cs" />
+    <Compile Include="Collections\ComputedList.cs" />
+    <Compile Include="Collections\Impl\UpdateCollectionHelper.cs" />
+    <Compile Include="Collections\ObservableDictionary.cs" />
+    <Compile Include="Collections\ObservableList.cs" />
+    <Compile Include="Computed.cs" />
+    <Compile Include="ComputedJob.cs" />
+    <Compile Include="Fields\Computed.cs" />
+    <Compile Include="Fields\ComputedSubscription.cs" />
+    <Compile Include="Fields\Observable.cs" />
+    <Compile Include="InertialProperty.cs" />
+    <Compile Include="MakeCommand.cs" />
+    <Compile Include="MemoizedTypeName.cs" />
+    <Compile Include="Metas\AtomSlot.cs" />
+    <Compile Include="Metas\BindingListSlot.cs" />
+    <Compile Include="Metas\CollectionItem.cs" />
+    <Compile Include="Metas\CollectionSlot.cs" />
+    <Compile Include="Metas\CommandMeta.cs" />
+    <Compile Include="Metas\ComputedMeta.cs" />
+    <Compile Include="Metas\FieldMeta.cs" />
+    <Compile Include="Metas\MemberMeta.cs" />
+    <Compile Include="Metas\MemberSlot.cs" />
+    <Compile Include="Metas\MethodCommand.cs" />
+    <Compile Include="Metas\ObservableMeta.cs" />
+    <Compile Include="Metas\PassThroughSlot.cs" />
+    <Compile Include="Metas\PropertyMeta.cs" />
+    <Compile Include="Metas\TypeMeta.cs" />
+    <Compile Include="Metas\ValuePropertyMeta.cs" />
+    <Compile Include="Metas\ViewModelTypes.cs" />
+    <Compile Include="Metas\ViewProxy.cs" />
+    <Compile Include="NamedPrecedents.cs" />
+    <Compile Include="Observable.cs" />
+    <Compile Include="Precedent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyTracker.cs" />
+    <Compile Include="RecycleBin.cs" />
+    <Compile Include="ThreadLocal.cs" />
+    <Compile Include="Timers\DroppingTimeSpan.cs" />
+    <Compile Include="Timers\FloatingDateTime.cs" />
+    <Compile Include="Timers\FloatingTimeSpan.cs" />
+    <Compile Include="Timers\FloatingTimeZone.cs" />
+    <Compile Include="Timers\ObservableTimer.cs" />
+    <Compile Include="Timers\RisingTimeSpan.cs" />
+    <Compile Include="Timers\UtcTimeZone.cs" />
+    <Compile Include="UpdateScheduler.cs" />
+    <Compile Include="WeakArray.cs" />
+    <Compile Include="WeakHashSet.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\Mallardsoft.snk">
+      <Link>Mallardsoft.snk</Link>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

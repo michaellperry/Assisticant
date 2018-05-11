@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>C:\Development\Assisticant\Common\Mallardsoft.snk</AssemblyOriginatorKeyFile>
+    <TargetFramework>netstandard1.4</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -32,7 +30,6 @@
     <Compile Include="..\Assisticant\MakeCommand.cs" Link="MakeCommand.cs" />
     <Compile Include="..\Assisticant\MemoizedTypeName.cs" Link="MemoizedTypeName.cs" />
     <Compile Include="..\Assisticant\Metas\AtomSlot.cs" Link="Metas\AtomSlot.cs" />
-    <Compile Include="..\Assisticant\Metas\BindingListSlot.cs" Link="Metas\BindingListSlot.cs" />
     <Compile Include="..\Assisticant\Metas\CollectionItem.cs" Link="Metas\CollectionItem.cs" />
     <Compile Include="..\Assisticant\Metas\CollectionSlot.cs" Link="Metas\CollectionSlot.cs" />
     <Compile Include="..\Assisticant\Metas\CommandMeta.cs" Link="Metas\CommandMeta.cs" />
@@ -72,10 +69,6 @@
     <Folder Include="Metas\" />
     <Folder Include="Timers\" />
     <Folder Include="Collections\Impl\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\Common\Mallardsoft.snk" Link="Mallardsoft.snk" />
   </ItemGroup>
 
   <ItemGroup>
