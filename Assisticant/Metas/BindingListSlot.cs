@@ -15,19 +15,23 @@ namespace Assisticant.Metas
         }
 
         MethodInfo _newItemMethod;
+        MethodInfo _deleteItemMethod;
         List<object> _sourceCollection;
         BindingList<object> _bindingList = new BindingList<object>();
         Func<IEnumerable, IEnumerable> _translateIncomingList;
+        bool _updating = false;
 
         public BindingListSlot(ViewProxy proxy, MemberMeta member)
             : base(proxy, member)
         {
             _newItemMethod = GetNewItemMethod(member);
+            _deleteItemMethod = GetDeleteItemMethod(member);
 
             _bindingList.AllowNew = true;
             _bindingList.AllowEdit = true;
             _bindingList.AllowRemove = true;
             _bindingList.AddingNew += BindingList_AddingNew;
+            _bindingList.ListChanged += BindingList_ListChanged;
         }
 
         public override void SetValue(object value)
@@ -36,10 +40,7 @@ namespace Assisticant.Metas
             // (which must be compatible with List<T>, e.g. IEnumerable<T> or IList)
             if (_translateIncomingList == null)
             {
-                Type propType = Member.MemberType;
-                Type elemType = (propType.GetInterfacesPortable().Concat(new Type[] { propType })
-                    .FirstOrDefault(i => i.IsGenericTypePortable() && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)) ?? typeof(IEnumerable<object>))
-                    .GetGenericArgumentsPortable().First();
+                Type elemType = GetElementType(Member);
                 MethodInfo mi = GetType().GetMethodPortable("TranslateIncomingList").MakeGenericMethod(new Type[] { elemType });
                 _translateIncomingList = (Func<IEnumerable, IEnumerable>)mi.CreateDelegatePortable(typeof(Func<IEnumerable, IEnumerable>), this);
             }
@@ -95,6 +96,8 @@ namespace Assisticant.Metas
                 FirePropertyChanged();
             }
 
+            _updating = true;
+
             // Create a list of new items.
             List<CollectionItem> items = new List<CollectionItem>();
 
@@ -116,6 +119,8 @@ namespace Assisticant.Metas
                 item.EnsureInCollection(index);
                 ++index;
             }
+
+            _updating = false;
         }
 
         IEnumerable TranslateIncomingList<T>(IEnumerable list)
@@ -132,10 +137,23 @@ namespace Assisticant.Metas
             e.NewObject = WrapValue(item);
         }
 
+        private void BindingList_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            if (!_updating)
+            {
+                if (e.ListChangedType == ListChangedType.ItemDeleted && _deleteItemMethod != null)
+                {
+                    object oldObject = _sourceCollection[e.NewIndex];
+                    _deleteItemMethod.Invoke(Instance, new [] { oldObject });
+                }
+            }
+        }
+
         private static MethodInfo GetNewItemMethod(MemberMeta member)
         {
             var method = member.DeclaringType.Type.GetMethodPortable($"NewItemIn{member.Name}");
-            if (method != null && method.GetParameters().Length == 0)
+            if (method != null &&
+                method.GetParameters().Length == 0)
             {
                 return method;
             }
@@ -143,6 +161,30 @@ namespace Assisticant.Metas
             {
                 return null;
             }
+        }
+
+        private MethodInfo GetDeleteItemMethod(MemberMeta member)
+        {
+            var method = member.DeclaringType.Type.GetMethodPortable($"DeleteItemFrom{member.Name}");
+            if (method != null &&
+                method.GetParameters().Length == 1 &&
+                method.GetParameters()[0].ParameterType == GetElementType(member))
+            {
+                return method;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static Type GetElementType(MemberMeta member)
+        {
+            Type propType = member.MemberType;
+            Type elemType = (propType.GetInterfacesPortable().Concat(new Type[] { propType })
+                .FirstOrDefault(i => i.IsGenericTypePortable() && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)) ?? typeof(IEnumerable<object>))
+                .GetGenericArgumentsPortable().First();
+            return elemType;
         }
 
         class CollectionItem : IDisposable
