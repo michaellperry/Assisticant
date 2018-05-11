@@ -45,14 +45,7 @@ namespace Assisticant.Metas
             }
             else
             {
-                if (member.IsViewModel)
-                {
-                    return new PassThroughSlot(proxy, member);
-                }
-                else
-                {
-                    return new AtomSlot(proxy, member);
-                }
+                return new AtomSlot(proxy, member);
             }
         }
 
