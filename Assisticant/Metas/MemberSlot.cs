@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assisticant.Metas
 {
@@ -38,9 +33,27 @@ namespace Assisticant.Metas
         internal static MemberSlot Create(ViewProxy proxy, MemberMeta member)
         {
             if (member.IsCollection)
-                return new CollectionSlot(proxy, member);
+            {
+                if (member.IsObservableCollection)
+                {
+                    return new PassThroughSlot(proxy, member);
+                }
+                else
+                {
+                    return new CollectionSlot(proxy, member);
+                }
+            }
             else
-                return new AtomSlot(proxy, member);
+            {
+                if (member.IsViewModel)
+                {
+                    return new PassThroughSlot(proxy, member);
+                }
+                else
+                {
+                    return new AtomSlot(proxy, member);
+                }
+            }
         }
 
         protected void FirePropertyChanged()
