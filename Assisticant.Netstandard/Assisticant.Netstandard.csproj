@@ -39,6 +39,7 @@
     <Compile Include="..\Assisticant\Metas\MemberSlot.cs" Link="Metas\MemberSlot.cs" />
     <Compile Include="..\Assisticant\Metas\MethodCommand.cs" Link="Metas\MethodCommand.cs" />
     <Compile Include="..\Assisticant\Metas\ObservableMeta.cs" Link="Metas\ObservableMeta.cs" />
+    <Compile Include="..\Assisticant\Metas\PassThroughSlot.cs" Link="Metas\PassThroughSlot.cs" />
     <Compile Include="..\Assisticant\Metas\PropertyMeta.cs" Link="Metas\PropertyMeta.cs" />
     <Compile Include="..\Assisticant\Metas\TypeMeta.cs" Link="Metas\TypeMeta.cs" />
     <Compile Include="..\Assisticant\Metas\ValuePropertyMeta.cs" Link="Metas\ValuePropertyMeta.cs" />

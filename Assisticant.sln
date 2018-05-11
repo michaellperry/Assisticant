@@ -73,6 +73,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.UnitTest.WPF", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assisticant.Netstandard", "Assisticant.Netstandard\Assisticant.Netstandard.csproj", "{2CAEFD06-13F2-47EA-B600-78C332D5BB2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Framework", "Assisticant\Assisticant.Framework.csproj", "{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -199,6 +201,22 @@ Global
 		{2CAEFD06-13F2-47EA-B600-78C332D5BB2B}.Release|x64.Build.0 = Release|Any CPU
 		{2CAEFD06-13F2-47EA-B600-78C332D5BB2B}.Release|x86.ActiveCfg = Release|Any CPU
 		{2CAEFD06-13F2-47EA-B600-78C332D5BB2B}.Release|x86.Build.0 = Release|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Debug|ARM.Build.0 = Debug|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|ARM.Build.0 = Release|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|x64.Build.0 = Release|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
