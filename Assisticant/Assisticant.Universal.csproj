@@ -82,6 +82,7 @@
     <Compile Include="Metas\CommandMeta.cs" />
     <Compile Include="Metas\ComputedMeta.cs" />
     <Compile Include="Metas\FieldMeta.cs" />
+    <Compile Include="Metas\PassThroughSlot.cs" />
     <Compile Include="Metas\ValuePropertyMeta.cs" />
     <Compile Include="Metas\ViewProxy.cs" />
     <Compile Include="Metas\MemberMeta.cs" />

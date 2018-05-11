@@ -40,7 +40,18 @@ namespace Assisticant.Metas
                 }
                 else
                 {
+#if NETSTANDARD2_0
+                    if (BindingListSlot.AppliesTo(member))
+                    {
+                        return new BindingListSlot(proxy, member);
+                    }
+                    else
+                    {
+                        return new CollectionSlot(proxy, member);
+                    }
+#else
                     return new CollectionSlot(proxy, member);
+#endif
                 }
             }
             else

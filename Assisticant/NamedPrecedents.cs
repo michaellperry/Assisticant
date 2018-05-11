@@ -33,7 +33,7 @@ namespace Assisticant
 		}
         static MethodInfo GetMethodInfo(Delegate d)
         {
-#if UNIVERSAL || NETSTANDARD1_4
+#if UNIVERSAL || NETSTANDARD2_0
             return d.GetMethodInfo();
 #else
             return d.Method;

@@ -9,9 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Assisticant</RootNamespace>
     <AssemblyName>Assisticant.XAML</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseIntermediateOutputPath>obj\WPF\</BaseIntermediateOutputPath>
+    <TargetFrameworkProfile />
+    <DependsOnNETStandard>true</DependsOnNETStandard>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -86,17 +88,16 @@
     <Compile Include="ViewSelector.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Assisticant.Portable.csproj">
-      <Project>{0f197cdb-cf38-438b-90ad-1b4f0976061e}</Project>
-      <Name>Assisticant.Portable</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Common\Mallardsoft.snk">
       <Link>Mallardsoft.snk</Link>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Assisticant.Netstandard\Assisticant.Netstandard.csproj">
+      <Project>{2caefd06-13f2-47ea-b600-78c332d5bb2b}</Project>
+      <Name>Assisticant.Netstandard</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
