@@ -135,7 +135,7 @@ namespace Assisticant.Metas
         private static MethodInfo GetNewItemMethod(MemberMeta member)
         {
             var method = member.DeclaringType.Type.GetMethodPortable($"NewItemIn{member.Name}");
-            if (method.GetParameters().Length == 0)
+            if (method != null && method.GetParameters().Length == 0)
             {
                 return method;
             }
