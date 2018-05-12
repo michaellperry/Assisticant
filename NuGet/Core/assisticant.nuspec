@@ -29,8 +29,8 @@
 
   </metadata>
   <files>
-    <file src="..\..\Assisticant\bin\portable-net4+netcore45+wpa81+wp8\Release\Assisticant.dll" target="lib\portable-net4+netcore45+wpa81+wp8" />
-    <file src="..\..\Assisticant\bin\portable-net4+netcore45+wpa81+wp8\Release\Assisticant.xml" target="lib\portable-net4+netcore45+wpa81+wp8" />
+    <file src="..\..\Assisticant\bin\portable-net4+sl5+netcore45+wpa81+wp8\Release\Assisticant.dll" target="lib\portable-net4+sl5+netcore45+wpa81+wp8" />
+    <file src="..\..\Assisticant\bin\portable-net4+sl5+netcore45+wpa81+wp8\Release\Assisticant.xml" target="lib\portable-net4+sl5+netcore45+wpa81+wp8" />
 
     <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\portable-net45+sl50+wp80+win80" />
     <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\portable-net45+sl50+wp80+win80" />
@@ -68,8 +68,8 @@
     <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.dll" target="lib\Xamarin.iOS10" />
     <file src="..\..\Assisticant\bin\Portable\Release\Assisticant.xml" target="lib\Xamarin.iOS10" />
 
-    <file src="..\..\Assisticant\bin\netstandard1.4\Release\netstandard1.4\Assisticant.netstandard.dll" target="lib\netstandard1.4" />
-    <file src="..\..\Assisticant\bin\netstandard1.4\Release\netstandard1.4\Assisticant.netstandard.xml" target="lib\netstandard1.4" />
+    <file src="..\..\Assisticant\bin\netstandard1.4\Release\netstandard1.4\Assisticant.dll" target="lib\netstandard1.4" />
+    <file src="..\..\Assisticant\bin\netstandard1.4\Release\netstandard1.4\Assisticant.xml" target="lib\netstandard1.4" />
     
   </files>
 </package>

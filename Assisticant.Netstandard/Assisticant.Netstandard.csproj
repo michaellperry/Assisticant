@@ -2,11 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
+    <RootNamespace>Assisticant</RootNamespace>
+    <AssemblyName>Assisticant</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\Assisticant\bin\netstandard1.4\Release\</OutputPath>
-    <DocumentationFile>..\Assisticant\bin\netstandard1.4\Release\netstandard1.4\Assisticant.Netstandard.xml</DocumentationFile>
+    <DocumentationFile>..\Assisticant\bin\netstandard1.4\Release\netstandard1.4\Assisticant.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
