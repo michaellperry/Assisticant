@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Assisticant</id>
-    <version>1.5</version>
+    <version>1.5.1</version>
     <authors>Michael L Perry</authors>
     <owners>Michael L Perry</owners>
     <description>Automatically discover view model dependencies and databind without INotifyPropertyChanged. UWP, WPF, iOS, or Android.</description>
@@ -18,14 +18,6 @@
       <frameworkAssembly assemblyName="System.Windows" targetFramework="win80"/>
       <frameworkAssembly assemblyName="System.Windows" targetFramework="wp80"/>
     </frameworkAssemblies>
-
-    <dependencies>
-      <group targetFramework="netstandard1.4">
-        <dependency id="System.ComponentModel" version="4.3.0" />
-        <dependency id="System.Threading.Thread" version="4.3.0" />
-        <dependency id="NETStandard.Library" version="1.6.1" />
-      </group>
-    </dependencies>
 
   </metadata>
   <files>
