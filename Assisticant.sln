@@ -61,8 +61,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{B8210BF2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.UnitTest.Portable", "Assisticant.UnitTest\Assisticant.UnitTest.Portable.csproj", "{664C559F-A3E9-46AE-A3C5-D95E2E8FB5C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Universal", "Assisticant\Assisticant.Universal.csproj", "{C5174D32-D236-45E6-B44F-BE6A5F1639DE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Core", "Assisticant\Assisticant.Core.csproj", "{E865E78F-63F9-404B-BE96-E88C0420DDFB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Android", "Android\Assisticant.Android.csproj", "{C4E189E5-7905-4678-A340-018F89274F49}"
@@ -117,16 +115,6 @@ Global
 		{664C559F-A3E9-46AE-A3C5-D95E2E8FB5C2}.Release|ARM.ActiveCfg = Release|Any CPU
 		{664C559F-A3E9-46AE-A3C5-D95E2E8FB5C2}.Release|x64.ActiveCfg = Release|Any CPU
 		{664C559F-A3E9-46AE-A3C5-D95E2E8FB5C2}.Release|x86.ActiveCfg = Release|Any CPU
-		{C5174D32-D236-45E6-B44F-BE6A5F1639DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5174D32-D236-45E6-B44F-BE6A5F1639DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5174D32-D236-45E6-B44F-BE6A5F1639DE}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{C5174D32-D236-45E6-B44F-BE6A5F1639DE}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{C5174D32-D236-45E6-B44F-BE6A5F1639DE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C5174D32-D236-45E6-B44F-BE6A5F1639DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5174D32-D236-45E6-B44F-BE6A5F1639DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5174D32-D236-45E6-B44F-BE6A5F1639DE}.Release|ARM.ActiveCfg = Release|Any CPU
-		{C5174D32-D236-45E6-B44F-BE6A5F1639DE}.Release|x64.ActiveCfg = Release|Any CPU
-		{C5174D32-D236-45E6-B44F-BE6A5F1639DE}.Release|x86.ActiveCfg = Release|Any CPU
 		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E865E78F-63F9-404B-BE96-E88C0420DDFB}.Debug|ARM.ActiveCfg = Debug|Any CPU

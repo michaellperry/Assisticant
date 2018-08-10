@@ -89,6 +89,7 @@
     <Compile Include="Metas\ViewModelTypes.cs" />
     <Compile Include="Metas\ViewProxy.cs" />
     <Compile Include="NamedPrecedents.cs" />
+    <Compile Include="NotifyAfterAttribute.cs" />
     <Compile Include="Observable.cs" />
     <Compile Include="Precedent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

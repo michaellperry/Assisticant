@@ -14,10 +14,6 @@ using System.Windows.Threading;
 #endif
 using System;
 using Assisticant.Timers;
-#if UNIVERSAL
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-#endif
 #if WPF
 using Assisticant.Descriptors;
 using Assisticant.Metas;
@@ -26,10 +22,6 @@ using System.Windows.Markup;
 using System.Windows.Controls;
 using System.Windows;
 #endif
-#if UNIVERSAL
-using Assisticant.XamlTypes;
-using Windows.UI.Xaml.Controls;
-#endif
 
 namespace Assisticant
 {
@@ -37,9 +29,6 @@ namespace Assisticant
     {
 #if WPF
         private static Dispatcher _mainDispatcher;
-#endif
-#if UNIVERSAL
-        private static CoreDispatcher _mainDispatcher;
 #endif
 
         public static void Initialize()
@@ -50,9 +39,6 @@ namespace Assisticant
             {
 #if WPF
                 _mainDispatcher = Dispatcher.CurrentDispatcher;
-#endif
-#if UNIVERSAL
-                _mainDispatcher = Window.Current.Dispatcher;
 #endif
                 UpdateScheduler.Initialize(RunOnUIThread);
                 FloatingTimeZone.Initialize(RunOnUIThread);
@@ -113,20 +99,6 @@ namespace Assisticant
             if (_mainDispatcher != null)
             {
                 _mainDispatcher.BeginInvoke(action, DispatcherPriority.Background);
-            }
-        }
-#endif
-#if UNIVERSAL
-        private static async void RunOnUIThread(Action action)
-        {
-            if (_mainDispatcher != null)
-            {
-                await _mainDispatcher.RunAsync(
-                    CoreDispatcherPriority.Low,
-                    new DispatchedHandler(delegate
-                    {
-                        action();
-                    }));
             }
         }
 #endif

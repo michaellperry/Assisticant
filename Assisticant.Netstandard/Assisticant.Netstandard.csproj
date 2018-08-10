@@ -48,6 +48,7 @@
     <Compile Include="..\Assisticant\Metas\ViewModelTypes.cs" Link="Metas\ViewModelTypes.cs" />
     <Compile Include="..\Assisticant\Metas\ViewProxy.cs" Link="Metas\ViewProxy.cs" />
     <Compile Include="..\Assisticant\NamedPrecedents.cs" Link="NamedPrecedents.cs" />
+    <Compile Include="..\Assisticant\NotifyAfterAttribute.cs" Link="NotifyAfterAttribute.cs" />
     <Compile Include="..\Assisticant\Observable.cs" Link="Observable.cs" />
     <Compile Include="..\Assisticant\Precedent.cs" Link="Precedent.cs" />
     <Compile Include="..\Assisticant\PropertyTracker.cs" Link="PropertyTracker.cs" />

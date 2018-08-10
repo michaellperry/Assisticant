@@ -10,6 +10,7 @@ namespace Assisticant.Metas
     public class PropertyMeta : MemberMeta
     {
         public readonly PropertyInfo Property;
+        private List<string> _earlierPropertyNames;
 
         public override bool CanRead { get { return Property.CanRead; } }
         public override bool CanWrite { get { return Property.CanWrite; } }
@@ -18,6 +19,11 @@ namespace Assisticant.Metas
             : base(owner, property.Name, property.PropertyType)
         {
             Property = property;
+
+            _earlierPropertyNames = property
+                .GetCustomAttributesPortable<NotifyAfterAttribute>()
+                .Select(a => a.OtherProperty)
+                .ToList();
         }
 
         public override object GetValue(object instance)
@@ -29,6 +35,9 @@ namespace Assisticant.Metas
         {
             Property.SetValue(instance, value, null);
         }
+
+        public override IEnumerable<MemberMeta> EarlierMembers =>
+            _earlierPropertyNames.SelectMany(n => DeclaringType.Members.Where(x => x.Name == n));
 
         internal static IEnumerable<MemberMeta> GetAll(TypeMeta owner)
         {

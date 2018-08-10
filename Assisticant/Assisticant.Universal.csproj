@@ -93,6 +93,7 @@
     <Compile Include="Metas\TypeMeta.cs" />
     <Compile Include="Metas\ViewModelTypes.cs" />
     <Compile Include="NamedPrecedents.cs" />
+    <Compile Include="NotifyAfterAttribute.cs" />
     <Compile Include="Observable.cs" />
     <Compile Include="InertialProperty.cs" />
     <Compile Include="Precedent.cs" />

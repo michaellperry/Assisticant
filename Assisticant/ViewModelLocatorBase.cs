@@ -37,9 +37,6 @@ namespace Assisticant
 #if WPF
             _designMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
 #endif
-#if UNIVERSAL
-            _designMode = Windows.ApplicationModel.DesignMode.DesignModeEnabled;
-#endif
         }
 
         public bool DesignMode

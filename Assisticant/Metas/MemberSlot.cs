@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Assisticant.Metas
 {
@@ -88,9 +90,17 @@ namespace Assisticant.Metas
 
         protected void UpdateNow()
         {
-            if (_computed.IsNotUpdating)
+            if (_computed.IsNotUpdating && !_computed.IsUpToDate)
             {
                 _computed.OnGet();
+
+                // Publish changes to higher priority members first.
+                // For example, publish ItemsSource changes before SelectedItem.
+                foreach (MemberSlot earlierMember in Member.EarlierMembers.Select(m => Proxy.LookupSlot(m)))
+                {
+                    earlierMember.UpdateNow();
+                }
+
                 // Update the GUI outside of the update method
                 // so we don't take a dependency on template bindings.
                 PublishChanges();

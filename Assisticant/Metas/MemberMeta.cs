@@ -21,6 +21,8 @@ namespace Assisticant.Metas
         public virtual bool CanRead { get { return true; } }
         public virtual bool CanWrite { get { return true; } }
 
+        public virtual IEnumerable<MemberMeta> EarlierMembers => Enumerable.Empty<MemberMeta>();
+
         public MemberMeta(TypeMeta owner, string name, Type type)
         {
             DeclaringType = owner;
