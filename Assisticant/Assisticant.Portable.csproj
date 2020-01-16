@@ -82,6 +82,7 @@
     <Compile Include="Collections\ObservableList.cs" />
     <Compile Include="Computed.cs" />
     <Compile Include="ComputedJob.cs" />
+    <Compile Include="Metas\ListSlot.cs" />
     <Compile Include="Metas\PassThroughSlot.cs" />
     <Compile Include="NotifyAfterAttribute.cs" />
     <Compile Include="PropertyTracker.cs" />

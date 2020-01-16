@@ -8,7 +8,7 @@ namespace Assisticant.Metas
     {
         public readonly ViewProxy Proxy;
         public readonly MemberMeta Member;
-        readonly Computed _computed;
+        protected readonly Computed _computed;
         public object Instance { get { return Proxy.Instance; } }
 
         protected MemberSlot(ViewProxy proxy, MemberMeta member)
@@ -40,7 +40,11 @@ namespace Assisticant.Metas
                 {
                     return new PassThroughSlot(proxy, member);
                 }
-                else
+                else if (member.IsList)
+				{
+					return new ListSlot(proxy, member);
+				}
+				else
                 {
 #if NETFRAMEWORK
                     if (BindingListSlot.AppliesTo(member))
