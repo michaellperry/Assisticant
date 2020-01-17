@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using VM.WPF.MVVM;
 
 namespace Assisticant.Sample
 {
-	public class ModelPrism : BindableBase
+    public class ModelPrism : BindableBase
 	{
 		public ModelPrism()
 		{
