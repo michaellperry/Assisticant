@@ -37,6 +37,7 @@
     <Compile Include="..\Assisticant\Metas\CommandMeta.cs" Link="Metas\CommandMeta.cs" />
     <Compile Include="..\Assisticant\Metas\ComputedMeta.cs" Link="Metas\ComputedMeta.cs" />
     <Compile Include="..\Assisticant\Metas\FieldMeta.cs" Link="Metas\FieldMeta.cs" />
+    <Compile Include="..\Assisticant\Metas\ListSlot.cs" Link="Metas\ListSlot.cs" />
     <Compile Include="..\Assisticant\Metas\MemberMeta.cs" Link="Metas\MemberMeta.cs" />
     <Compile Include="..\Assisticant\Metas\MemberSlot.cs" Link="Metas\MemberSlot.cs" />
     <Compile Include="..\Assisticant\Metas\MethodCommand.cs" Link="Metas\MethodCommand.cs" />

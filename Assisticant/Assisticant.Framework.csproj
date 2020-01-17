@@ -78,6 +78,7 @@
     <Compile Include="Metas\CommandMeta.cs" />
     <Compile Include="Metas\ComputedMeta.cs" />
     <Compile Include="Metas\FieldMeta.cs" />
+    <Compile Include="Metas\ListSlot.cs" />
     <Compile Include="Metas\MemberMeta.cs" />
     <Compile Include="Metas\MemberSlot.cs" />
     <Compile Include="Metas\MethodCommand.cs" />

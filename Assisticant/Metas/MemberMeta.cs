@@ -16,14 +16,16 @@ namespace Assisticant.Metas
         public readonly Type MemberType;
         public readonly bool IsViewModel;
         public readonly bool IsCollection;
-        public readonly bool IsObservableCollection;
+		public readonly bool IsList;
+		public readonly bool IsObservableCollection;
 
         public virtual bool CanRead { get { return true; } }
         public virtual bool CanWrite { get { return true; } }
 
         public virtual IEnumerable<MemberMeta> EarlierMembers => Enumerable.Empty<MemberMeta>();
 
-        public MemberMeta(TypeMeta owner, string name, Type type)
+
+		public MemberMeta(TypeMeta owner, string name, Type type)
         {
             DeclaringType = owner;
             Name = name;
@@ -32,9 +34,11 @@ namespace Assisticant.Metas
             IsCollection = typeof(IEnumerable).IsAssignableFromPortable(MemberType) && MemberType != typeof(string);
             IsObservableCollection = typeof(INotifyCollectionChanged).IsAssignableFromPortable(type) ||
                 IsBindingList(type);
+			IsList = typeof(IList).IsAssignableFromPortable(type) ||
+				IsIList(type);
         }
 
-        public abstract void SetValue(object instance, object value);
+		public abstract void SetValue(object instance, object value);
         public abstract object GetValue(object instance);
 
         public override string ToString()
@@ -48,5 +52,12 @@ namespace Assisticant.Metas
             return type.FullName == bindingList ||
                 type.GetInterfacesPortable().Any(i => i.FullName == bindingList);
         }
-    }
+
+		private bool IsIList(Type type)
+		{
+			const string iList = "System.Collections.Generic.IList";
+			return type.FullName.Contains(iList) ||
+				type.GetInterfacesPortable().Any(i => i.FullName.Contains(iList));
+		}
+	}
 }
