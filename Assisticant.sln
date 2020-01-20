@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29519.87
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Portable", "Assisticant\Assisticant.Portable.csproj", "{0F197CDB-CF38-438B-90AD-1B4F0976061E}"
 EndProject
@@ -72,6 +72,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assisticant.Netstandard", "Assisticant.Netstandard\Assisticant.Netstandard.csproj", "{2CAEFD06-13F2-47EA-B600-78C332D5BB2B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Framework", "Assisticant\Assisticant.Framework.csproj", "{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storyboard", "Storyboard\Storyboard.csproj", "{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -205,6 +207,22 @@ Global
 		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|x64.Build.0 = Release|Any CPU
 		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|x86.ActiveCfg = Release|Any CPU
 		{FC03FCBE-CD1C-4F1B-A84A-32E3C848904E}.Release|x86.Build.0 = Release|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Debug|ARM.Build.0 = Debug|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Debug|x64.Build.0 = Debug|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Debug|x86.Build.0 = Debug|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Release|ARM.Build.0 = Release|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Release|x64.ActiveCfg = Release|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Release|x64.Build.0 = Release|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Release|x86.ActiveCfg = Release|Any CPU
+		{80CED9D9-76F3-4A89-A1AE-9EC26CD95D4E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

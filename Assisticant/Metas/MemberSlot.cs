@@ -73,8 +73,6 @@ namespace Assisticant.Metas
 
         protected object UnwrapValue(object value)
         {
-            if (!Member.IsViewModel)
-                return value;
             var proxy = value as ViewProxy;
             if (proxy != null)
                 return proxy.Instance;

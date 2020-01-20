@@ -28,14 +28,14 @@ namespace Assisticant.Metas
 					case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
 						foreach (var item in e.NewItems)
 						{
-							_sourceCollection.Add(item);
+							_sourceCollection.Add(UnwrapValue(item));
 						}
 						_computed.MakeDependentsOutOfDate();
 						break;
 					case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
 						foreach (var item in e.OldItems)
 						{
-							_sourceCollection.Remove(item);
+							_sourceCollection.Remove(UnwrapValue(item));
 						}
 						_computed.MakeDependentsOutOfDate();
 						break;
