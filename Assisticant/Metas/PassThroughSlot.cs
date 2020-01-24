@@ -18,7 +18,7 @@ namespace Assisticant.Metas
             return Member.GetValue(Instance);
         }
 
-        protected override void PublishChanges()
+        protected internal override void PublishChanges()
         {
         }
 

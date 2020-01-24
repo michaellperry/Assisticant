@@ -5,8 +5,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assisticant.Metas
 {
@@ -17,36 +15,47 @@ namespace Assisticant.Metas
         Func<IEnumerable, IEnumerable> _translateIncomingList;
 		private NotifyCollectionChangedEventHandler _collectionChangedFromUIEventHandler;
 		private bool _collectionChangedFromUIEventHandlerSubscribed = false;
+        private bool _publishingChanges = false;
 
 		public ListSlot(ViewProxy proxy, MemberMeta member)
             : base(proxy, member)
 		{
 			_collectionChangedFromUIEventHandler = new NotifyCollectionChangedEventHandler((s, e) =>
 			{
-				switch (e.Action)
-				{
-					case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-						foreach (var item in e.NewItems)
-						{
-							_sourceCollection.Add(UnwrapValue(item));
-						}
-						_computed.MakeDependentsOutOfDate();
-						break;
-					case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-						foreach (var item in e.OldItems)
-						{
-							_sourceCollection.Remove(UnwrapValue(item));
-						}
-						_computed.MakeDependentsOutOfDate();
-						break;
-					case NotifyCollectionChangedAction.Reset:
-						_sourceCollection.Clear();
-						_computed.MakeDependentsOutOfDate();
-						break;
-					default:
-						break;
-				}
-			});
+                if (!_publishingChanges)
+                {
+                    switch (e.Action)
+                    {
+                        case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                            foreach (var item in e.NewItems)
+                            {
+                                _sourceCollection.Add(UnwrapValue(item));
+                            }
+                            _computed.MakeDependentsOutOfDate();
+                            break;
+                        case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                            foreach (var item in e.OldItems)
+                            {
+                                _sourceCollection.Remove(UnwrapValue(item));
+                            }
+                            _computed.MakeDependentsOutOfDate();
+                            break;
+                        case NotifyCollectionChangedAction.Reset:
+                            _sourceCollection.Clear();
+                            _computed.MakeDependentsOutOfDate();
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (Proxy.IsNotifying)
+                    {
+                        // The view is modifying the list in response to another update.
+                        // After it stops, notify it of other changes so that it can get the correct list.
+                        Proxy.WasModified(this);
+                    }
+                }
+            });
 		}
 
 		public override void SetValue(object value)
@@ -110,47 +119,56 @@ namespace Assisticant.Metas
             // getters to fire.
         }
 
-        protected override void PublishChanges()
+        protected internal override void PublishChanges()
         {
-            if (_sourceCollection == null)
+            _publishingChanges = true;
+
+            try
             {
-                if (_collection != null)
+                if (_sourceCollection == null)
                 {
-                    _collection = null;
-					_collectionChangedFromUIEventHandlerSubscribed = false;
-					FirePropertyChanged();
+                    if (_collection != null)
+                    {
+                        _collection = null;
+                        _collectionChangedFromUIEventHandlerSubscribed = false;
+                        FirePropertyChanged();
+                    }
+                    return;
                 }
-                return;
-            }
 
-            if (_collection == null)
-            {
-                _collection = new ObservableCollection<object>();
-				_collection.CollectionChanged += _collectionChangedFromUIEventHandler;
-				_collectionChangedFromUIEventHandlerSubscribed = true;
-				FirePropertyChanged();
-            }
+                if (_collection == null)
+                {
+                    _collection = new ObservableCollection<object>();
+                    _collection.CollectionChanged += _collectionChangedFromUIEventHandler;
+                    _collectionChangedFromUIEventHandlerSubscribed = true;
+                    FirePropertyChanged();
+                }
 
-            // Create a list of new items.
-            List<CollectionItem> items = new List<CollectionItem>();
+                // Create a list of new items.
+                List<CollectionItem> items = new List<CollectionItem>();
 
-            // Dump all previous items into a recycle bin.
-            using (RecycleBin<CollectionItem> bin = new RecycleBin<CollectionItem>())
-            {
-                foreach (object oldItem in _collection)
-                    bin.AddObject(new CollectionItem(_collection, oldItem, true));
-                // Add new objects to the list.
-                if (_sourceCollection != null)
-                    foreach (object obj in _sourceCollection)
-                        items.Add(bin.Extract(new CollectionItem(_collection, WrapValue(obj), false)));
-                // All deleted items are removed from the collection at this point.
+                // Dump all previous items into a recycle bin.
+                using (RecycleBin<CollectionItem> bin = new RecycleBin<CollectionItem>())
+                {
+                    foreach (object oldItem in _collection)
+                        bin.AddObject(new CollectionItem(_collection, oldItem, true));
+                    // Add new objects to the list.
+                    if (_sourceCollection != null)
+                        foreach (object obj in _sourceCollection)
+                            items.Add(bin.Extract(new CollectionItem(_collection, WrapValue(obj), false)));
+                    // All deleted items are removed from the collection at this point.
+                }
+                // Ensure that all items are added to the list.
+                int index = 0;
+                foreach (CollectionItem item in items)
+                {
+                    item.EnsureInCollection(index);
+                    ++index;
+                }
             }
-            // Ensure that all items are added to the list.
-            int index = 0;
-            foreach (CollectionItem item in items)
+            finally
             {
-                item.EnsureInCollection(index);
-                ++index;
+                _publishingChanges = false;
             }
         }
 
