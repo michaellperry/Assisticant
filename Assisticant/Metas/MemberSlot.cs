@@ -30,7 +30,7 @@ namespace Assisticant.Metas
         public abstract void SetValue(object value);
         public abstract object GetValue();
         internal abstract void UpdateValue();
-        protected abstract void PublishChanges();
+        protected internal abstract void PublishChanges();
 
         internal static MemberSlot Create(ViewProxy proxy, MemberMeta member)
         {
@@ -105,7 +105,7 @@ namespace Assisticant.Metas
 
                 // Update the GUI outside of the update method
                 // so we don't take a dependency on template bindings.
-                PublishChanges();
+                Proxy.Notify(() => PublishChanges());
             }
         }
 

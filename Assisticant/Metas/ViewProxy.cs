@@ -13,6 +13,8 @@ namespace Assisticant.Metas
     {
         public readonly object Instance;
         readonly MemberSlot[] _slots;
+        private int _notifyCount = 0;
+        private HashSet<MemberSlot> _modifiedWhileNotifying = new HashSet<MemberSlot>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -76,6 +78,34 @@ namespace Assisticant.Metas
         public override string ToString()
         {
             return Instance.ToString();
+        }
+
+        internal void Notify(Action publishChanges)
+        {
+            _notifyCount++;
+            try
+            {
+                publishChanges();
+            }
+            finally
+            {
+                _notifyCount--;
+                if (_notifyCount == 0)
+                {
+                    foreach (var member in _modifiedWhileNotifying)
+                    {
+                        member.PublishChanges();
+                    }
+                    _modifiedWhileNotifying.Clear();
+                }
+            }
+        }
+
+        internal bool IsNotifying => _notifyCount > 0;
+
+        internal void WasModified(MemberSlot member)
+        {
+            _modifiedWhileNotifying.Add(member);
         }
     }
 }

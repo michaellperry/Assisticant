@@ -43,7 +43,7 @@ namespace Assisticant.Metas
             _sourceValue = WrapValue(Member.GetValue(Instance));
         }
 
-        protected override void PublishChanges()
+        protected internal override void PublishChanges()
         {
             if (!Object.Equals(_value, _sourceValue))
             {
