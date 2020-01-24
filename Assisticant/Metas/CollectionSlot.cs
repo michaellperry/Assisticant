@@ -67,7 +67,7 @@ namespace Assisticant.Metas
             // getters to fire.
         }
 
-        protected override void PublishChanges()
+        protected internal override void PublishChanges()
         {
             if (_sourceCollection == null)
             {
