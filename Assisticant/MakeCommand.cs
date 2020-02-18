@@ -17,8 +17,9 @@ namespace Assisticant
     /// <summary>
     /// Creates a command object, which implements ICommand. Use the When (optional) and
     /// Do (required) methods to specify the behavior of the command. Pass lambda expressions
-    /// taking no parameters into both methods. A lambda expression taking no parameters
-    /// looks like this: () => &lt;condition or {statement}&gt;
+    /// into both methods. Use a lambda taking no parameters like this: () => &lt;condition or
+    /// {statement}&gt;. Or use a lambda taking one parameter like this: param => &lt;condition
+    /// or {statement}&gt;.
     /// </summary>
     public static class MakeCommand
     {
@@ -108,6 +109,11 @@ namespace Assisticant
             {
                 return new Command(_canExecute, execute);
             }
+
+            public ICommand Do(Action<object> execute)
+            {
+                return new Command(_canExecute, () => execute(null));
+            }
         }
 
         /// <summary>
@@ -120,6 +126,11 @@ namespace Assisticant
         public static Condition When(Func<bool> condition)
         {
             return new Condition(condition);
+        }
+
+        public static Condition When(Func<object, bool> condition)
+        {
+            return new Condition(() => condition(null));
         }
 
         /// <summary>
