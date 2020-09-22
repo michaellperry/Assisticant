@@ -9,17 +9,19 @@
  * 
  **********************************************************************/
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using Assisticant.Collections.Impl;
 
 namespace Assisticant.Collections
 {
-	public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+	public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary
 	{
 		private IDictionary<TKey, TValue> _dictionary = new Dictionary<TKey, TValue>();
 		private Observable _indDictionary = new NamedObservable(MemoizedTypeName<ObservableDictionary<TKey, TValue>>.GenericName());
 
-		public ObservableDictionary()
+        public ObservableDictionary()
 		{
 			_dictionary = new Dictionary<TKey, TValue>();
 		}
@@ -59,7 +61,25 @@ namespace Assisticant.Collections
 			}
 		}
 
-		ICollection<TKey> IDictionary<TKey, TValue>.Keys { get { return Keys; } }
+        ICollection IDictionary.Values
+        {
+            get
+            {
+				_indDictionary.OnGet();
+                return (ICollection)_dictionary.Values;
+            }
+        }
+
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys
+        {
+            get {
+                return new UpdateCollectionHelper<TKey>(() =>
+                {
+                    _indDictionary.OnGet();
+                    return _dictionary.Keys;
+                });
+            }
+        }
 
 		public bool Remove(TKey key)
 		{
@@ -73,7 +93,16 @@ namespace Assisticant.Collections
 			return _dictionary.TryGetValue(key, out value);
 		}
 
-		public UpdateCollectionHelper<TValue> Values
+        ICollection IDictionary.Keys
+        {
+            get
+            {
+				_indDictionary.OnGet();
+                return (ICollection) _dictionary.Keys;
+            }
+        }
+
+        public UpdateCollectionHelper<TValue> Values
 		{
 			get {
 				return new UpdateCollectionHelper<TValue>(() =>
@@ -84,9 +113,19 @@ namespace Assisticant.Collections
 			}
 		}
 
-		ICollection<TValue> IDictionary<TKey, TValue>.Values { get { return Values; } }
+        ICollection<TValue> IDictionary<TKey, TValue>.Values
+        {
+            get
+            {
+                return new UpdateCollectionHelper<TValue>(() =>
+                {
+                    _indDictionary.OnGet();
+                    return _dictionary.Values;
+                });
+            }
+        }
 
-		public TValue this[TKey key]
+        public TValue this[TKey key]
 		{
 			get
 			{
@@ -106,13 +145,39 @@ namespace Assisticant.Collections
 			_dictionary.Add(item);
 		}
 
-		public void Clear()
+        public void Add(object key, object value)
+        {
+            _indDictionary.OnSet();
+            _dictionary.Add((TKey) key, (TValue) value);
+        }
+
+        public void Clear()
 		{
 			_indDictionary.OnSet();
 			_dictionary.Clear();
 		}
 
-		public bool Contains(KeyValuePair<TKey, TValue> item)
+        public bool Contains(object key)
+        {
+            _indDictionary.OnGet();
+            return _dictionary.ContainsKey((TKey) key);
+        }
+
+        IDictionaryEnumerator IDictionary.GetEnumerator()
+        {
+            _indDictionary.OnGet();
+            return _dictionary.GetEnumerator() as IDictionaryEnumerator;
+        }
+
+        public void Remove(object key)
+        {
+            _indDictionary.OnSet();
+            _dictionary.Remove((TKey) key);
+        }
+
+        public bool IsFixedSize => false;
+
+        public bool Contains(KeyValuePair<TKey, TValue> item)
 		{
 			_indDictionary.OnGet();
 			return _dictionary.Contains(item);
@@ -124,17 +189,37 @@ namespace Assisticant.Collections
 			_dictionary.CopyTo(array, arrayIndex);
 		}
 
-		public int Count
+        public void CopyTo(Array array, int index)
+        {
+            _indDictionary.OnGet();
+            _dictionary.CopyTo((KeyValuePair<TKey, TValue>[]) array, index);
+        }
+
+        public int Count
 		{
 			get { _indDictionary.OnGet(); return _dictionary.Count; }
 		}
 
-		public bool IsReadOnly
-		{
-			get { return true; }
-		}
+        public bool IsSynchronized { get; }
+        public object SyncRoot { get; }
 
-		public bool Remove(KeyValuePair<TKey, TValue> item)
+        public bool IsReadOnly => false;
+
+        public object this[object key]
+        {
+            get
+            {
+				_indDictionary.OnGet();
+                return _dictionary[(TKey) key];
+            }
+            set
+            {
+				_indDictionary.OnSet();
+                _dictionary[(TKey) key] = (TValue)value;
+            }
+        }
+
+        public bool Remove(KeyValuePair<TKey, TValue> item)
 		{
 			_indDictionary.OnSet();
 			return _dictionary.Remove(item);

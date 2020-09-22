@@ -71,6 +71,7 @@
     <Compile Include="ContactListData\ContactListViewModel.cs" />
     <Compile Include="ContactListData\ContactViewModel.cs" />
     <Compile Include="ComputedListTest.cs" />
+    <Compile Include="DictionaryTests.cs" />
     <Compile Include="DirectConcurrencyTest.cs" />
     <Compile Include="DirectComputed.cs" />
     <Compile Include="DirectComputedTest.cs" />
