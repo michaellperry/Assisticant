@@ -62,12 +62,12 @@ namespace Assisticant.Collections.Impl
 
         public bool IsReadOnly
 		{
-			get { return false; }
+			get { return true; }
 		}
 		public bool Remove(T item)
         {
-            return _get().Remove(item);
-        }
+			throw new NotSupportedException();
+		}
 
 		public IEnumerator<T> GetEnumerator()
 		{
