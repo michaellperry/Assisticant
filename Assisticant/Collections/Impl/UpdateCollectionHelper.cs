@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace Assisticant.Collections.Impl
 	/// It also ensures that the dictionary is updated if necessary when it is 
 	/// accessed through the Keys or Values collection.
 	/// </remarks>
-	public struct UpdateCollectionHelper<T> : ICollection<T>
+	public struct UpdateCollectionHelper<T> : ICollection<T>, ICollection
 	{
 		readonly Func<ICollection<T>> _get;
 
@@ -45,26 +46,37 @@ namespace Assisticant.Collections.Impl
 		{
 			_get().CopyTo(array, arrayIndex);
 		}
-		public int Count
+
+        public void CopyTo(Array array, int index)
+        {
+            _get().CopyTo((T[])array, index);
+        }
+
+        public int Count
 		{
 			get { return _get().Count; }
 		}
-		public bool IsReadOnly
+
+        public bool IsSynchronized => false;
+        public object SyncRoot => this;
+
+        public bool IsReadOnly
 		{
-			get { return true; }
+			get { return false; }
 		}
 		public bool Remove(T item)
-		{
-			throw new NotSupportedException();
-		}
+        {
+            return _get().Remove(item);
+        }
 
 		public IEnumerator<T> GetEnumerator()
 		{
 			return _get().GetEnumerator();
 		}
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return GetEnumerator();
+			return _get().GetEnumerator();
 		}
 	}
 }
