@@ -13,7 +13,7 @@ namespace Assisticant.Collections
 	/// job is to choose the contents of the dictionary (either as a list of key-
 	/// value pairs, or as an object that implements <see cref="IDictionary{TKey,TValue}"/>).
 	/// </remarks>
-	public class ComputedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+	public class ComputedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
 	{
 		private readonly Func<IEnumerable<KeyValuePair<TKey, TValue>>> _computeCollection;
 		private IDictionary<TKey, TValue> _dictionary;
@@ -100,6 +100,7 @@ namespace Assisticant.Collections
 			}
 		}
 		ICollection<TKey> IDictionary<TKey, TValue>.Keys { get { return Keys; } }
+		IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
 
 		public bool Remove(TKey key)
 		{
@@ -122,6 +123,7 @@ namespace Assisticant.Collections
 			}
 		}
 		ICollection<TValue> IDictionary<TKey, TValue>.Values { get { return Values; } }
+		IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
 
 		public TValue this[TKey key]
 		{
@@ -195,5 +197,5 @@ namespace Assisticant.Collections
 		{
 			get { return _computedSentry; }
 		}
-	}
+    }
 }

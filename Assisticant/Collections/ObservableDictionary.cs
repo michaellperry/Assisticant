@@ -16,7 +16,7 @@ using Assisticant.Collections.Impl;
 
 namespace Assisticant.Collections
 {
-	public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary
+	public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>
 	{
 		private IDictionary<TKey, TValue> _dictionary = new Dictionary<TKey, TValue>();
 		private Observable _indDictionary = new NamedObservable(MemoizedTypeName<ObservableDictionary<TKey, TValue>>.GenericName());
@@ -80,6 +80,9 @@ namespace Assisticant.Collections
                 });
             }
         }
+
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
 
 		public bool Remove(TKey key)
 		{

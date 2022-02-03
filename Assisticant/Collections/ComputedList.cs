@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Assisticant.Collections
 {
-    public class ComputedList<T> : IEnumerable<T>
+    public class ComputedList<T> : IEnumerable<T>, IReadOnlyList<T>
     {
         private readonly Func<IEnumerable<T>> _computeCollection;
 
