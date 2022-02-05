@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Assisticant.UnitTest</RootNamespace>
     <AssemblyName>Assisticant.UnitTest</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -17,6 +17,7 @@
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
     <BaseIntermediateOutputPath>obj\Portable\</BaseIntermediateOutputPath>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -92,13 +93,13 @@
     <Compile Include="SubscriptionTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assisticant\Assisticant.Portable.csproj">
-      <Project>{0f197cdb-cf38-438b-90ad-1b4f0976061e}</Project>
-      <Name>Assisticant.Portable</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Assisticant.Netstandard\Assisticant.Netstandard.csproj">
+      <Project>{2caefd06-13f2-47ea-b600-78c332d5bb2b}</Project>
+      <Name>Assisticant.Netstandard</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
