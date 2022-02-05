@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29519.87
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Portable", "Assisticant\Assisticant.Portable.csproj", "{0F197CDB-CF38-438B-90AD-1B4F0976061E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.WPF", "Assisticant\Assisticant.WPF.csproj", "{FEFABF21-E62D-4E4A-A51A-30803EDFA37F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{7426ECC1-F6B4-4C5C-82BB-60C93EEFE722}"
@@ -85,16 +83,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0F197CDB-CF38-438B-90AD-1B4F0976061E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F197CDB-CF38-438B-90AD-1B4F0976061E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F197CDB-CF38-438B-90AD-1B4F0976061E}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{0F197CDB-CF38-438B-90AD-1B4F0976061E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0F197CDB-CF38-438B-90AD-1B4F0976061E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0F197CDB-CF38-438B-90AD-1B4F0976061E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F197CDB-CF38-438B-90AD-1B4F0976061E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F197CDB-CF38-438B-90AD-1B4F0976061E}.Release|ARM.ActiveCfg = Release|Any CPU
-		{0F197CDB-CF38-438B-90AD-1B4F0976061E}.Release|x64.ActiveCfg = Release|Any CPU
-		{0F197CDB-CF38-438B-90AD-1B4F0976061E}.Release|x86.ActiveCfg = Release|Any CPU
 		{FEFABF21-E62D-4E4A-A51A-30803EDFA37F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FEFABF21-E62D-4E4A-A51A-30803EDFA37F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEFABF21-E62D-4E4A-A51A-30803EDFA37F}.Debug|ARM.ActiveCfg = Debug|Any CPU

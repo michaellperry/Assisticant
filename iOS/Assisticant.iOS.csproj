@@ -51,9 +51,9 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assisticant\Assisticant.Portable.csproj">
-      <Project>{0f197cdb-cf38-438b-90ad-1b4f0976061e}</Project>
-      <Name>Assisticant.Portable</Name>
+    <ProjectReference Include="..\Assisticant.Netstandard\Assisticant.Netstandard.csproj">
+      <Project>{2caefd06-13f2-47ea-b600-78c332d5bb2b}</Project>
+      <Name>Assisticant.Netstandard</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

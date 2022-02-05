@@ -66,9 +66,9 @@
     <Compile Include="NotifyDataErrorInfoTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assisticant\Assisticant.Portable.csproj">
-      <Project>{0F197CDB-CF38-438B-90AD-1B4F0976061E}</Project>
-      <Name>Assisticant.Portable</Name>
+    <ProjectReference Include="..\Assisticant.Netstandard\Assisticant.Netstandard.csproj">
+      <Project>{2caefd06-13f2-47ea-b600-78c332d5bb2b}</Project>
+      <Name>Assisticant.Netstandard</Name>
     </ProjectReference>
     <ProjectReference Include="..\Assisticant\Assisticant.WPF.csproj">
       <Project>{fefabf21-e62d-4e4a-a51a-30803edfa37f}</Project>
