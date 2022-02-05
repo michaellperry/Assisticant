@@ -15,7 +15,7 @@ using System.Collections.Generic;
 
 namespace Assisticant.Collections
 {
-	public class ObservableList<T> : IList<T>, IList
+	public class ObservableList<T> : IList<T>, IList, IReadOnlyList<T>
 	{
         private List<T> _list;
 		private Observable _indList = new NamedObservable(MemoizedTypeName<ObservableList<T>>.GenericName());
