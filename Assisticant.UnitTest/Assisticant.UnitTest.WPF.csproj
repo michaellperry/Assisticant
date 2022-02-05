@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Assisticant.UnitTest.WPF</RootNamespace>
     <AssemblyName>Assisticant.UnitTest.WPF</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,9 +67,9 @@
     <Compile Include="NotifyDataErrorInfoTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assisticant.Netstandard\Assisticant.Netstandard.csproj">
-      <Project>{2caefd06-13f2-47ea-b600-78c332d5bb2b}</Project>
-      <Name>Assisticant.Netstandard</Name>
+    <ProjectReference Include="..\Assisticant\Assisticant.Framework.csproj">
+      <Project>{fc03fcbe-cd1c-4f1b-a84a-32e3c848904e}</Project>
+      <Name>Assisticant.Framework</Name>
     </ProjectReference>
     <ProjectReference Include="..\Assisticant\Assisticant.WPF.csproj">
       <Project>{fefabf21-e62d-4e4a-a51a-30803edfa37f}</Project>
