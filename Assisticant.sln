@@ -59,8 +59,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{B8210BF2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.UnitTest.Portable", "Assisticant.UnitTest\Assisticant.UnitTest.Portable.csproj", "{664C559F-A3E9-46AE-A3C5-D95E2E8FB5C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Core", "Assisticant\Assisticant.Core.csproj", "{E865E78F-63F9-404B-BE96-E88C0420DDFB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.Android", "Android\Assisticant.Android.csproj", "{C4E189E5-7905-4678-A340-018F89274F49}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assisticant.iOS", "iOS\Assisticant.iOS.csproj", "{89B554EB-2886-475F-9672-F90FAE10C4F2}"
