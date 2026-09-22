@@ -50,3 +50,6 @@ Generated_Code*/
 AppPackages/
 *.ncrunchproject
 *.ncrunchsolution
+
+# Claude Code agent worktrees
+.claude/worktrees/
