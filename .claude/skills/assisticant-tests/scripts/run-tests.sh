@@ -22,7 +22,7 @@ if [[ ! -d "$repo_root/Assisticant.UnitTest" ]]; then
   echo "run-tests.sh: $repo_root has no Assisticant.UnitTest folder" >&2; exit 2
 fi
 # One build directory per checkout, so parallel worktrees don't collide.
-repo_key="$(printf '%s' "$repo_root" | shasum | cut -c1-10)"
+repo_key="$(printf '%s' "$repo_root" | git hash-object --stdin | cut -c1-10)"
 runner_dir="${ASSISTICANT_TEST_DIR:-${TMPDIR:-/tmp}/assisticant-test-runner-$repo_key}"
 mkdir -p "$runner_dir"
 
