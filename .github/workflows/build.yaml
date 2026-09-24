@@ -33,14 +33,22 @@ jobs:
         - name: Setup NuGet
           uses: NuGet/setup-nuget@v2
 
-        - name: Restore NuGet packages
-          run: nuget restore Assisticant.sln
+        # windows-latest no longer ships the .NET Framework 4.5 targeting pack
+        - name: Install .NET Framework 4.5 developer pack
+          run: choco install netfx-4.5.2-devpack -y --no-progress
 
-        - name: Restore PackageReference projects
-          run: msbuild Assisticant.sln /t:Restore /p:Configuration=Release
+        # Android/iOS are excluded: classic Xamarin tooling is EOL (May 2024) and no
+        # longer ships on hosted build images (confirmed by trying it on this runner).
+        - name: Restore packages.config packages
+          run: nuget restore Assisticant.UnitTest\packages.config -PackagesDirectory packages
 
-        - name: Build solution
-          run: msbuild Assisticant.sln /p:Configuration=Release /m /verbosity:minimal
+        - name: Restore Assisticant.Netstandard
+          run: msbuild Assisticant.Netstandard\Assisticant.Netstandard.csproj /t:Restore
+
+        - name: Build core projects and tests
+          run: |
+            msbuild Assisticant.UnitTest\Assisticant.UnitTest.Portable.csproj /p:Configuration=Release /m /verbosity:minimal
+            msbuild Assisticant.UnitTest\Assisticant.UnitTest.WPF.csproj /p:Configuration=Release /m /verbosity:minimal
 
         - name: Setup VSTest
           uses: darenm/Setup-VSTest@v1
