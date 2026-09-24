@@ -1,0 +1,54 @@
+{
+  "skill_name": "assisticant-tests",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "There are no tests for BindingManager at all. Add some \u2014 I want to know that Bind pushes the current value and later changes to the action, and that nothing gets pushed after Unbind.",
+      "expected_output": "A new BindingManager test class in Assisticant.UnitTest, added to the Portable csproj, using a shared scheduler harness with explicit Process(); tests pass under the bundled runner along with the full suite.",
+      "files": [],
+      "assertions": [
+        "Every new .cs file is registered as a Compile entry in Assisticant.UnitTest.Portable.csproj",
+        "No library source under Assisticant/ or Assisticant.Netstandard/ was modified",
+        "The full suite (all ~75 pre-existing tests plus the new ones) was run, and the output is saved",
+        "No pre-existing test fails in the full-suite run; every failure is an intentional, named bug test",
+        "No new test is marked [Ignore] to hide a failure",
+        "Every test class that subscribes goes through one shared scheduler harness (no second private UpdateScheduler.Initialize, no reflection on UpdateScheduler internals)",
+        "A test asserts that after Unbind, a later change does not reach the action",
+        "A test asserts that a change the bound function never read does not push to the action"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm pretty sure Observable<T>.Value raises invalidation before it actually stores the new value, so if the UI dispatcher runs updates synchronously a subscriber reads the old value. Can you write a test that proves it? Don't fix it yet.",
+      "expected_output": "A test named for the correct behavior, using an inline scheduler, that fails against current code with a clear message; library code untouched; failure reported as evidence.",
+      "files": [],
+      "assertions": [
+        "Every new .cs file is registered as a Compile entry in Assisticant.UnitTest.Portable.csproj",
+        "No library source under Assisticant/ or Assisticant.Netstandard/ was modified",
+        "The full suite (all ~75 pre-existing tests plus the new ones) was run, and the output is saved",
+        "No pre-existing test fails in the full-suite run; every failure is an intentional, named bug test",
+        "No new test is marked [Ignore] to hide a failure",
+        "Every test class that subscribes goes through one shared scheduler harness (no second private UpdateScheduler.Initialize, no reflection on UpdateScheduler internals)",
+        "The test drives updates through an inline (synchronous) scheduler",
+        "The new test fails against current library code, and the failure message is reported",
+        "The test is named for the correct behavior (subscriber sees the new value), not for the bug"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "add tests for ObservableList<T> \u2014 computeds that read it should go out of date on Add/Remove/Clear/AddRange, and a computed that reads some other list shouldn't be affected",
+      "expected_output": "ObservableList tests covering each mutator plus negative (unrelated list) tests, laziness via IsUpToDate or invalidation counts, fixture model class, csproj entry, passing run.",
+      "files": [],
+      "assertions": [
+        "Every new .cs file is registered as a Compile entry in Assisticant.UnitTest.Portable.csproj",
+        "No library source under Assisticant/ or Assisticant.Netstandard/ was modified",
+        "The full suite (all ~75 pre-existing tests plus the new ones) was run, and the output is saved",
+        "No pre-existing test fails in the full-suite run; every failure is an intentional, named bug test",
+        "No new test is marked [Ignore] to hide a failure",
+        "Tests cover each of Add, Remove, Clear and AddRange",
+        "There is a negative test: a computed reading a different list is not invalidated",
+        "Tests assert how often invalidation or recomputation happens (a count), not only IsUpToDate or final values"
+      ]
+    }
+  ]
+}
