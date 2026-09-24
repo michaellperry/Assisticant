@@ -33,10 +33,6 @@ jobs:
         - name: Setup NuGet
           uses: NuGet/setup-nuget@v2
 
-        # windows-latest no longer ships the .NET Framework 4.5 targeting pack
-        - name: Install .NET Framework 4.5 developer pack
-          run: choco install netfx-4.5.2-devpack -y --no-progress
-
         # Android/iOS are excluded: classic Xamarin tooling is EOL (May 2024) and no
         # longer ships on hosted build images (confirmed by trying it on this runner).
         - name: Restore packages.config packages
