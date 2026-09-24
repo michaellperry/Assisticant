@@ -45,6 +45,7 @@ Consequences when editing:
 - `NamedPrecedents.cs` and the visualizer classes support debugging (`Precedent.DebugMode`).
 
 **Update batching / threading** (`UpdateScheduler.cs`): invalidations schedule UI updates rather than firing them synchronously. `UpdateScheduler.Initialize(runOnUIThread)` (called from `ForView.Initialize`) sets how updates get marshalled to the UI thread. Updates scheduled before initialization are queued. `Begin()`/`End()` capture a batch. Observables can be changed from any thread (callers lock), and `PropertyChanged` is still raised only on the UI thread.
+- **Contract: `runOnUIThread` must always dispatch asynchronously, never run its action inline** — even when `Initialize`/`ScheduleUpdate` is already called from the UI thread. `Observable<T>.Value`'s setter raises `Invalidated` (which schedules the update through this delegate) *before* it stores the new value (`Fields/Observable.cs`). An inline dispatcher lets a subscriber's read race ahead of the store and observe the stale value. Every built-in adapter honors this: WPF's `ForView` uses `Dispatcher.BeginInvoke` (always posts); Android's `BindingManagerExtensions` hops through `ThreadPool.QueueUserWorkItem` before `RunOnUiThread`. When wiring a new platform (e.g. MAUI), use a delegate that always queues — e.g. `IDispatcher.DispatchDelayed(TimeSpan.Zero, action)` — not `MainThread.BeginInvokeOnMainThread` or an `IsMainThread` inline-execute check, both of which run synchronously when already on the main thread and reproduce this bug class.
 
 **View-model proxying** (`Metas/`, `Descriptors/`, `XamlTypes/`, `ForView.cs`, `ViewModelLocatorBase.cs`):
 - `ForView.Wrap(obj)` creates a `PlatformProxy<T>` around any plain object. `ViewModelLocatorBase.ViewModel(() => ...)` does this lazily per property (keyed by `[CallerMemberName]`) and returns the unwrapped instance in design mode.
@@ -55,6 +56,15 @@ Consequences when editing:
 **Mobile** (`Android/`, `iOS/`): there is no XAML, so binding is imperative. `Binding/BindingManager` (in core) plus per-control extension methods (`TextBindingExtensions`, `ButtonBindingExtensions`, list/table views, etc.) subscribe computeds to native controls. The manager is initialized from the Activity/ViewController.
 
 **Timers** (`Timers/`): time-dependent observables (`FloatingDateTime`, `RisingTimeSpan`, `DroppingTimeSpan`, …) that invalidate dependents when a time threshold is crossed. They are driven by `FloatingTimeZone`, which is also initialized with the UI-thread dispatcher.
+
+## Binding on platforms without `ForView` (MAUI, and any platform without an XAML type-descriptor bridge)
+
+`ForView.Wrap`/`ViewModelLocatorBase` are WPF-only (`#if WPF` in `ForView.cs`; the proxy layer needs `ICustomTypeDescriptor`, which doesn't exist outside WPF/UWP). MAUI has no equivalent adapter today, so it is stuck with the same imperative pattern Android/iOS already use — `Assisticant.Binding.BindingManager` — not `{Binding}`/XAML data binding directly on a raw view model. Consequences to design around, all real and all confirmed against source:
+
+- **No `INotifyPropertyChanged`, ever, on a raw VM.** `{Binding}` against an unwrapped view model reads once at bind time and never updates. Every property a MAUI page displays must be pushed through `BindingManager.Bind(() => vm.Property, value => control.Foo = value)`, bound in `OnAppearing` and `Unbind()` + dispose in `OnDisappearing`.
+- **No `INotifyCollectionChanged` on `ObservableList<T>`/`ObservableDictionary`.** Confirmed in `Collections/ObservableList.cs` — it never raises INCC. On WPF this is invisible because `ForView.Wrap` routes list-typed members through `Metas/ListSlot.cs`, which mirrors the raw list into a real `ObservableCollection<object>` and republishes diffs; that proxy doesn't exist on MAUI. Until it does (see the open design issue on adding optional INCC support), MAUI code must snapshot with `list.ToArray()` and reassign `ItemsSource`/`ItemsSource`-equivalent after the mutating VM method returns — not push incrementally on every `Add`/`Clear`, which can observe an empty or partial list mid-mutation.
+- **The UI-thread dispatcher must always be asynchronous** — see the `UpdateScheduler` contract above. This is the single most common source of "the VM says X but the control still shows the old value" bugs on MAUI.
+- Assisticant's `IValidation`/`INotifyDataErrorInfo` support is WPF-only; don't plan `ValidatesOnNotifyDataErrors` in MAUI XAML.
 
 ## NuGet packages
 
