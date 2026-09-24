@@ -20,3 +20,30 @@ jobs:
             azure-devops-project-url: https://michaellperry.visualstudio.com/Assisticant
             azure-pipeline-name: 'Build from GitHub'
             azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+
+    build-and-test:
+        name: Build and test (GitHub Actions)
+        runs-on: windows-latest
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Setup MSBuild
+          uses: microsoft/setup-msbuild@v2
+
+        - name: Setup NuGet
+          uses: NuGet/setup-nuget@v2
+
+        - name: Restore NuGet packages
+          run: nuget restore Assisticant.sln
+
+        - name: Restore PackageReference projects
+          run: msbuild Assisticant.sln /t:Restore /p:Configuration=Release
+
+        - name: Build solution
+          run: msbuild Assisticant.sln /p:Configuration=Release /m /verbosity:minimal
+
+        - name: Setup VSTest
+          uses: darenm/Setup-VSTest@v1
+
+        - name: Run tests
+          run: vstest.console.exe "Assisticant.UnitTest\bin\Portable\Release\Assisticant.UnitTest.dll" "Assisticant.UnitTest\bin\Release\Assisticant.UnitTest.WPF.dll"
