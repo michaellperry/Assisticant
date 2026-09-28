@@ -13,7 +13,10 @@ namespace Assisticant.SourceGenerators
 {
     /// <summary>
     /// ViewModel layer. Turns an <c>[Computed]</c>-decorated method into a read-only
-    /// property backed by <c>Computed&lt;T&gt;</c> - Assisticant's dependent variables.
+    /// property - backed by <c>Computed&lt;T&gt;</c> for a scalar return type, or by a
+    /// live <c>ObservableCollection&lt;T&gt;</c> for an <c>IEnumerable&lt;T&gt;</c>
+    /// return type (see the "Collection mode" section below) - Assisticant's dependent
+    /// variables.
     ///
     /// <b>Model/ViewModel separation:</b> by default a ViewModel holds no
     /// <c>Observable&lt;T&gt;</c> of its own (see <see cref="ObservableGenerator"/>'s
@@ -42,16 +45,53 @@ namespace Assisticant.SourceGenerators
     ///         public string Greeting =&gt; __greetingField.Value;
     ///     }
     ///
-    /// The method must take no parameters and not return void (it becomes the
-    /// Func&lt;T&gt; passed to Computed&lt;T&gt;'s constructor). Because a property can't
-    /// share its name with the method that computes it, the property name is derived
-    /// by stripping a leading "Compute" or "Get" prefix (or given explicitly via
+    /// The method must take no parameters (it becomes the Func&lt;T&gt; passed to
+    /// Computed&lt;T&gt;'s constructor, or the source enumerable a collection-mode
+    /// property re-synchronizes from). Because a property can't share its name with
+    /// the method that computes it, the property name is derived by stripping a
+    /// leading "Compute" or "Get" prefix (or given explicitly via
     /// [Computed("PropertyName")]).
     ///
     /// Add <c>[NotifyPropertyChanged]</c> to the class (see
-    /// <see cref="NotifyPropertyChangedGenerator"/>) to have each [Computed] property
-    /// also raise <c>PropertyChanged</c> (asynchronously, via <c>UpdateScheduler</c>)
-    /// whenever its backing <c>Computed&lt;T&gt;</c> invalidates.
+    /// <see cref="NotifyPropertyChangedGenerator"/>) to have each scalar [Computed]
+    /// property also raise <c>PropertyChanged</c> (asynchronously, via
+    /// <c>UpdateScheduler</c>) whenever its backing <c>Computed&lt;T&gt;</c>
+    /// invalidates. Collection-mode properties don't participate in this - see below.
+    ///
+    /// <b>Collection mode.</b> When the method returns <c>IEnumerable&lt;T&gt;</c> (or
+    /// any type implementing it for exactly one T - excluding <c>string</c>, which
+    /// technically implements <c>IEnumerable&lt;char&gt;</c>, mirroring the exclusion
+    /// the reflection-based <c>Metas/MemberMeta.cs</c> already makes), the generated
+    /// property is instead a live, strongly-typed
+    /// <c>System.Collections.ObjectModel.ObservableCollection&lt;T&gt;</c> that's
+    /// synchronized - not replaced - on every recompute:
+    ///
+    ///     [Computed] private IEnumerable&lt;PersonViewModel&gt; ComputePeople()
+    ///         =&gt; _people.Select(p =&gt; new PersonViewModel(p));
+    ///
+    /// becomes (see <see cref="GeneratorSupport"/> for CollectionSynchronizer&lt;T&gt;):
+    ///
+    ///     private ObservableCollection&lt;PersonViewModel&gt;? __peopleField;
+    ///     private Computed? __peopleSentryField;
+    ///     public ObservableCollection&lt;PersonViewModel&gt; People { get { ...; return __peopleField; } }
+    ///
+    /// The property's identity never changes across recomputes - only its contents do,
+    /// via minimal Add/Remove/Move mutations that raise real
+    /// <c>INotifyCollectionChanged</c> events, with per-item identity preserved by a
+    /// <c>RecycleBin&lt;T&gt;</c> exactly the way <c>Collections/ComputedList.cs</c>
+    /// already preserves it (so e.g. an item's own [Observable] "IsSelected" survives
+    /// a recompute).
+    ///
+    /// This targets a real <c>ObservableCollection&lt;T&gt;</c> - not a custom
+    /// <c>INotifyCollectionChanged</c> implementation, and not <c>ComputedList&lt;T&gt;</c>
+    /// itself, which implements neither - because .NET MAUI's <c>CollectionView</c> is
+    /// confirmed (independent of anything in this repo) to not reliably subscribe to
+    /// <c>INotifyCollectionChanged</c> on an arbitrary custom collection class; only
+    /// on <c>ObservableCollection&lt;T&gt;</c> itself
+    /// (https://github.com/dotnet/maui/issues/29284, open as of this writing). The
+    /// diff algorithm mirrors Assisticant's own WPF proxy
+    /// (<c>Metas/ListSlot.cs</c>/<c>Metas/CollectionItem.cs</c>), generalized from an
+    /// untyped <c>ObservableCollection&lt;object&gt;</c> to a strongly-typed one.
     ///
     /// This is a prototype - see the caveats on <see cref="ObservableGenerator"/>,
     /// which apply here too.
@@ -67,16 +107,19 @@ namespace Assisticant.SourceGenerators
 namespace Assisticant.Fields
 {
     /// <summary>
-    /// Generates a read-only property backed by <see cref=""Computed{T}""/> - Assisticant's
-    /// dependent variables. Belongs on ViewModel classes only, deriving from an injected
-    /// Model; see [Observable] for Models.
+    /// Generates a read-only property - backed by <see cref=""Computed{T}""/> for a
+    /// scalar return type, or by a live, incrementally-synchronized
+    /// <see cref=""System.Collections.ObjectModel.ObservableCollection{T}""/> for an
+    /// <c>IEnumerable&lt;T&gt;</c> return type. Belongs on ViewModel classes only,
+    /// deriving from an injected Model; see [Observable] for Models.
     ///
-    /// Apply it to a parameterless, non-void method:
+    /// Apply it to a parameterless method:
     ///
     ///     [Computed] private string ComputeGreeting() =&gt; $""Hello, {_person.Name}!"";
+    ///     [Computed] private IEnumerable&lt;PersonViewModel&gt; ComputePeople() =&gt; _people.Select(p =&gt; new PersonViewModel(p));
     ///
     /// generates a property named by stripping the method's leading ""Compute""/""Get""
-    /// prefix (here, ""Greeting""), or by the name given to the attribute:
+    /// prefix (here, ""Greeting""/""People""), or by the name given to the attribute:
     /// [Computed(""PropertyName"")]. The containing type (and every enclosing type, if
     /// nested) must be declared 'partial'.
     /// </summary>
@@ -88,6 +131,93 @@ namespace Assisticant.Fields
         public ComputedAttribute(string propertyName) => PropertyName = propertyName;
 
         public string? PropertyName { get; }
+    }
+
+    /// <summary>
+    /// Applies a newly computed sequence to a live
+    /// <see cref=""System.Collections.ObjectModel.ObservableCollection{T}""/> with
+    /// minimal Add/Remove/Move mutations instead of a full Clear+rebuild, preserving
+    /// per-item identity via <see cref=""Assisticant.RecycleBin{T}""/> so a recycled
+    /// item's own state (e.g. an [Observable] ""IsSelected"") survives across
+    /// recomputes. Generated collection-mode [Computed] code calls this instead of
+    /// hand-rolling the diff; the algorithm mirrors Assisticant's own WPF proxy
+    /// (Metas/ListSlot.cs, Metas/CollectionItem.cs), generalized from an untyped
+    /// ObservableCollection&lt;object&gt; to a strongly-typed one. Not intended to be
+    /// called directly.
+    /// </summary>
+    public static class CollectionSynchronizer<T>
+    {
+        private sealed class Slot : global::System.IDisposable
+        {
+            private readonly global::System.Collections.ObjectModel.ObservableCollection<T> _collection;
+            private readonly T _item;
+            private bool _inCollection;
+
+            public Slot(global::System.Collections.ObjectModel.ObservableCollection<T> collection, T item, bool inCollection)
+            {
+                _collection = collection;
+                _item = item;
+                _inCollection = inCollection;
+            }
+
+            public void Dispose()
+            {
+                if (_inCollection)
+                    _collection.Remove(_item);
+            }
+
+            public void EnsureInCollection(int index)
+            {
+                if (!_inCollection)
+                {
+                    _collection.Insert(index, _item);
+                    _inCollection = true;
+                }
+                else if (!global::System.Collections.Generic.EqualityComparer<T>.Default.Equals(_collection[index], _item))
+                {
+                    _collection.Remove(_item);
+                    _collection.Insert(index, _item);
+                }
+            }
+
+            public override int GetHashCode() => _item == null ? 0 : _item.GetHashCode();
+
+            public override bool Equals(object? obj) =>
+                obj is Slot other && global::System.Collections.Generic.EqualityComparer<T>.Default.Equals(_item, other._item);
+        }
+
+        public static void Synchronize(
+            global::System.Collections.ObjectModel.ObservableCollection<T> collection,
+            global::System.Collections.Generic.IEnumerable<T>? newItems)
+        {
+            var slots = new global::System.Collections.Generic.List<Slot>();
+
+            // Dump the collection's current contents into a recycle bin, keyed by
+            // item identity (Equals/GetHashCode), then extract - in the NEW order -
+            // either the matching old Slot (preserving position-tracking state) or a
+            // brand new one for each incoming item. Anything left in the bin at the
+            // end of the `using` block is disposed, which removes it from the
+            // collection - this is the same trick RecycleBin's own doc comment
+            // describes: ""it disposes old objects that are no longer in use"".
+            using (var bin = new global::Assisticant.RecycleBin<Slot>())
+            {
+                foreach (var oldItem in collection)
+                    bin.AddObject(new Slot(collection, oldItem, inCollection: true));
+
+                if (newItems != null)
+                    foreach (var item in newItems)
+                        slots.Add(bin.Extract(new Slot(collection, item, inCollection: false)));
+            }
+
+            // Now that membership is settled, fix up ordering: insert new items and
+            // move misplaced ones into their correct position, left to right.
+            int index = 0;
+            foreach (var slot in slots)
+            {
+                slot.EnsureInCollection(index);
+                ++index;
+            }
+        }
     }
 }
 ";
@@ -160,13 +290,45 @@ namespace Assisticant.Fields
                 return MethodResult.Error(Diagnostic.Create(CannotDeriveNameDiagnostic, location, method.Name));
 
             string propertyName = candidateName!;
-            var elementTypeDisplay = method.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             var backingFieldName = "__" + char.ToLowerInvariant(propertyName[0]) + propertyName.Substring(1) + "Field";
             var ns = GetNamespace(method.ContainingType);
+
+            var collectionElementType = GetEnumerableElementType(method.ReturnType);
+            if (collectionElementType != null)
+            {
+                var elementTypeDisplay = collectionElementType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                return MethodResult.CollectionSuccess(ns, typeChain, method.Name, propertyName, elementTypeDisplay, backingFieldName);
+            }
+
+            var scalarTypeDisplay = method.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             var notifiesPropertyChanged = method.ContainingType.GetAttributes()
                 .Any(a => a.AttributeClass?.ToDisplayString() == NotifyPropertyChangedAttributeFullName);
 
-            return MethodResult.Success(ns, typeChain, method.Name, propertyName, elementTypeDisplay, backingFieldName, notifiesPropertyChanged);
+            return MethodResult.ScalarSuccess(ns, typeChain, method.Name, propertyName, scalarTypeDisplay, backingFieldName, notifiesPropertyChanged);
+        }
+
+        /// <summary>
+        /// Returns T if <paramref name="returnType"/> is (or implements, for exactly
+        /// one T) <c>IEnumerable&lt;T&gt;</c> - excluding <c>string</c>, which
+        /// technically implements <c>IEnumerable&lt;char&gt;</c> but is a scalar for
+        /// this generator's purposes, mirroring <c>Metas/MemberMeta.cs</c>'s existing
+        /// `MemberType != typeof(string)` exclusion. Returns null for a scalar type.
+        /// </summary>
+        private static ITypeSymbol? GetEnumerableElementType(ITypeSymbol returnType)
+        {
+            if (returnType.SpecialType == SpecialType.System_String)
+                return null;
+
+            if (returnType is INamedTypeSymbol { OriginalDefinition.SpecialType: SpecialType.System_Collections_Generic_IEnumerable_T } self)
+                return self.TypeArguments[0];
+
+            foreach (var iface in returnType.AllInterfaces)
+            {
+                if (iface.OriginalDefinition.SpecialType == SpecialType.System_Collections_Generic_IEnumerable_T)
+                    return iface.TypeArguments[0];
+            }
+
+            return null;
         }
 
         private static string? GetExplicitPropertyName(IMethodSymbol method)
@@ -215,8 +377,6 @@ namespace Assisticant.Fields
 
         private static string RenderType(string ns, List<TypeFrame> typeChain, List<MethodResult> members)
         {
-            bool notifies = members[0].NotifiesPropertyChanged;
-
             var sb = new StringBuilder();
             sb.AppendLine("// <auto-generated/>");
             sb.AppendLine("// Generated by Assisticant.SourceGenerators.ComputedGenerator from [Computed] methods.");
@@ -246,52 +406,10 @@ namespace Assisticant.Fields
             // doesn't declare them itself even when `notifies` is true here).
             foreach (var member in members)
             {
-                // A field initializer can't reference an instance method (CS0236 -
-                // "this" isn't available yet), so the Computed<T> is constructed
-                // lazily, on first access, instead of via a field initializer or a
-                // generated constructor (which would need to run no matter which of
-                // the user's own constructors was called).
-                Indent(sb, indent)
-                    .Append("private global::Assisticant.Fields.Computed<").Append(member.ElementType).Append(">? ")
-                    .Append(member.BackingFieldName).AppendLine(";");
-
-                if (notifies)
-                {
-                    // Raising PropertyChanged is deferred through UpdateScheduler rather
-                    // than invoked directly from the Invalidated handler, even though
-                    // this event carries no value to read: Observable<T>.Value's setter
-                    // raises invalidation (which cascades into this Computed<T>'s
-                    // Invalidated) BEFORE storing the new value, and some UI dispatchers
-                    // (documented on UpdateScheduler.Initialize) run queued work inline
-                    // when already on the UI thread. Deferring - the same way
-                    // ComputedSubscription and the WPF proxy's MemberSlot already do -
-                    // guarantees the eventual re-read sees the new value regardless of
-                    // what the host binding infrastructure's own dispatch does.
-                    Indent(sb, indent)
-                        .Append("public ").Append(member.ElementType).Append(' ').Append(member.PropertyName)
-                        .Append(" => (").Append(member.BackingFieldName)
-                        .Append(" ??= __Create").Append(member.PropertyName).AppendLine("Field()).Value;");
-                    Indent(sb, indent)
-                        .Append("private global::Assisticant.Fields.Computed<").Append(member.ElementType).Append("> __Create")
-                        .Append(member.PropertyName).AppendLine("Field()");
-                    Indent(sb, indent).AppendLine("{");
-                    Indent(sb, indent + 1)
-                        .Append("var computed = new global::Assisticant.Fields.Computed<").Append(member.ElementType).Append(">(")
-                        .Append(member.MethodName).AppendLine(");");
-                    Indent(sb, indent + 1)
-                        .Append("computed.Invalidated += () => global::Assisticant.UpdateScheduler.ScheduleUpdate(() => __RaisePropertyChanged(\"")
-                        .Append(member.PropertyName).AppendLine("\"));");
-                    Indent(sb, indent + 1).AppendLine("return computed;");
-                    Indent(sb, indent).AppendLine("}");
-                }
+                if (member.IsCollection)
+                    RenderCollectionMember(sb, indent, member);
                 else
-                {
-                    Indent(sb, indent)
-                        .Append("public ").Append(member.ElementType).Append(' ').Append(member.PropertyName)
-                        .Append(" => (").Append(member.BackingFieldName)
-                        .Append(" ??= new global::Assisticant.Fields.Computed<").Append(member.ElementType).Append(">(")
-                        .Append(member.MethodName).Append(")).Value;").AppendLine();
-                }
+                    RenderScalarMember(sb, indent, member);
                 sb.AppendLine();
             }
 
@@ -307,6 +425,91 @@ namespace Assisticant.Fields
             return sb.ToString();
         }
 
+        private static void RenderScalarMember(StringBuilder sb, int indent, MethodResult member)
+        {
+            // A field initializer can't reference an instance method (CS0236 -
+            // "this" isn't available yet), so the Computed<T> is constructed
+            // lazily, on first access, instead of via a field initializer or a
+            // generated constructor (which would need to run no matter which of
+            // the user's own constructors was called).
+            Indent(sb, indent)
+                .Append("private global::Assisticant.Fields.Computed<").Append(member.ElementType).Append(">? ")
+                .Append(member.BackingFieldName).AppendLine(";");
+
+            if (member.NotifiesPropertyChanged)
+            {
+                // Raising PropertyChanged is deferred through UpdateScheduler rather
+                // than invoked directly from the Invalidated handler, even though
+                // this event carries no value to read: Observable<T>.Value's setter
+                // raises invalidation (which cascades into this Computed<T>'s
+                // Invalidated) BEFORE storing the new value, and some UI dispatchers
+                // (documented on UpdateScheduler.Initialize) run queued work inline
+                // when already on the UI thread. Deferring - the same way
+                // ComputedSubscription and the WPF proxy's MemberSlot already do -
+                // guarantees the eventual re-read sees the new value regardless of
+                // what the host binding infrastructure's own dispatch does.
+                Indent(sb, indent)
+                    .Append("public ").Append(member.ElementType).Append(' ').Append(member.PropertyName)
+                    .Append(" => (").Append(member.BackingFieldName)
+                    .Append(" ??= __Create").Append(member.PropertyName).AppendLine("Field()).Value;");
+                Indent(sb, indent)
+                    .Append("private global::Assisticant.Fields.Computed<").Append(member.ElementType).Append("> __Create")
+                    .Append(member.PropertyName).AppendLine("Field()");
+                Indent(sb, indent).AppendLine("{");
+                Indent(sb, indent + 1)
+                    .Append("var computed = new global::Assisticant.Fields.Computed<").Append(member.ElementType).Append(">(")
+                    .Append(member.MethodName).AppendLine(");");
+                Indent(sb, indent + 1)
+                    .Append("computed.Invalidated += () => global::Assisticant.UpdateScheduler.ScheduleUpdate(() => __RaisePropertyChanged(\"")
+                    .Append(member.PropertyName).AppendLine("\"));");
+                Indent(sb, indent + 1).AppendLine("return computed;");
+                Indent(sb, indent).AppendLine("}");
+            }
+            else
+            {
+                Indent(sb, indent)
+                    .Append("public ").Append(member.ElementType).Append(' ').Append(member.PropertyName)
+                    .Append(" => (").Append(member.BackingFieldName)
+                    .Append(" ??= new global::Assisticant.Fields.Computed<").Append(member.ElementType).Append(">(")
+                    .Append(member.MethodName).Append(")).Value;").AppendLine();
+            }
+        }
+
+        private static void RenderCollectionMember(StringBuilder sb, int indent, MethodResult member)
+        {
+            var collectionType = "global::System.Collections.ObjectModel.ObservableCollection<" + member.ElementType + ">";
+            var sentryFieldName = member.BackingFieldName.Substring(0, member.BackingFieldName.Length - "Field".Length) + "SentryField";
+
+            // The ObservableCollection<T> instance itself is never replaced across
+            // recomputes - only its contents are, via CollectionSynchronizer<T> - so a
+            // binding that reads this property once (e.g. MAUI's CollectionView.ItemsSource)
+            // keeps seeing live updates without ever needing PropertyChanged for this
+            // property itself. See this file's doc comment for why the target is a real
+            // ObservableCollection<T> rather than a custom INotifyCollectionChanged type.
+            Indent(sb, indent).Append("private ").Append(collectionType).Append("? ").Append(member.BackingFieldName).AppendLine(";");
+            Indent(sb, indent).AppendLine("private global::Assisticant.Computed? " + sentryFieldName + ";");
+            Indent(sb, indent).Append("public ").Append(collectionType).Append(' ').Append(member.PropertyName).AppendLine();
+            Indent(sb, indent).AppendLine("{");
+            Indent(sb, indent + 1).AppendLine("get");
+            Indent(sb, indent + 1).AppendLine("{");
+            Indent(sb, indent + 2).Append("if (").Append(member.BackingFieldName).AppendLine(" == null)");
+            Indent(sb, indent + 2).AppendLine("{");
+            Indent(sb, indent + 3).Append(member.BackingFieldName).Append(" = new ").Append(collectionType).AppendLine("();");
+            Indent(sb, indent + 3).Append(sentryFieldName).Append(" = new global::Assisticant.Computed(() => global::Assisticant.Fields.CollectionSynchronizer<")
+                .Append(member.ElementType).Append(">.Synchronize(").Append(member.BackingFieldName).Append(", ").Append(member.MethodName).AppendLine("()));");
+            // The dispatcher registered with UpdateScheduler.Initialize is exactly what
+            // MAUI needs here too: CollectionView throws if ItemsSource is mutated off
+            // the UI thread, and this defers every Add/Remove/Move CollectionSynchronizer<T>
+            // performs through that same dispatcher - no separate mechanism required.
+            Indent(sb, indent + 3).Append(sentryFieldName)
+                .AppendLine(".Invalidated += () => global::Assisticant.UpdateScheduler.ScheduleUpdate(() => " + sentryFieldName + "!.OnGet());");
+            Indent(sb, indent + 2).AppendLine("}");
+            Indent(sb, indent + 2).Append(sentryFieldName).AppendLine("!.OnGet();");
+            Indent(sb, indent + 2).Append("return ").Append(member.BackingFieldName).AppendLine(";");
+            Indent(sb, indent + 1).AppendLine("}");
+            Indent(sb, indent).AppendLine("}");
+        }
+
         private sealed class MethodResult
         {
             public string Namespace = "";
@@ -316,9 +519,10 @@ namespace Assisticant.Fields
             public string ElementType = "";
             public string BackingFieldName = "";
             public bool NotifiesPropertyChanged;
+            public bool IsCollection;
             public Diagnostic? Diagnostic;
 
-            public static MethodResult Success(
+            public static MethodResult ScalarSuccess(
                 string ns, List<TypeFrame> typeChain, string methodName, string propertyName, string elementType,
                 string backingFieldName, bool notifiesPropertyChanged) =>
                 new MethodResult
@@ -330,6 +534,21 @@ namespace Assisticant.Fields
                     ElementType = elementType,
                     BackingFieldName = backingFieldName,
                     NotifiesPropertyChanged = notifiesPropertyChanged,
+                    IsCollection = false,
+                };
+
+            public static MethodResult CollectionSuccess(
+                string ns, List<TypeFrame> typeChain, string methodName, string propertyName, string elementType,
+                string backingFieldName) =>
+                new MethodResult
+                {
+                    Namespace = ns,
+                    TypeChain = typeChain,
+                    MethodName = methodName,
+                    PropertyName = propertyName,
+                    ElementType = elementType,
+                    BackingFieldName = backingFieldName,
+                    IsCollection = true,
                 };
 
             public static MethodResult Error(Diagnostic diagnostic) =>

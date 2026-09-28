@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assisticant;
 
 namespace Assisticant.SourceGenerators.Demo
@@ -111,6 +112,52 @@ namespace Assisticant.SourceGenerators.Demo
                 : "FAIL: CanExecuteChanged did not fire as expected.");
 
             ok &= commandOk;
+
+            // --- [Computed] collection-mode demo ---
+            // People is a live ObservableCollection<PersonViewModel>, synchronized
+            // (not replaced) on every recompute of the Model's ObservableList<Person>.
+            Console.WriteLine();
+            Console.WriteLine("--- [Computed] collection mode demo ---");
+
+            var roster = new Roster();
+            roster.People.Add(new Person { Name = "Carol", Age = 25 });
+            roster.People.Add(new Person { Name = "Dave", Age = 40 });
+
+            var rosterViewModel = new RosterViewModel(roster);
+
+            var collectionActions = new List<string>();
+            rosterViewModel.People.CollectionChanged += (_, e) => collectionActions.Add(e.Action.ToString());
+
+            Console.WriteLine($"Initial: {string.Join(", ", rosterViewModel.People.Select(p => p.Greeting))}");
+
+            // Capture a specific item's ViewModel and give it some ViewModel-local
+            // state, to prove recycling preserves it across the recompute below.
+            var carolViewModel = rosterViewModel.People.First(p => p.Greeting == "Hello, Carol!");
+            carolViewModel.IsSelected = true;
+            Pump();
+
+            roster.People.Add(new Person { Name = "Eve", Age = 22 });
+            roster.People.Remove(roster.People.First(p => p.Name == "Dave"));
+            Pump();
+
+            Console.WriteLine($"After add Eve/remove Dave: {string.Join(", ", rosterViewModel.People.Select(p => p.Greeting))}");
+            Console.WriteLine($"CollectionChanged actions: {string.Join(", ", collectionActions)}");
+
+            var carolViewModelAfter = rosterViewModel.People.First(p => p.Greeting == "Hello, Carol!");
+
+            bool collectionOk = rosterViewModel.People.Count == 2
+                && rosterViewModel.People.Any(p => p.Greeting == "Hello, Eve!")
+                && !rosterViewModel.People.Any(p => p.Greeting == "Hello, Dave!")
+                && ReferenceEquals(carolViewModel, carolViewModelAfter) // same instance - recycled, not rebuilt
+                && carolViewModelAfter.IsSelected // ViewModel-local state survived the recompute
+                && !collectionActions.Contains("Reset"); // incremental, not a wholesale rebuild
+
+            Console.WriteLine();
+            Console.WriteLine(collectionOk
+                ? "OK: recompute added Eve and removed Dave incrementally, while Carol's ViewModel (and her IsSelected) was recycled, not rebuilt."
+                : "FAIL: collection recompute did not behave as expected.");
+
+            ok &= collectionOk;
             Environment.Exit(ok ? 0 : 1);
         }
     }

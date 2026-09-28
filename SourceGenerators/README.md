@@ -136,6 +136,78 @@ Only the containing type needs to be `partial` for `[Computed]` - the method
 itself is an ordinary private method, not split across declarations the way
 `[Observable]`'s partial property is.
 
+### [Computed] collection mode - a live, recycled `ObservableCollection<T>`
+
+When the method returns `IEnumerable<T>` (or anything implementing it for
+exactly one `T` - excluding `string`, mirroring the reflection-based
+`Metas/MemberMeta.cs`'s existing exclusion), `[Computed]` generates a
+different shape entirely:
+
+```csharp
+[Computed] private IEnumerable<PersonViewModel> ComputePeople() =>
+    _roster.People.Select(p => new PersonViewModel(p));
+```
+
+generates:
+
+```csharp
+private ObservableCollection<PersonViewModel>? __peopleField;
+private Computed? __peopleSentryField;
+public ObservableCollection<PersonViewModel> People
+{
+    get
+    {
+        if (__peopleField == null)
+        {
+            __peopleField = new ObservableCollection<PersonViewModel>();
+            __peopleSentryField = new Computed(() =>
+                CollectionSynchronizer<PersonViewModel>.Synchronize(__peopleField, ComputePeople()));
+            __peopleSentryField.Invalidated += () =>
+                UpdateScheduler.ScheduleUpdate(() => __peopleSentryField!.OnGet());
+        }
+        __peopleSentryField!.OnGet();
+        return __peopleField;
+    }
+}
+```
+
+`People`'s identity never changes across recomputes - only its *contents* do,
+via `CollectionSynchronizer<T>` (emitted the same way `GeneratedCommand` is),
+which applies the newly computed sequence with minimal Add/Remove/Move
+mutations instead of a full Clear+rebuild, using a `RecycleBin<T>` to match
+old-vs-new items by identity - exactly the algorithm Assisticant's WPF proxy
+already uses (`Metas/ListSlot.cs`/`Metas/CollectionItem.cs`), generalized
+from an untyped `ObservableCollection<object>` to a strongly-typed one.
+
+**Why the target is a real `ObservableCollection<T>`, not a custom
+`INotifyCollectionChanged` implementation, and not `ComputedList<T>`
+itself** (which implements neither): confirmed independent of anything in
+this repo, [dotnet/maui#29284](https://github.com/dotnet/maui/issues/29284)
+(open as of this writing) reports that MAUI's `CollectionView` does *not*
+reliably subscribe to `INotifyCollectionChanged` on an arbitrary custom
+collection class - only when it's actually an `ObservableCollection<T>` (or
+derives from one). Implementing the interface ourselves on our own type
+wouldn't reliably work as something bound to `ItemsSource`.
+
+**Why identity preservation matters, concretely:** `RecycleBin<T>.Extract`
+matches by `Equals`/`GetHashCode`, and a fresh `PersonViewModel` is
+constructed on *every* recompute (`.Select(p => new PersonViewModel(p))`).
+Without `PersonViewModel` delegating `Equals`/`GetHashCode` to its wrapped
+`Person` (see `PersonViewModel.cs`), recycling would silently never match
+anything - every recompute would produce all-new `PersonViewModel` instances,
+discarding each one's own `IsSelected` (or any other ViewModel-local state)
+every time. This is exactly the footgun `RecycleBin.cs`'s own doc comment
+warns about ("It is imperative that you properly implement `GetHashCode` and
+`Equals`"), and a natural candidate for a follow-up generator: since a
+ViewModel's one constructor (per the constructor discipline above) already
+names its injected Model, that's enough information to generate this
+override automatically. Not implemented here - hand-written in the demo.
+
+**Why `[NotifyPropertyChanged]` doesn't apply to collection-mode properties:**
+there's nothing for it to do. `People`'s reference never changes, so a MAUI
+`{Binding}` only needs to read it once; every subsequent update flows through
+`CollectionChanged`, which `ObservableCollection<T>` already raises itself.
+
 ### [NotifyPropertyChanged] - binding a ViewModel (or Model) directly (e.g. on MAUI)
 
 ```csharp
@@ -298,7 +370,9 @@ intentional, not a missing case to route around.
 
 - `Assisticant.SourceGenerators/`
   - `ObservableGenerator.cs` - the Model-layer generator (`[Observable]`).
-  - `ComputedGenerator.cs` - the ViewModel-layer generator (`[Computed]`).
+  - `ComputedGenerator.cs` - the ViewModel-layer generator (`[Computed]`),
+    including collection mode; also emits the `CollectionSynchronizer<T>`
+    runtime type collection-mode properties are generated in terms of.
   - `NotifyPropertyChangedGenerator.cs` - the cross-cutting generator
     (`[NotifyPropertyChanged]`) that `ObservableGenerator`/`ComputedGenerator`
     call into; see its doc comment for why it's a separate generator rather
@@ -309,10 +383,11 @@ intentional, not a missing case to route around.
     validation - including the class-itself case `[NotifyPropertyChanged]`
     needs - namespace/indentation rendering, and the shared attribute-name
     constant used to recognize `[NotifyPropertyChanged]`).
-  - All four emit their own attribute (and, for `[Command]`, the
-    `GeneratedCommand` runtime type) via `RegisterPostInitializationOutput`,
-    so trying this needs no changes to the main
-    `Assisticant`/`Assisticant.Netstandard` projects.
+  - All four emit their own attribute (and, for `[Command]`/`[Computed]`
+    collection mode, the `GeneratedCommand`/`CollectionSynchronizer<T>`
+    runtime types) via `RegisterPostInitializationOutput`, so trying this
+    needs no changes to the main `Assisticant`/`Assisticant.Netstandard`
+    projects.
 - `Assisticant.SourceGenerators.Demo/` - a `net8.0` console app (needs
   `LangVersion` 13+ for partial properties; the project already sets
   `LangVersion=latest`) that references all four generators as analyzers and
@@ -323,15 +398,25 @@ intentional, not a missing case to route around.
     (`[Observable]`) and `SelectionLabel` (`[Computed]`, depending on
     `IsSelected` rather than the injected Model) as the deliberate exception
     to the usual separation, plus `ClearSelectionCommand` (`[Command]`,
-    guarded by `CanClearSelection`).
+    guarded by `CanClearSelection`) and an `Equals`/`GetHashCode` override
+    delegating to the wrapped `Person` (required for collection-mode
+    recycling - see below).
+  - `Roster.cs` - a Model holding a plain `ObservableList<Person>`.
+  - `RosterViewModel.cs` - a ViewModel whose `People` is `[Computed]` in
+    collection mode: `IEnumerable<PersonViewModel>` projected from the
+    injected `Roster`'s `ObservableList<Person>`.
   - `Program.cs` - proves `PropertyChanged` fires exactly when something a
     property actually depends on changes - whether that dependency is the
     injected Model (`Greeting`, `IsAdult`) or the ViewModel's own state
     (`SelectionLabel` depending on `IsSelected`) - and not otherwise, with the
-    raise order across a single mutation traced and asserted explicitly; and
-    that `ClearSelectionCommand.CanExecuteChanged` fires automatically both
-    when `IsSelected` is set directly and when executing the command itself
-    changes it, with no bookkeeping code anywhere.
+    raise order across a single mutation traced and asserted explicitly; that
+    `ClearSelectionCommand.CanExecuteChanged` fires automatically both when
+    `IsSelected` is set directly and when executing the command itself
+    changes it, with no bookkeeping code anywhere; and that adding/removing
+    `Person`s in the Model produces incremental `CollectionChanged` events
+    (never a `Reset`) on `RosterViewModel.People`, while a captured item's
+    `PersonViewModel` instance - and its own `IsSelected` - survives the
+    recompute unchanged (recycled, not rebuilt).
 - `NuGet.Config` - scoped to this subtree only; it resets package sources to
   nuget.org because the repo's machine-wide NuGet config points at an internal,
   VPN-only feed that isn't reachable in every environment. It doesn't affect
@@ -359,6 +444,18 @@ In `PersonViewModel.cs` (ViewModel / `[Computed]`):
 - Make a `[Computed]` method return `void` → `ASSISTICANT103`.
 - Name a `[Computed]` method without a `Compute`/`Get` prefix and no explicit
   name → `ASSISTICANT104`.
+
+In `RosterViewModel.cs` (`[Computed]` collection mode) and `PersonViewModel.cs`:
+- Remove the `Equals`/`GetHashCode` override from `PersonViewModel` → verified
+  live: the demo still runs and still ends up with the right two people, but
+  `CollectionChanged` reports `Remove, Remove, Add, Add` instead of `Remove,
+  Add` - both old items were discarded and both new ones rebuilt from
+  scratch, including Carol, who didn't even change. Recycling silently
+  stopped matching *anything* (default reference equality never matches a
+  freshly-constructed prototype), so `carolViewModel` and
+  `carolViewModelAfter` are no longer the same instance and `IsSelected` is
+  lost. No diagnostic catches this; it's the exact footgun `RecycleBin.cs`'s
+  doc comment warns about (see the rough edges below).
 
 `[NotifyPropertyChanged]`:
 - Remove `[NotifyPropertyChanged]` from `PersonViewModel` and see `Program.cs`
@@ -391,16 +488,19 @@ properties, the existing reflection-based `TypeMeta` scan picks them up
 unmodified, so WPF bindings work against `[Observable]`/`[Computed]` Models
 and ViewModels with no other changes.
 
-`[NotifyPropertyChanged]` and `[Command]` are the two pieces of this
-prototype that change what's possible on MAUI rather than just reducing
-boilerplate: `[NotifyPropertyChanged]` gives a `[Computed]`-based ViewModel a
-real `INotifyPropertyChanged` implementation, which MAUI's `{Binding}`
-requires for live updates and had no path to before (there being no MAUI
-equivalent of `ForView.Wrap`); `[Command]` gives it a `Button.Command`-typed
-member whose `CanExecuteChanged` fires itself, which - per MAUI's own docs -
-its built-in `Command` class does not do on its own. Both are still additive,
-though - `BindingManager`'s imperative pattern keeps working unchanged for
-ViewModels that don't opt in.
+`[NotifyPropertyChanged]`, `[Command]`, and `[Computed]` collection mode are
+the three pieces of this prototype that change what's possible on MAUI rather
+than just reducing boilerplate: `[NotifyPropertyChanged]` gives a
+`[Computed]`-based ViewModel a real `INotifyPropertyChanged` implementation,
+which MAUI's `{Binding}` requires for live updates and had no path to before
+(there being no MAUI equivalent of `ForView.Wrap`); `[Command]` gives it a
+`Button.Command`-typed member whose `CanExecuteChanged` fires itself, which -
+per MAUI's own docs - its built-in `Command` class does not do on its own;
+collection mode gives it a real `ObservableCollection<T>` that a
+`CollectionView.ItemsSource` binding can actually rely on for incremental
+updates, which `ComputedList<T>` alone cannot provide (see its section above).
+All three are still additive, though - `BindingManager`'s imperative pattern
+keeps working unchanged for ViewModels that don't opt in.
 
 ## Known rough edges (prototype, not production-ready)
 
@@ -416,3 +516,24 @@ ViewModels that don't opt in.
   (see its section above) or batching multiple property changes from one
   `Execute` into a single UI update pass the way WPF's proxy does via
   `UpdateScheduler.Begin()`/`End()`.
+- `[Computed]` collection mode has no diagnostic for the single biggest
+  footgun in using it: a recycled item type (like `PersonViewModel`) that
+  doesn't override `Equals`/`GetHashCode` to delegate to its wrapped Model
+  silently loses all recycling, with no compiler error - verified above. A
+  Roslyn analyzer could plausibly catch "this type is only ever constructed
+  inside a `[Computed]` collection projection and never overrides `Equals`,"
+  but that's meaningfully more work than this prototype does today; more
+  realistically, a follow-up generator that auto-generates the override from
+  the ViewModel's one constructor (as suggested above) removes the footgun
+  entirely instead of just detecting it.
+- `[Computed]` collection mode only recognizes `Model`/`ViewModel` shape by
+  return type (`IEnumerable<T>`); it doesn't validate that `T` is sensible to
+  recycle (e.g. it would "work," uselessly, for `IEnumerable<int>`, just
+  without any benefit over a plain list, since primitives have no
+  ViewModel-local state to preserve and default `Equals` is already
+  value-based for them).
+- Only `List`/`IEnumerable`-shaped collections are covered - no
+  `ComputedDictionary<TKey,TValue>` equivalent, and no generator support yet
+  for a Model's own collection properties (`ObservableList<T>` is still
+  hand-written in `Roster.cs`, per suggestion #1 from the design discussion
+  that preceded this prototype).

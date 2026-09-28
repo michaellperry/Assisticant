@@ -58,5 +58,18 @@ namespace Assisticant.SourceGenerators.Demo
         // this very command - with no manual "RefreshCanExecutes()" anywhere.
         [Command] private void ClearSelection() => IsSelected = false;
         private bool CanClearSelection() => IsSelected;
+
+        // Required for RosterViewModel's [Computed] collection property
+        // (see ComputedGenerator's "Collection mode" doc comment): RecycleBin<T>
+        // matches old-vs-new instances by Equals/GetHashCode, and a fresh
+        // PersonViewModel is constructed on every recompute (`.Select(p => new
+        // PersonViewModel(p))`), so without delegating identity to the wrapped
+        // Model, recycling would silently never match anything - every recompute
+        // would produce a brand-new PersonViewModel per Person, discarding
+        // IsSelected each time. This is exactly the footgun RecycleBin.cs's own
+        // doc comment warns about, and exactly what a follow-up generator could
+        // auto-generate from this class's one constructor parameter.
+        public override bool Equals(object? obj) => obj is PersonViewModel other && ReferenceEquals(_person, other._person);
+        public override int GetHashCode() => _person.GetHashCode();
     }
 }
