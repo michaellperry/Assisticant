@@ -79,6 +79,38 @@ namespace Assisticant.SourceGenerators.Demo
                 ? "OK: Model changes and ViewModel-local changes both raise PropertyChanged correctly, and only for what actually depends on them."
                 : "FAIL: something did not behave as expected.");
 
+            // --- [Command] demo ---
+            // ClearSelectionCommand's CanExecute (CanClearSelection => IsSelected) is
+            // wrapped in a Computed<bool> - CanExecuteChanged fires automatically
+            // whenever IsSelected changes, with no manual "RefreshCanExecutes()" call
+            // anywhere, unlike .NET MAUI's own Command class.
+            Console.WriteLine();
+            Console.WriteLine("--- [Command] demo ---");
+
+            var canExecuteValues = new List<bool>();
+            viewModel.ClearSelectionCommand.CanExecuteChanged +=
+                (_, __) => canExecuteValues.Add(viewModel.ClearSelectionCommand.CanExecute(null));
+
+            Console.WriteLine($"IsSelected={viewModel.IsSelected}, CanExecute={viewModel.ClearSelectionCommand.CanExecute(null)}");
+
+            viewModel.ClearSelectionCommand.Execute(null); // sets IsSelected = false
+            Pump();
+            Console.WriteLine($"After Execute(): IsSelected={viewModel.IsSelected}, CanExecute={viewModel.ClearSelectionCommand.CanExecute(null)}");
+
+            viewModel.IsSelected = true; // flips CanExecute back, with no command-specific code involved
+            Pump();
+            Console.WriteLine($"After IsSelected=true: CanExecute={viewModel.ClearSelectionCommand.CanExecute(null)}");
+
+            bool commandOk = canExecuteValues.Count == 2
+                && canExecuteValues[0] == false // after Execute() set IsSelected = false
+                && canExecuteValues[1] == true; // after IsSelected was set back to true
+
+            Console.WriteLine();
+            Console.WriteLine(commandOk
+                ? "OK: CanExecuteChanged fired automatically both times IsSelected changed - no manual bookkeeping."
+                : "FAIL: CanExecuteChanged did not fire as expected.");
+
+            ok &= commandOk;
             Environment.Exit(ok ? 0 : 1);
         }
     }

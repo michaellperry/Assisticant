@@ -1,6 +1,6 @@
-# [Observable] / [Computed] / [NotifyPropertyChanged] generators (prototype)
+# [Observable] / [Computed] / [NotifyPropertyChanged] / [Command] generators (prototype)
 
-Three Roslyn incremental source generators that remove the boilerplate around
+Four Roslyn incremental source generators that remove the boilerplate around
 Assisticant's dependency-tracking primitives, without ever exposing
 `Observable<T>` or `Computed<T>` in user code - while defaulting toward
 Assisticant's separation of independent and dependent variables, without
@@ -241,37 +241,97 @@ through the `IsSelected` setter, before that setter's own trailing
 "schedule my raise" statement runs - see `Program.cs` for this traced through
 a live assertion.
 
+### [Command] - ICommand for a view's Command/CommandParameter binding
+
+```csharp
+[Command] private void ClearSelection() => IsSelected = false;
+private bool CanClearSelection() => IsSelected;
+```
+
+generates:
+
+```csharp
+private GeneratedCommand? __clearSelectionCommandField;
+public ICommand ClearSelectionCommand =>
+    __clearSelectionCommandField ??= new GeneratedCommand(ClearSelection, CanClearSelection);
+```
+
+`[Command]` goes on a parameterless, void-returning method - it becomes
+`GeneratedCommand`'s `Action` (its `Execute`). The property name is the
+method's name plus `"Command"` (or given explicitly via
+`[Command("PropertyName")]`) - unlike `[Computed]`, there's no name-collision
+problem to work around here, since the method and the generated property
+never share a name.
+
+`CanClearSelection` is found purely by naming convention - a parameterless,
+bool-returning method named `"Can"` + the command method's name, on the same
+class - matching the convention Assisticant's existing reflection-based
+`Metas/CommandMeta.cs` already uses. It isn't itself attributed; if no such
+method exists, the command is always executable (`GeneratedCommand` is
+constructed with `null` for `canExecute`).
+
+**This is where Assisticant's dependency tracking beats MAUI's own commanding
+model, not just matches it.** MAUI's own docs are explicit: *"Unlike some UI
+frameworks (such as WPF), .NET MAUI does not automatically detect when the
+return value of `CanExecute` might change. You must manually raise the
+`CanExecuteChanged` event (or call `ChangeCanExecute()` on the `Command`
+class)"* - their own sample hand-writes a `RefreshCanExecutes()` method called
+after every mutation that could affect any command's enabled state.
+`GeneratedCommand` wraps the `CanExecute` predicate in a `Computed<bool>` and
+raises `CanExecuteChanged` (deferred through `UpdateScheduler`, same
+reasoning as `[Computed]`'s `PropertyChanged` raise) automatically whenever
+anything that predicate reads changes - the dependency is *discovered*, not
+declared, so there's no `RefreshCanExecutes()`-style bookkeeping to maintain
+at every call site that might affect it, and no `[NotifyCanExecuteChangedFor]`-style
+attribute listing the way `CommunityToolkit.Mvvm` needs either.
+
+**Scope of this prototype:** only parameterless commands are supported - not
+MAUI's `Command<T>`/`CommandParameter` pattern. A parameter supplied by the
+platform at `Execute`/`CanExecute` call time isn't a value Assisticant's
+dependency graph can track the way `Computed<T>` tracks a captured
+no-argument delegate's reads (there's no single cached value to invalidate
+when the caller can pass a different parameter on every call), so it doesn't
+fit this generator's model without more design work. `ASSISTICANT302` is
+intentional, not a missing case to route around.
+
 ## Layout
 
 - `Assisticant.SourceGenerators/`
   - `ObservableGenerator.cs` - the Model-layer generator (`[Observable]`).
   - `ComputedGenerator.cs` - the ViewModel-layer generator (`[Computed]`).
   - `NotifyPropertyChangedGenerator.cs` - the cross-cutting generator
-    (`[NotifyPropertyChanged]`) that the other two call into; see its doc
-    comment for why it's a separate generator rather than something either of
-    them emits directly.
-  - `GeneratorSupport.cs` - helpers shared by all three (partial-type-chain
+    (`[NotifyPropertyChanged]`) that `ObservableGenerator`/`ComputedGenerator`
+    call into; see its doc comment for why it's a separate generator rather
+    than something either of them emits directly.
+  - `CommandGenerator.cs` - the ICommand generator (`[Command]`); also emits
+    the `GeneratedCommand` runtime type it generates properties in terms of.
+  - `GeneratorSupport.cs` - helpers shared by all four (partial-type-chain
     validation - including the class-itself case `[NotifyPropertyChanged]`
     needs - namespace/indentation rendering, and the shared attribute-name
-    constant the three generators use to recognize each other's attribute).
-  - All three emit their own attribute via `RegisterPostInitializationOutput`,
+    constant used to recognize `[NotifyPropertyChanged]`).
+  - All four emit their own attribute (and, for `[Command]`, the
+    `GeneratedCommand` runtime type) via `RegisterPostInitializationOutput`,
     so trying this needs no changes to the main
     `Assisticant`/`Assisticant.Netstandard` projects.
 - `Assisticant.SourceGenerators.Demo/` - a `net8.0` console app (needs
   `LangVersion` 13+ for partial properties; the project already sets
-  `LangVersion=latest`) that references all three generators as analyzers and
+  `LangVersion=latest`) that references all four generators as analyzers and
   `Assisticant.Netstandard` as a library:
   - `Person.cs` - the Model.
   - `PersonViewModel.cs` - the ViewModel, constructor-injected with `Person`,
-    marked `[NotifyPropertyChanged]`, and also carrying its own `IsSelected`
+    marked `[NotifyPropertyChanged]`, carrying its own `IsSelected`
     (`[Observable]`) and `SelectionLabel` (`[Computed]`, depending on
     `IsSelected` rather than the injected Model) as the deliberate exception
-    to the usual separation.
+    to the usual separation, plus `ClearSelectionCommand` (`[Command]`,
+    guarded by `CanClearSelection`).
   - `Program.cs` - proves `PropertyChanged` fires exactly when something a
     property actually depends on changes - whether that dependency is the
     injected Model (`Greeting`, `IsAdult`) or the ViewModel's own state
     (`SelectionLabel` depending on `IsSelected`) - and not otherwise, with the
-    raise order across a single mutation traced and asserted explicitly.
+    raise order across a single mutation traced and asserted explicitly; and
+    that `ClearSelectionCommand.CanExecuteChanged` fires automatically both
+    when `IsSelected` is set directly and when executing the command itself
+    changes it, with no bookkeeping code anywhere.
 - `NuGet.Config` - scoped to this subtree only; it resets package sources to
   nuget.org because the repo's machine-wide NuGet config points at an internal,
   VPN-only feed that isn't reachable in every environment. It doesn't affect
@@ -305,8 +365,16 @@ In `PersonViewModel.cs` (ViewModel / `[Computed]`):
   fail to compile (`viewModel.PropertyChanged` no longer exists) - the
   attribute is what adds that member.
 - Remove `partial` from `PersonViewModel` (with `[NotifyPropertyChanged]`
-  still on it) → all three generators report their own diagnostic for the
-  same mistake: `ASSISTICANT001`/`ASSISTICANT101`/`ASSISTICANT201`.
+  still on it) → all relevant generators report their own diagnostic for the
+  same mistake: `ASSISTICANT001`/`ASSISTICANT101`/`ASSISTICANT201`/`ASSISTICANT301`.
+
+`[Command]`:
+- Give `ClearSelection` a parameter → `ASSISTICANT302` (this prototype's
+  scope boundary, not a bug).
+- Make `ClearSelection` return a value instead of `void` → `ASSISTICANT303`.
+- Rename `CanClearSelection` to anything else → `ClearSelectionCommand` is
+  still generated, just always executable (`CanExecute` returns `true`
+  unconditionally) - no diagnostic, since an unguarded command is valid.
 
 Set `<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>` (already on
 in the demo project) and look under `SourceGenerators/Generated/` after a build
@@ -323,11 +391,14 @@ properties, the existing reflection-based `TypeMeta` scan picks them up
 unmodified, so WPF bindings work against `[Observable]`/`[Computed]` Models
 and ViewModels with no other changes.
 
-`[NotifyPropertyChanged]` is the one piece of this prototype that changes
-what's possible on MAUI rather than just reducing boilerplate: it gives a
-`[Computed]`-based ViewModel a real `INotifyPropertyChanged` implementation,
-which MAUI's `{Binding}` requires for live updates and had no path to before
-(there being no MAUI equivalent of `ForView.Wrap`). It's still additive,
+`[NotifyPropertyChanged]` and `[Command]` are the two pieces of this
+prototype that change what's possible on MAUI rather than just reducing
+boilerplate: `[NotifyPropertyChanged]` gives a `[Computed]`-based ViewModel a
+real `INotifyPropertyChanged` implementation, which MAUI's `{Binding}`
+requires for live updates and had no path to before (there being no MAUI
+equivalent of `ForView.Wrap`); `[Command]` gives it a `Button.Command`-typed
+member whose `CanExecuteChanged` fires itself, which - per MAUI's own docs -
+its built-in `Command` class does not do on its own. Both are still additive,
 though - `BindingManager`'s imperative pattern keeps working unchanged for
 ViewModels that don't opt in.
 
@@ -341,3 +412,7 @@ ViewModels that don't opt in.
 - `[Computed]`'s "strip a Compute/Get prefix" name derivation is a simple
   convention, not configurable beyond the explicit-name attribute argument.
 - The partial-property style requires C# 13 (ships with recent .NET SDKs).
+- `[Command]` doesn't support MAUI's `Command<T>`/`CommandParameter` pattern
+  (see its section above) or batching multiple property changes from one
+  `Execute` into a single UI update pass the way WPF's proxy does via
+  `UpdateScheduler.Begin()`/`End()`.

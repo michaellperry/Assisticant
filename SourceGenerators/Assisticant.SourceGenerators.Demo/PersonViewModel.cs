@@ -50,5 +50,13 @@ namespace Assisticant.SourceGenerators.Demo
         // depending on an [Observable] property on the same ViewModel, not on
         // the injected Model at all.
         [Computed] private string ComputeSelectionLabel() => IsSelected ? "Selected" : "Not selected";
+
+        // ClearSelectionCommand's CanExecute is CanClearSelection below, found by
+        // naming convention (no attribute on it). It's wrapped in a Computed<bool>,
+        // so CanExecuteChanged fires automatically whenever IsSelected changes -
+        // whether that's from code (Program.cs sets it directly) or from executing
+        // this very command - with no manual "RefreshCanExecutes()" anywhere.
+        [Command] private void ClearSelection() => IsSelected = false;
+        private bool CanClearSelection() => IsSelected;
     }
 }
