@@ -18,4 +18,31 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
   </ItemGroup>
 
+  <!-- Packaging: this is a build-time-only analyzer, not a library consumers compile
+       against. IncludeBuildOutput=false (above) already suppresses the normal lib/ref
+       output; NoPackageAnalysis silences NU5128 ("no lib/ref assemblies"), which is
+       expected for an analyzer-only package. DevelopmentDependency=true keeps this
+       from flowing as a transitive compile-time dependency to a consumer's consumers.
+       PackageId/Version are left unset here so each alpha push can supply
+       -p:PackageId=/-p:PackageVersion= at pack time without editing this file. -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <Description>Roslyn source generators for Assisticant: [Observable] (Model properties), [Computed] (ViewModel properties and recycled ObservableCollection&lt;T&gt; projections), [NotifyPropertyChanged], and [Command] - generated without runtime reflection. Prototype/alpha - see https://github.com/michaellperry/Assisticant/pull/49.</Description>
+    <Authors>Michael L Perry</Authors>
+    <PackageTags>mvvm viewmodel databinding sourcegenerator roslyn maui inotifypropertychanged icommand</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>http://assisticant.net/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/michaellperry/Assisticant</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Routes the built generator DLL into the analyzers/dotnet/cs convention path
+         instead of lib/, so it loads as a compile-time analyzer and never becomes a
+         runtime reference. This is the standard, documented pattern for packaging a
+         Roslyn analyzer/source generator. -->
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
 </Project>
